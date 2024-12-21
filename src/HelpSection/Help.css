@@ -1,0 +1,183 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+.helpContainer {
+  position: relative;
+  top: 100px;
+  bottom: 40px;
+  height: max-content;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.helpContainer > .header {
+  position: relative;
+  top: 0;
+  left: 40px;
+  max-width: 1024px;
+  width: 100%;
+}
+.helpContainer > .header > h3 {
+  color: black;
+  font-size: 28px;
+  font-weight: 600;
+  font-family: "kanit";
+  margin: 0;
+  padding: 0;
+}
+.helpContainer > .header > span {
+  color: black;
+  font-size: 16px;
+  font-weight: 400;
+  font-family: "Kanit";
+}
+
+/*  Help seciton css is here  */
+.helpSection {
+  background-color: rgb(198 190 190 / 19%);
+  max-width: 1024px;
+  width: 100%;
+  height: auto;
+  margin: 10px 0px;
+  margin-bottom: 100px;
+  display: flex;
+  padding: 15px;
+  flex-direction: row;
+  box-shadow: 2px 2px 5px #999;
+}
+.helpSection > .helpHeader {
+  background-color: rgba(106, 106, 106, 0.563);
+  width: 30%;
+  height: 96%;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  font-size: 18px;
+  font-family: "Kanit";
+  align-items: center;
+  margin: 40px 5px;
+}
+.helpSection > .helpHeader > .helpsubheader {
+  color: black;
+  margin: 20px 0px;
+  border-bottom: none;
+  width: 100%;
+  padding: 5px 10px;
+  /* background-color: red; */
+}
+.active {
+  border: 1px solid white;
+  padding: 5px 10px;
+  box-shadow: 2px 2px 5px white;
+}
+
+.helpSection > .helpHeader > .helpsubheader > .ankertag {
+  text-decoration: none;
+  color: black;
+}
+
+.helptype {
+  width: 100%;
+  /* background-color: green; */
+}
+.helptype > ul {
+  padding: 10px;
+}
+.helptype > ul > li {
+  list-style: none;
+  padding: 20px 0px 20px 0px;
+  border-bottom: 1px solid black;
+  display: flex;
+  position: relative;
+}
+
+.helptype > ul > li > .text > span {
+  margin: 5px 0px;
+  color: black;
+  font-family: "Kanit";
+  font-weight: 400;
+  font-size: 20px;
+}
+.helptype > ul > li > .text > .show {
+  display: block;
+  color: black;
+  padding: 10px 20px;
+  transition: all ease-in 0.8s;
+}
+.helptype > ul > li > .text > .hide {
+  display: none;
+}
+.helptype > ul > li > .text > .show > h3 {
+  color: black;
+  font-family: "kanit";
+  font-size: 23px;
+}
+.helptype > ul > li > .text > .show > button {
+  color: white;
+  padding: 5px 10px;
+  border: 1px solid orangered;
+  background-color: orangered;
+  font-family: "Kanit";
+  margin: 0px 10px;
+}
+.helptype > ul > li > .text > .show > button:hover {
+  color: black;
+  background-color: transparent;
+  border: 1px solid orangered;
+}
+.helptype > ul > li > .text > .show > span {
+  color: black;
+  display: block;
+  font-size: 10px;
+  margin: 5px 10px;
+}
+
+.helptype > ul > li > .icon > i {
+  position: absolute;
+  right: 30px;
+  cursor: pointer;
+  color: black;
+}
+
+@media screen and (max-width: 767px) {
+  .helpContainer {
+    position: relative;
+    top: 70px;
+  }
+  .helpContainer > .header > h3 {
+    font-size: 20px;
+  }
+  .helpContainer > .header > span {
+    font-size: 14px;
+  }
+  .helpSection {
+    display: flex;
+    flex-direction: column;
+  }
+  .helpSection > .helpHeader {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    padding: 5px;
+    margin: 0px;
+  }
+  .helpSection > .helpHeader > .helpsubheader {
+    width: auto;
+  }
+  .helptype > ul > li > .text > span {
+    margin: 5px 0px;
+    color: black;
+    font-family: "Kanit";
+    font-weight: 400;
+    font-size: 14px;
+  }
+
+  .helptype > ul > li > .text > .show > h3 {
+    color: black;
+    font-family: "kanit";
+    font-size: 20px;
+  }
+}

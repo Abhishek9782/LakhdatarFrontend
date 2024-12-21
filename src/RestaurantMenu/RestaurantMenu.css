@@ -1,0 +1,141 @@
+.Rm_parent {
+  margin-top: 15px;
+  position: relative;
+  width: 100%;
+  height: 100vh;
+}
+.Rm_parent .head_part h3 {
+  color: black;
+  text-align: center;
+  font-family: "Kanit", sans-serif;
+  font-size: 35px;
+}
+.MenuDishes {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  margin-top: 50px;
+}
+.MenuDish {
+  position: relative;
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+.dish1 {
+  width: 45%;
+  height: 400px;
+  margin: 0px 5px;
+  position: relative;
+  cursor: pointer;
+}
+.dish1 span {
+  position: absolute;
+  bottom: 13%;
+  right: 0%;
+  font-size: 28px;
+  font-family: "Kanit", sans-serif;
+  width: 86px;
+  height: 40px;
+  background-color: white;
+  color: black;
+  text-align: center;
+}
+.dish1 img {
+  width: 100%;
+  height: 350px;
+  object-fit: cover;
+  border-radius: 5px;
+}
+.dish2 {
+  width: 24%;
+  height: 400px;
+  margin: 0px 5px;
+  position: relative;
+  cursor: pointer;
+}
+.dish2 img {
+  width: 100%;
+  height: 350px;
+  object-fit: cover;
+  border-radius: 5px;
+}
+.dish2 span {
+  position: absolute;
+  bottom: 13%;
+  right: 0%;
+  font-size: 28px;
+  font-family: "Kanit", sans-serif;
+  width: 86px;
+  height: 40px;
+  background-color: white;
+  color: black;
+  text-align: center;
+}
+.dish3 {
+  width: 24%;
+  height: 400px;
+  margin: 0px 5px;
+  position: relative;
+  cursor: pointer;
+}
+.dish3 img {
+  width: 100%;
+  height: 350px;
+  object-fit: cover;
+  border-radius: 5px;
+}
+.dish3 span {
+  position: absolute;
+  bottom: 13%;
+  right: 0%;
+  font-size: 28px;
+  font-family: "Kanit", sans-serif;
+  width: 86px;
+  height: 40px;
+  background-color: white;
+  color: black;
+  text-align: center;
+}
+
+/*  Media query for responsive website   */
+@media screen and (max-width: 767px) {
+  .Rm_parent {
+    width: 100%;
+    height: auto !important;
+  }
+  .Rm_parent .head_part h3 {
+    font-size: 1.7em;
+    margin-bottom: 0px;
+    position: relative;
+    top: 20px;
+  }
+  .MenuDishes {
+    width: 100%;
+    height: auto;
+  }
+  .MenuDish {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  .dish1 {
+    width: 80%;
+  }
+  .dish2 {
+    width: 80%;
+  }
+  .dish3 {
+    width: 80%;
+  }
+}
+@media screen and (min-width: 768px) and (max-width: 1023px) {
+}
+
+@media screen and (min-width: 1024px) and (max-width: 1439px) {
+}
+@media screen and (min-width: 1440px) {
+}

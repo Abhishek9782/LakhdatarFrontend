@@ -1,0 +1,433 @@
+.menusection {
+  width: 100%;
+  height: auto;
+  /* background-color: red; */
+  position: relative;
+  top: 100px;
+  margin-bottom: 60px;
+  display: flex;
+  /* justify-content: center; */
+  /* align-items: center; */
+  flex-direction: column;
+}
+.menusection > h3 {
+  text-align: center;
+  margin: 10px 0px;
+  font-size: 28px;
+  color: black;
+  font-family: "kanit", "sans-serif";
+  text-shadow: 2px 2px 5px #9999999f;
+  text-transform: uppercase;
+}
+.menuslider {
+  max-width: 1024px;
+  height: calc(100%);
+  position: relative;
+  left: 18%;
+  margin: 10px 0px;
+  padding: 30px;
+  text-align: center;
+}
+
+.menuslider > .menubar {
+  background: black;
+  color: white;
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  display: inline;
+  padding: 15px 30px;
+  border-radius: 10px;
+}
+.menuslider > .menubar > span {
+  margin: 0px 40px;
+  color: white;
+  cursor: pointer;
+  /* border: 1px solid red; */
+  padding: 6px 12px;
+  transition: all ease-in-out 0.5s;
+  border-radius: 5px;
+}
+.menuslider > .menubar > span:hover {
+  background-color: white;
+  color: black;
+  box-shadow: 5px 5px 10px #999, 10px 5px 10px #999;
+}
+.menuslider > .menubar > .active {
+  border-radius: 10%;
+  background-color: white;
+  color: black;
+}
+/*  item css is here  */
+
+.menuitem {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  /* grid-template-rows: 1fr; */
+  row-gap: 15px;
+  column-gap: 15px;
+}
+.apperance {
+  font-size: 20px;
+  font-family: "kanit", "sans-serif";
+  color: black;
+  text-align: left;
+  position: relative;
+  top: 30px;
+  left: 70px;
+  width: 90%;
+  margin-bottom: 40px;
+}
+.item {
+  height: 50vh;
+  margin-top: 40px;
+  margin: 10px 0px;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid rgb(157, 157, 155);
+  box-shadow: 1px 1px 3px #999, 1px 1px 3px #999, 1px 1px 3px #999,
+    1px 1px 3px #999;
+  position: relative;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
+.item > .img {
+  /* width: 20vw; */
+  height: 26vh;
+  /* flex: 1; */
+  overflow: hidden;
+  cursor: pointer;
+}
+.item > .img > img {
+  width: 100%;
+  height: 26vh;
+  object-fit: cover;
+  /* border-radius: 5px; */
+}
+
+/*  faviorate button is here */
+.fav-heart > i {
+  color: white;
+  position: absolute;
+  top: 10rem;
+  right: 20px;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.details {
+  /* flex: 2; */
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  position: relative;
+}
+.details > h3 {
+  color: black;
+  font-family: "kanit", "sans-serif";
+  font-size: 14px;
+  margin: 0px;
+  text-align: start;
+}
+.details > span {
+  color: black;
+  font-family: "sans-serif";
+  text-align: start;
+  margin: 5px 0px;
+}
+.rating {
+  width: 20%;
+  position: absolute;
+  right: -1px;
+  top: 0px;
+  color: white;
+  font-family: "kanit";
+  background-color: green;
+}
+.rating > i {
+  color: white;
+  margin: 0px 2px;
+}
+.price {
+  /* flex: 1; */
+  width: 100%;
+  height: 27%;
+}
+.price > .buttons {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
+}
+.price > .buttons > span {
+  color: black;
+  font-size: 24px;
+  font-weight: 600;
+  width: 40%;
+  text-align: center;
+  filter: drop-shadow(2px 2px 5px #b1afaf);
+}
+.price > .buttons > .quantity {
+  background-color: black;
+  width: 80%;
+  padding: 10px px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  border-radius: 10px;
+  height: 34px;
+  margin-left: 16px;
+}
+.price > .buttons > .quantity > span {
+  width: 40%;
+  transition: all ease 0.5s;
+}
+.price > .buttons > .quantity > span:hover {
+  background-color: white;
+  color: black;
+  border-radius: 5px;
+}
+
+.bgchange {
+  background-color: white;
+  color: black;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.price > .buttons > .cart {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  justify-content: space-evenly;
+}
+.price > .buttons > .cart > span {
+  color: black;
+  font-size: 24px;
+  font-weight: 600;
+  width: 40%;
+  text-align: center;
+  filter: drop-shadow(2px 2px 5px #b1afaf);
+}
+.price > .buttons > .cart > .cart-button {
+  width: 40%;
+  padding: 5px 5px;
+  color: white;
+  font-size: 16px;
+  /* border: 1px solid black; */
+  background-color: black;
+  border-radius: 5px;
+  transition: all ease-in-out 0.6s;
+  box-shadow: 2px 2px 12px rgb(0, 0, 0, 0.25) inset;
+  font-family: "sens-serif";
+  text-decoration: none;
+}
+.price > .buttons > .cart > .cart-button:hover {
+  background-color: white;
+  color: black;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.price > .buttons > button:hover {
+  color: black;
+  background-color: transparent;
+}
+.empty-food-container {
+  color: black;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  flex-direction: row;
+  align-items: center;
+  height: 50vh;
+}
+.empty-food-container > h2 {
+  color: black;
+  font-family: "kanit";
+}
+
+/*  Media Query here for making responsive website  */
+@media screen and (max-width: 767px) {
+  .menusection {
+    margin-top: 0px !important;
+  }
+  .menusection > h3 {
+    font-size: 22px;
+    margin: 0px 0px 20px 0px;
+  }
+  .menuslider {
+    position: relative;
+    left: 0px;
+    display: contents;
+  }
+  .menuslider > .menubar {
+    width: 90%;
+    align-self: center;
+    padding: 10px 10px;
+    /* margin-top: 0px  */
+  }
+  .menuslider > .menubar > span {
+    margin: 0px;
+    font-size: 15px;
+    padding: 3px;
+    margin: 0px 12px;
+  }
+  .menuitem {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto;
+    overflow-x: scroll;
+    padding: 10px;
+  }
+  .item {
+    height: 36vh;
+  }
+
+  .fav-heart > i {
+    top: 6rem;
+    right: 11px;
+    font-size: 20px;
+    cursor: pointer;
+  }
+  .rating {
+    width: 30%;
+    position: absolute;
+    left: 0px;
+    top: -22px;
+    color: white;
+    font-family: "kanit";
+    background-color: green;
+  }
+  .price > .buttons > .cart > span {
+    color: black;
+    font-size: 18px;
+    font-weight: 600;
+    width: 35%;
+    text-align: center;
+    filter: drop-shadow(2px 2px 5px #b1afaf);
+  }
+  .price > .buttons > .cart > .cart-button {
+    width: 49%;
+    padding: 5px 5px;
+    color: white;
+    font-size: 15px;
+    /* border: 1px solid black; */
+    background-color: black;
+    border-radius: 5px;
+    transition: all ease-in-out 0.6s;
+    box-shadow: 2px 2px 12px rgb(0, 0, 0, 0.25) inset;
+    font-family: "sens-serif";
+    text-decoration: none;
+  }
+}
+@media screen and (min-width: 768px) and (max-width: 1023px) {
+  .menusection {
+    margin-top: 0px !important;
+  }
+
+  .menusection > h3 {
+    font-size: 28px;
+    margin: 40px 0px 20px 0px;
+    text-align: center;
+    width: 100%;
+  }
+
+  .menuslider {
+    position: relative;
+    left: 0px;
+    display: contents;
+  }
+  .menuslider > .menubar {
+    width: 90%;
+    align-self: center;
+    padding: 10px 10px;
+    /* margin-top: 0px  */
+  }
+  .menuslider > .menubar > span {
+    margin: 0px;
+    font-size: 18px;
+    padding: 0px;
+    margin: 0px 15px;
+  }
+  .menuitem {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto;
+    overflow-x: scroll;
+    padding: 10px;
+  }
+  .item {
+    height: 36vh;
+  }
+
+  .fav-heart > i {
+    top: 10rem;
+    right: 18px;
+    font-size: 35px;
+    cursor: pointer;
+  }
+  .rating {
+    width: 30%;
+    position: absolute;
+    left: 0px;
+    top: -22px;
+    color: white;
+    font-family: "kanit";
+    background-color: green;
+  }
+  .price > .buttons > .cart > span {
+    color: black;
+    font-size: 18px;
+    font-weight: 600;
+    width: 35%;
+    text-align: center;
+    filter: drop-shadow(2px 2px 5px #b1afaf);
+  }
+  .price > .buttons > .cart > .cart-button {
+    width: 49%;
+    padding: 5px 5px;
+    color: white;
+    font-size: 15px;
+    /* border: 1px solid black; */
+    background-color: black;
+    border-radius: 5px;
+    transition: all ease-in-out 0.6s;
+    box-shadow: 2px 2px 12px rgb(0, 0, 0, 0.25) inset;
+    font-family: "sens-serif";
+    text-decoration: none;
+  }
+}
+
+@media screen and (min-width: 1024px) and (max-width: 1439px) {
+  .menusection {
+    width: 100%;
+    max-width: 1024px !important;
+  }
+  .menusection > h3 {
+    font-size: 22px;
+    margin: 0px 0px 20px 0px;
+    text-align: center;
+    width: 100% !important;
+    max-width: 1024px !important;
+  }
+  .menuslider {
+    left: 0px;
+  }
+  .fav-heart > i {
+    top: 15rem;
+    font-size: 30px;
+  }
+  .details > h3 {
+    font-size: 24px;
+  }
+  .details > span {
+    font-size: 20px;
+  }
+  .item {
+    height: 35vh !important;
+  }
+}
+@media screen and (min-width: 1440px) {
+}

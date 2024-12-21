@@ -1,0 +1,174 @@
+@import url("https://fonts.googleapis.com/css2?family=Pacifico&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap");
+
+:root {
+  --pacificoFont: "Pacifico", "cursive";
+  --kanitFont: "Kanit", sans-serif;
+  --blackColor: #000;
+}
+.offersSection {
+  margin-top: 80px;
+  color: red;
+  height: 80vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.container {
+  max-width: 1124px;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+}
+.leftCotent {
+  width: 50%;
+  background-color: white;
+}
+.leftCotent .headLeftContent {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-bottom: 2px solid yellow;
+  height: 20vh;
+}
+.leftCotent .headLeftContent span {
+  color: var(--blackColor);
+}
+.leftCotent .headLeftContent:nth-child(1) {
+  font-size: 23px;
+  font-family: var(--pacificoFont);
+}
+
+.listLeftContent {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 10px;
+}
+.listLeftContent .listimg {
+  padding: 5px;
+}
+.listLeftContent .listimg > img {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 2px;
+  border: 5px solid #99999962;
+}
+.listLeftContent .listdesc {
+  padding: 5px;
+}
+.listLeftContent .listdesc h3 {
+  font-size: 15px;
+  font-family: var(--kanitFont);
+  color: var(--blackColor);
+}
+.listLeftContent .listdesc span {
+  font-family: var(--kanitFont);
+  font-size: 12px;
+  line-height: 1px;
+  letter-spacing: 1px;
+  word-spacing: 1px;
+  color: var(--blackColor);
+}
+.listLeftContent .listprice {
+  padding: 5px;
+}
+.listLeftContent .listprice button {
+  padding: 8px 25px;
+  color: var(--blackColor);
+  background-color: transparent;
+  border: 1px solid var(--blackColor);
+  cursor: pointer;
+  border-radius: 5px;
+}
+.rightContent {
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+.cursol_head {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: end;
+}
+.curouselhead {
+  box-shadow: 5px 5px 10px #999;
+}
+/*  cursole image css is here  */
+.cursol_image {
+  max-height: 60vh;
+  width: 100%;
+  object-fit: cover;
+  border-radius: 5px;
+}
+
+@media screen and (max-width: 767px) {
+  .offersSection {
+    margin: 0px;
+    width: 100%;
+    height: auto;
+  }
+  .container {
+    display: flex;
+    flex-direction: column;
+    margin: 0px;
+    width: 100%;
+    align-items: center;
+  }
+  .leftCotent {
+    width: 80%;
+  }
+  .listLeftContent {
+    display: flex;
+    flex-direction: column;
+  }
+  .listLeftContent > .listimg {
+    min-width: 20rem;
+    max-height: max-content;
+  }
+  .listLeftContent > .listimg > img {
+    width: 100%;
+    height: 100%;
+  }
+  .listprice {
+    width: 100%;
+  }
+  .listprice > button {
+    width: 100%;
+    background-color: black !important;
+    color: white !important;
+    padding: 2px 0px !important;
+    margin: 5px 0px;
+  }
+  /*  right container  */
+  .rightContent {
+    width: 80%;
+    padding: 0px;
+  }
+}
+
+@media screen and (min-width: 768px) and (max-width: 1023px) {
+  .offersSection {
+    width: 124vw;
+    max-width: 1023px;
+  }
+  .container {
+    height: 110vh;
+    max-height: max-content;
+  }
+  .cursol_head {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center !important;
+  }
+}

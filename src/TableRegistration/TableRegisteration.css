@@ -1,0 +1,136 @@
+.TR_main {
+  position: relative;
+  width: 100%;
+  height: 70vh;
+  margin-top: 50px;
+  display: flex;
+  justify-content: center;
+}
+.Trbg {
+  position: absolute;
+  width: 99%;
+  height: 100%;
+  filter: contrast(2px);
+  overflow: hidden;
+}
+.Trbg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: blur(2px);
+}
+.Trhead {
+  position: relative;
+  color: black;
+  background-color: rgba(0, 0, 0, 0.605);
+  width: 40vw;
+  height: 60vh;
+  position: relative;
+  top: 40px;
+  border-radius: 5px;
+}
+.Trhead h3 {
+  position: relative;
+  top: 30px;
+  right: 30px;
+  color: goldenrod;
+  width: 100%;
+  text-align: center;
+  font-size: 15px;
+  font-family: "Permanent Marker", cursive;
+}
+.Trhead span {
+  color: white;
+  display: block;
+  font-size: 35px;
+  font-family: "Permanent Marker", cursive;
+}
+.TrForm {
+  position: absolute;
+  top: 23%;
+  left: 5%;
+}
+.TrForm input {
+  padding: 8px 20px;
+  width: 40%;
+  margin: 15px;
+  color: black;
+}
+.trSumbitButton {
+  width: 85%;
+  margin: 15px;
+  padding: 5px 0px;
+  color: white;
+  background-color: green;
+  border: none;
+  opacity: 0.7;
+  transition: all ease 0.5s;
+}
+.trSumbitButton:hover {
+  opacity: 1;
+}
+@media screen and (min-width: 300px) and (max-width: 500px) {
+  .Trhead {
+    height: 75vh !important;
+  }
+  .TrForm input {
+    padding: 8px 20px;
+    width: 80% !important;
+    margin: 15px;
+    color: black;
+  }
+}
+/*  media query for responsive our website  */
+@media screen and (max-width: 767px) {
+  .TR_main {
+    width: 100%;
+    height: max-content;
+  }
+  .Trbg {
+    width: 100%;
+    height: max-content;
+    display: none;
+  }
+  .Trhead {
+    width: 80%;
+    position: relative;
+    top: 0px;
+  }
+  .Trhead > h3 {
+    font-size: 1rem;
+    right: 0px;
+  }
+  .Trhead > h3 > span {
+    font-size: 1.5rem;
+  }
+  .TrForm {
+    position: absolute;
+    top: 23%;
+    left: 0%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+  }
+  .TrForm > input {
+    padding: 2px 4px;
+    border: none;
+    background-color: transparent;
+    border-bottom: 1px solid white;
+    color: black;
+  }
+  .TrForm > input:focus {
+    outline: none;
+  }
+  .TrForm > input::placeholder {
+    color: white;
+  }
+}
+
+@media screen and (min-width: 768px) and (max-width: 1023px) {
+}
+
+@media screen and (min-width: 1024px) and (max-width: 1439px) {
+}
+@media screen and (min-width: 1440px) {
+}

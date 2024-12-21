@@ -1,0 +1,107 @@
+.ChefContaner {
+  width: 100%;
+  margin-top: 78vh;
+  height: 70vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+}
+.ChefContaner > h3 {
+  position: relative;
+  bottom: 40px;
+  color: black;
+  text-transform: uppercase;
+  text-align: center;
+  font-family: "Kanit", sans-serif;
+  font-size: 35px;
+  text-shadow: 2px 2px 5px #999;
+}
+.ChefContaner > h3 > i {
+  color: black;
+  font-size: 25px;
+  margin: 0px 5px;
+}
+.chefcards {
+  width: 80%;
+  height: 60%;
+  border-radius: 10px;
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-items: center;
+}
+.chefcards .chefcard {
+  width: 250px;
+  height: 100%;
+  border: 1px solid black;
+  border-radius: 10px;
+  position: relative;
+}
+.chefcards .chefcard .img img {
+  width: 300px;
+  position: absolute;
+  bottom: 134px;
+  right: -8px;
+}
+.aboutchef {
+  position: relative;
+  margin-top: 195px;
+}
+.aboutchef h5 {
+  color: black;
+  font-size: 16px;
+  text-align: center;
+  margin: 0px 0px;
+  font-family: "Pacifico", "cursive";
+}
+.aboutchef h3 {
+  font-size: 17px;
+  text-align: center;
+  text-transform: capitalize;
+  margin: 4px 0px;
+  color: black;
+  font-family: "Kanit", sans-serif;
+}
+.chefmedia {
+  text-align: center;
+  margin: 10px 0px;
+}
+.chefmedia > i {
+  font-size: 22px;
+  color: black;
+  margin: 0px 10px;
+  cursor: pointer;
+}
+
+/* media query for responsive website   */
+@media screen and (max-width: 767px) {
+  .ChefContaner {
+    margin-top: 10vh;
+    width: 100%;
+    height: auto;
+  }
+  .ChefContaner > h3 {
+    font-size: 1.7em;
+    text-align: center;
+  }
+  .chefcards {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    align-items: center;
+  }
+  .chefcard {
+    margin-top: 20vh;
+  }
+}
+@media screen and (min-width: 768px) and (max-width: 1023px) {
+}
+
+@media screen and (min-width: 1024px) and (max-width: 1439px) {
+}
+@media screen and (min-width: 1440px) {
+}

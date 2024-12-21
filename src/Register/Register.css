@@ -1,0 +1,65 @@
+.register {
+  width: 100%;
+  height: 100vh;
+  background: linear-gradient(to right, #2e3192, #1bffff);
+  background-blend-mode: color;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.Registerform {
+  height: 550px;
+  width: 500px;
+  background-color: rgba(255, 255, 255, 0.471);
+  border-radius: 20px;
+  box-shadow: 5px 5px 10px #2e3192;
+}
+.Registerform > form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  top: 30px;
+  font-family: "Kanit", "sans-serif";
+}
+.Registerform > form > input {
+  width: 80%;
+  border: none;
+  border-radius: 5px;
+  position: relative;
+  top: 30px;
+  color: black;
+  padding-inline: 20px !important;
+  padding: 6px 0px;
+  margin: 15px 0px;
+}
+
+button[type="sumbit"] {
+  width: 80%;
+  position: relative;
+  top: 40px;
+  padding: 5px 0px;
+  border: none;
+  color: #1bffff;
+  background-color: #2e3192;
+  transition: all ease-in-out 0.5s;
+  font-family: "Kaint", "sans-serif";
+}
+button[type="sumbit"]:hover {
+  color: #2e3192;
+  background-color: #1bffff;
+}
+/* for removing input type number up down symbols  */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.ismatch {
+  position: absolute;
+  top: 50px;
+  margin: 0px;
+  margin-bottom: 5px;
+}

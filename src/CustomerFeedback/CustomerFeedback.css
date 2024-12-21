@@ -1,0 +1,133 @@
+.CmFeedback {
+  width: 100%;
+  height: 75vh;
+  position: relative;
+  top: 75vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.CmFeedback h3 {
+  text-transform: uppercase;
+  text-align: center;
+  font-family: "Kanit", sans-serif;
+  position: relative;
+  bottom: 70px;
+  color: black;
+  font-size: 30px;
+}
+.CmFeedback .CfContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-items: center;
+}
+.CmFeedback .CfContainer .card {
+  color: black;
+  background-color: #99999929;
+  width: 20vw;
+  height: 50vh;
+  position: relative;
+  box-shadow: 15px 15px 5px rgba(105, 81, 81, 0.753);
+}
+.card .img {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  position: relative;
+  bottom: 35px;
+  left: 32%;
+}
+.card .img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+.CmFeedback .CfContainer .card .cftxt {
+  color: black;
+  font-family: "Pacifico ", " cursive";
+  padding: 15px;
+}
+.review {
+  text-align: center;
+  font-size: 24px;
+  color: black;
+  background-color: black;
+}
+.review i {
+  margin: 0px 2px;
+}
+@media screen and (min-width: 300px) and (max-width: 500px) {
+  .CmFeedback {
+    position: relative;
+    top: 0vh;
+    height: auto;
+  }
+  .CmFeedback > h3 {
+    font-size: 1.7em;
+    position: relative;
+    top: 0px;
+  }
+  .CmFeedback > .CfContainer {
+    display: flex !important;
+    flex-direction: column !important;
+    padding-bottom: 20px !important;
+  }
+  .CmFeedback > .CfContainer > .card {
+    width: 85%;
+    margin: 5rem 0px 0px 0px;
+    height: 40vh !important;
+  }
+  .cftxt {
+    text-align: center;
+  }
+  .card {
+    height: 55vh !important;
+  }
+  .card .img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    position: relative;
+    bottom: 35px;
+    left: 36%;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .CmFeedback {
+    position: relative;
+    top: 0vh;
+    height: auto;
+  }
+  .CmFeedback > h3 {
+    font-size: 1.7em;
+    position: relative;
+    top: 0px;
+  }
+  .CmFeedback > .CfContainer {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    justify-items: center;
+  }
+  .CmFeedback > .CfContainer > .card {
+    width: 85%;
+    margin: 5rem 0px 0px 0px;
+    height: max-content !important;
+    padding-bottom: 20px;
+  }
+  .cftxt {
+    text-align: center;
+  }
+  .card {
+    height: 55vh !important;
+  }
+}
+@media screen and (min-width: 768px) and (max-width: 1023px) {
+}
+
+@media screen and (min-width: 1024px) and (max-width: 1439px) {
+}
+@media screen and (min-width: 1440px) {
+}

@@ -1,0 +1,342 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap");
+
+.navbar {
+  display: flex;
+  position: fixed;
+  width: 100%;
+  padding: 25px 30px;
+  justify-content: space-around;
+  background-color: #999999bb;
+  z-index: 2;
+  top: 0;
+}
+:root {
+  --blackColor: #000;
+  --kanitFont: "Kanit", sans-serif;
+}
+
+.logoname span {
+  font-family: "Montserrat", sans-serif;
+  font-size: 20px;
+  animation: focus-in-contract-bck 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+  color: var(--blackColor);
+}
+/* keyframe for animate logo name on reload  */
+@keyframes focus-in-contract-bck {
+  0% {
+    letter-spacing: 1em;
+    -webkit-transform: translateZ(300px);
+    transform: translateZ(300px);
+    -webkit-filter: blur(12px);
+    filter: blur(12px);
+    opacity: 0;
+  }
+  100% {
+    -webkit-transform: translateZ(12px);
+    transform: translateZ(12px);
+    -webkit-filter: blur(0);
+    filter: blur(0);
+    opacity: 1;
+  }
+}
+
+.menu ul {
+  display: flex;
+  background-color: transparent;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 0 !important;
+}
+.menu ul li {
+  list-style: none;
+  margin: 0px 25px;
+  background-color: transparent;
+  font-family: "Montserrat", sans-serif;
+  color: var(--blackColor);
+  height: 28px;
+  transition: all ease-in 0.5s;
+  position: relative;
+}
+.menu ul li:hover {
+  border-bottom: 1px solid var(--blackColor);
+}
+
+.menu ul li a {
+  text-decoration: none;
+  color: var(--blackColor);
+}
+.menuIcon {
+  font-size: 20px;
+  display: none;
+}
+.menuIcon > i {
+  color: black;
+  cursor: pointer;
+}
+.menuSlider {
+  background-color: #000;
+  width: 100%;
+  height: 100vh;
+  z-index: 4;
+  position: absolute;
+  display: none;
+  animation-name: slider;
+  animation-duration: 0.5s;
+}
+@keyframes slider {
+  from {
+    left: 100%;
+  }
+  to {
+    left: 0%;
+  }
+}
+
+.xmark {
+  font-size: 23px;
+  position: absolute;
+  right: 40px;
+  top: 40px;
+  cursor: pointer;
+}
+.menubarforSlider {
+  width: 100%;
+  height: 100%;
+}
+.menubarforSlider > ul {
+  width: 100%;
+  height: 100%;
+  margin-top: 150px;
+  padding: 0px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.menubarforSlider > ul > li {
+  list-style: none;
+  text-decoration: none;
+  margin: 20px 0px 0px 0px;
+  padding: 20px;
+  width: 70%;
+  border-bottom: 1px solid white;
+  text-align: center;
+}
+.menubarforSlider > ul > li > a {
+  text-decoration: none;
+  color: white;
+}
+
+/*  Profile css is here  */
+.profilebody {
+  width: 30vw;
+  height: 90vh;
+  position: fixed;
+  z-index: 4;
+  right: 0;
+  backdrop-filter: blur(7px) saturate(110%);
+  -webkit-backdrop-filter: blur(7px) saturate(110%);
+  background-color: rgba(153, 153, 153, 0.52);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.125);
+  overflow-y: scroll;
+}
+.xmark > i {
+  color: black;
+}
+.prilfilelist {
+  padding: 20px;
+  color: black;
+}
+.prilfilelist > .logo {
+  width: 70px;
+  height: 70px;
+  display: flex;
+  justify-self: center;
+}
+.prilfilelist > .logo > img {
+  width: 100%;
+  border-radius: 50%;
+}
+.prilfilelist > ul > .username {
+  text-align: center;
+  border-bottom: none;
+}
+.prilfilelist > ul > .username > b {
+  margin-right: 30px;
+  color: black;
+}
+.prilfilelist > ul > li {
+  color: black;
+  list-style: none;
+  line-height: 70px;
+  font-family: "Kanit";
+  font-size: 17px;
+  width: 100%;
+}
+.prilfilelist > ul > li:hover {
+  border-bottom: 1px solid black;
+  cursor: pointer;
+}
+.prilfilelist > ul > li > i {
+  color: black;
+  margin: 0px 5px;
+}
+.logoutbtn {
+  display: flex;
+  justify-content: center;
+  border-bottom: none !important;
+}
+.LBtn {
+  width: 10vw;
+  height: 6vh;
+  color: white;
+  background-color: black;
+  transition: all ease-in 0.2s;
+  line-height: 0;
+  margin-top: 70px;
+  border-bottom: none;
+}
+.LBtn:hover {
+  background-color: white;
+  color: black;
+}
+
+/*  Favorite part  */
+.favoritelogo {
+  font-family: "Montserrat", sans-serif;
+  font-size: 18px;
+  padding: 10px;
+  position: relative;
+  top: 30px;
+  left: 20px;
+  color: var(--blackColor);
+}
+.favioratedetails > h3 {
+  font-size: 18px;
+  color: black;
+  position: relative;
+  top: 60px;
+  text-align: center;
+  /* left: 20px; */
+  font-weight: 400;
+  font-family: "Montserrat", sans-serif;
+}
+.favproductList {
+  position: relative;
+  top: 100px;
+  left: 0px;
+}
+.favproductList > ul {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  margin: 0px;
+  padding: 10px 0px 10px 20px;
+}
+.favproductList > ul > li {
+  list-style: none;
+  color: black;
+  flex: 1;
+  cursor: pointer;
+}
+.favproductList > ul > .img {
+  width: 100px;
+  height: 100px;
+  /* aspect-ratio: 4/3; */
+}
+.favproductList > ul > li > img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.favproductList > ul > .deleteicon > i {
+  color: black;
+  transition: all ease 0.5s;
+}
+.favproductList > ul > .deleteicon > i:hover {
+  color: red;
+  cursor: pointer;
+}
+.EmptyFav {
+  color: black;
+  font-size: 24px;
+  font-family: "kanit";
+  text-align: center;
+  position: relative;
+  top: 200px;
+}
+/*  Media Query for making responsive our web site  */
+@media screen and (min-width: 300px) and (max-width: 500px) {
+}
+
+@media screen and (max-width: 767px) {
+  .navbar {
+    width: 100%;
+    /* max-width: 767px; */
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    padding: 10px 0px;
+  }
+  .menu {
+    display: none;
+  }
+  .logoname span {
+    font-size: 1em;
+  }
+  .menuIcon {
+    display: block;
+  }
+}
+@media screen and (min-width: 768px) and (max-width: 1023px) {
+  .navbar {
+    width: 100% !important;
+    max-width: 1023px !important;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    padding: 20px 0px;
+    align-items: start;
+    padding: 20px 0px;
+  }
+  .logoname {
+    padding-bottom: 20px !important;
+    width: 80%;
+    text-align: center;
+  }
+  .menu {
+    display: block;
+    width: 80% !important;
+  }
+  .menu > ul {
+    padding: 0px;
+    justify-content: space-evenly;
+  }
+  .menu > ul > li {
+    margin: 0px 10px 0px 0px;
+  }
+  .logoname span {
+    font-size: 1em !important;
+  }
+  .menuIcon {
+    display: none;
+  }
+}
+
+@media screen and (min-width: 1024px) and (max-width: 1439px) {
+  .navbar {
+    width: 100%;
+    max-width: 1439px !important;
+  }
+}
+@media screen and (min-width: 1440px) {
+  .navbar {
+    width: 100%;
+    min-width: 1440px !important;
+  }
+}
