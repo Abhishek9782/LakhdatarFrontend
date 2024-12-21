@@ -12,7 +12,7 @@ export const Featuredproducts = () => {
 
   const getFeatureData = async () => {
     const res = await axios
-      .get("https://lakahdatarbackend.onrender.com//food/featureProducts")
+      .get("https://lakahdatarbackend.onrender.com/food/featureProducts")
       .catch((error) => {
         console.log(error);
       });
