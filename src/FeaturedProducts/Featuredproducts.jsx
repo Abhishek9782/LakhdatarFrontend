@@ -12,7 +12,7 @@ export const Featuredproducts = () => {
 
   const getFeatureData = async () => {
     const res = await axios
-      .get("http://localhost:5000/food/featureProducts")
+      .get("https://lakahdatarbackend.onrender.com//food/featureProducts")
       .catch((error) => {
         console.log(error);
       });
@@ -47,7 +47,10 @@ export const Featuredproducts = () => {
         console.log("carts!==null");
         const addtocart = async () => {
           const res = await axios
-            .post(`http://localhost:5000/user-cart-add/${user._id}`, data)
+            .post(
+              `https://lakahdatarbackend.onrender.com/user-cart-add/${user._id}`,
+              data
+            )
             .catch((error) => {
               console.log(error);
             });
@@ -62,7 +65,10 @@ export const Featuredproducts = () => {
         const addtocart = async () => {
           console.log("carts==null");
           const res = await axios
-            .post(`http://localhost:5000/user-cart-add/${user._id}`, data)
+            .post(
+              `https://lakahdatarbackend.onrender.com/user-cart-add/${user._id}`,
+              data
+            )
             .catch((error) => {
               console.log(error);
             });

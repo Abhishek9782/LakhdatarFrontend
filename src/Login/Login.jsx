@@ -31,7 +31,10 @@ export const Login = () => {
     e.preventDefault();
     dispatch(loginStart());
     const res = await axios
-      .post("http://localhost:5000/user-login", { user: user, cart: stateCart })
+      .post("https://lakahdatarbackend.onrender.com/user-login", {
+        user: user,
+        cart: stateCart,
+      })
       .catch((error) => {
         Swal.fire({
           icon: "error",

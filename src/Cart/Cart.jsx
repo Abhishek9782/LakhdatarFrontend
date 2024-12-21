@@ -380,7 +380,9 @@ export const Cart = () => {
 
   const getCarts = async () => {
     const res = await axios
-      .get(`http://localhost:5000/get-carts-by-user/${stateUser._id}`)
+      .get(
+        `https://lakahdatarbackend.onrender.com/get-carts-by-user/${stateUser._id}`
+      )
       .catch((error) => {
         console.log(error);
       });
@@ -400,7 +402,7 @@ export const Cart = () => {
   //  Here we handle cartquantity decrease or increase
   async function handleDecreaseqty(e, id) {
     const res = await axios
-      .post(`http://localhost:5000/cart/decreaseqty/${id}`, {
+      .post(`https://lakahdatarbackend.onrender.com/cart/decreaseqty/${id}`, {
         userId: stateUser._id,
       })
       .catch((error) => {
@@ -416,7 +418,7 @@ export const Cart = () => {
 
   async function handleIncrement(e, id) {
     const res = await axios
-      .post(`http://localhost:5000/cart/increment/${id}`, {
+      .post(`https://lakahdatarbackend.onrender.com/cart/increment/${id}`, {
         userId: stateUser._id,
       })
       .catch((error) => {

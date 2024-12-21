@@ -17,7 +17,7 @@ export const Menu = () => {
 
   //here we get all products from database
   const GetProducts = async () => {
-    const res = await axios.get("http://localhost:5000/food");
+    const res = await axios.get("https://lakahdatarbackend.onrender.com/food");
     if (res.data) {
       setFood(res.data);
     }

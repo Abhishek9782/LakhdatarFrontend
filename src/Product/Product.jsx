@@ -76,7 +76,7 @@ export const Product = () => {
   console.log(product);
   const GetProduct = async () => {
     const res = await axios.get(
-      `http://localhost:5000/food/productopen/${productId}`
+      `https://lakahdatarbackend.onrender.com/food/productopen/${productId}`
     );
     if (res.data) {
       setProduct(res.data);

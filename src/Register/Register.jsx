@@ -39,7 +39,7 @@ export const Register = () => {
   const createUser = async (e) => {
     e.preventDefault();
     const res = await axios
-      .post("http://localhost:5000/user-register", credential)
+      .post("https://lakahdatarbackend.onrender.com/user-register", credential)
       .catch((error) => {
         document.getElementById("isMatch").innerText =
           error.response.data.message;

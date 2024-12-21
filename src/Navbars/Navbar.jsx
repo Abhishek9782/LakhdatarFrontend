@@ -28,7 +28,7 @@ export const Navbar = () => {
     document.getElementById("menuSlider").style.display = "none";
     e.preventDefault();
     const res = await axios
-      .post(`http://localhost:5000/user-cart-lose/${user._id}`)
+      .post(`https://lakahdatarbackend.onrender.com/user-cart-lose/${user._id}`)
       .catch((error) => {
         Swal.fire({
           icon: "error",
@@ -75,7 +75,9 @@ export const Navbar = () => {
 
   async function getFavData() {
     const res = await axios
-      .get(`http://localhost:5000/food/favProduct${favProduct}`)
+      .get(
+        `https://lakahdatarbackend.onrender.com//food/favProduct${favProduct}`
+      )
       .catch((error) => {
         console.log(error);
       });
