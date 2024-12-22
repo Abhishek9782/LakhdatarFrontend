@@ -76,7 +76,7 @@ export const Navbar = () => {
   async function getFavData() {
     const res = await axios
       .get(
-        `https://lakahdatarbackend.onrender.com//food/favProduct${favProduct}`
+        `https://lakahdatarbackend.onrender.com/food/favProduct${favProduct}`
       )
       .catch((error) => {
         console.log(error);
