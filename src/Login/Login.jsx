@@ -31,7 +31,7 @@ export const Login = () => {
     e.preventDefault();
     dispatch(loginStart());
     const res = await axios
-      .post("https://lakahdatarbackend.onrender.com/user-login", {
+      .post("http://localhost:5000/user-login", {
         user: user,
         cart: stateCart,
       })
@@ -45,7 +45,7 @@ export const Login = () => {
       });
 
     // If alll is good email and id both are good then run it
-    console.log(res.data);
+
     if (res.data) {
       Swal.fire({
         position: "top-center",
@@ -54,14 +54,14 @@ export const Login = () => {
         showConfirmButton: false,
         timer: 1500,
       }).then(() => {
-        dispatch(cartQuantityHandle(res.data.carts.length));
+        dispatch(cartQuantityHandle(res.data.carts?.length));
         dispatch(cartClear());
         dispatch(
-          loginSucess({ data: res.data, cartlength: res.data.carts.length })
+          loginSucess({ data: res.data, cartlength: res.data.carts?.length })
         );
         navigate("/");
 
-        // console.log(res.data);
+        console.log(res.data);
       });
     }
   };
