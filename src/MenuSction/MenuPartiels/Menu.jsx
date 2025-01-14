@@ -49,7 +49,9 @@ export const Menu = () => {
     //  After save foodType i add on that element class which one i clicked
     e.target.className = "foodtype active";
     const getFilteredProduct = async () => {
-      const res = await axios.get(`http://localhost:5000/food/type/${type}`);
+      const res = await axios.get(
+        `https://lakahdatarbackend.onrender.com/food/type/${type}`
+      );
       if (res.data) {
         setFood(res.data);
       }
