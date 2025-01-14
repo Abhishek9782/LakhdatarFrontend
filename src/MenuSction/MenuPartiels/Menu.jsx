@@ -14,18 +14,29 @@ export const Menu = () => {
   const dispatch = useDispatch();
 
   const [food, setFood] = useState([]);
+  const [loading, setloading] = useState(true);
+  const [pageNum, setPageNum] = useState(1);
+  const [nextPage, setnextPage] = useState(true);
 
+  //  fetch data according page
+  let limit = 15;
+  let skip = (pageNum - 1) * limit;
   //here we get all products from database
   const GetProducts = async () => {
-    const res = await axios.get("https://lakahdatarbackend.onrender.com/food");
+    const res = await axios.get(
+      `https://lakahdatarbackend.onrender.com/food/?limit=${limit}&skip=${skip}`
+    );
+    setFood(true);
     if (res.data) {
-      setFood(res.data);
+      setFood(res.data.allProducts);
+      setloading(false);
+      setnextPage(res.data.hasNextPage);
     }
   };
 
   useEffect(() => {
     GetProducts();
-  }, []);
+  }, [pageNum]);
 
   // Onclick evenet handle after some time
   function handleMenu(e, type) {
@@ -113,6 +124,16 @@ export const Menu = () => {
     }
   }
 
+  function handlePage(type) {
+    if (type == "Decrease") {
+      if (pageNum > 1) {
+        setPageNum(pageNum - 1);
+      }
+    } else if (type == "increament") {
+      setPageNum(pageNum + 1);
+    }
+  }
+
   return (
     <div>
       {/*  Here we pass background remove our background in menu bar */}
@@ -163,6 +184,14 @@ export const Menu = () => {
           </div>
           <h3 className="apperance">Apperance</h3>
           {/*  Items are here you can use here your data to add menu here  */}
+          {loading && (
+            <div className="empty-food-container">
+              <svg viewBox="25 25 50 50">
+                <circle r="20" cy="50" cx="50"></circle>
+              </svg>
+              <h2>Please Wait Food Is Loading ...</h2>
+            </div>
+          )}
           {food.length > 0 ? (
             <div className="menuitem">
               {food.map((food) => (
@@ -238,6 +267,41 @@ export const Menu = () => {
           )}
         </div>
       </div>
+      <nav
+        aria-label="Page navigation example"
+        style={{ display: "flex", justifyContent: "end", marginRight: "50px " }}
+      >
+        <ul class="pagination">
+          <li class="page-item" onClick={() => handlePage("Decrease")}>
+            <a class="page-link" href="#">
+              Previous
+            </a>
+          </li>
+          <li class="page-item">
+            <a class="page-link" href="#">
+              {pageNum}
+            </a>
+          </li>
+
+          {nextPage ? (
+            <li class="page-item">
+              <a
+                class="page-link"
+                href="#"
+                onClick={() => handlePage("increament")}
+              >
+                Next
+              </a>
+            </li>
+          ) : (
+            <li class="page-item">
+              <a class="page-link" href="#" disabled>
+                Next
+              </a>
+            </li>
+          )}
+        </ul>
+      </nav>
     </div>
   );
 };

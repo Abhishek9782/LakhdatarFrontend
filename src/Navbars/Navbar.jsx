@@ -79,7 +79,7 @@ export const Navbar = () => {
         `https://lakahdatarbackend.onrender.com/food/favProduct${favProduct}`
       )
       .catch((error) => {
-        console.log(error);
+        // console.log(error);
       });
 
     if (res.data) {

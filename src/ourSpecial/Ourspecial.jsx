@@ -230,7 +230,6 @@ export const Ourspecial = () => {
 
   // State
   const [allFood, setAllFood] = useState([]);
-  console.log(allFood);
 
   const FetchAllProduct = async () => {
     const res = await axios

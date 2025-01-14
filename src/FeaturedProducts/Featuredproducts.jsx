@@ -6,17 +6,21 @@ import { useDispatch, useSelector } from "react-redux";
 
 export const Featuredproducts = () => {
   const [FeatureProducts, setFeatureProducts] = useState([]);
+  const [loader, setloader] = useState(false);
   const carts = useSelector((state) => state.carts.carts);
   const user = useSelector((state) => state.user.user);
   const dispatch = useDispatch();
 
   const getFeatureData = async () => {
+    setloader(true);
     const res = await axios
       .get("https://lakahdatarbackend.onrender.com/food/featureProducts")
       .catch((error) => {
         console.log(error);
       });
+
     if (res.data) {
+      setloader(false);
       setFeatureProducts(res.data);
     }
   };
@@ -90,7 +94,12 @@ export const Featuredproducts = () => {
           <h3 className="fpHead">Featured Products </h3>
           <div className="fpcards">
             {FeatureProducts.map((data) => (
-              <div className="fpcard" data-aos="flip-up" key={data._id}>
+              <div
+                className="fpcard"
+                data-aos="flip-up"
+                key={data._id}
+                loading="Lazy"
+              >
                 <img src={data.src} alt="" />
                 <div className="fpdetails">
                   <div className="fptop">
@@ -117,6 +126,12 @@ export const Featuredproducts = () => {
                 </div>
               </div>
             ))}
+
+            {loader && (
+              <svg viewBox="25 25 50 50">
+                <circle r="20" cy="50" cx="50"></circle>
+              </svg>
+            )}
           </div>
         </div>
       </div>

@@ -465,8 +465,10 @@ export const Cart = () => {
   };
 
   const handleSubmit = (e) => {
+    e.stopPropagation();
     e.preventDefault();
     console.log(deliveryAddress);
+    SetaddClicked(!addclicked);
     alert("Form submitted successfully!");
   };
 
@@ -530,9 +532,13 @@ export const Cart = () => {
           ) : (
             <></>
           )}
-          <DeliveryAddress>
+          <DeliveryAddress
+            onClick={(e) => {
+              handleaddressField(e);
+            }}
+          >
             Delivery Address
-            <AddresIcon onClick={handleaddressField}>
+            <AddresIcon>
               <i className="fa-solid fa-location-dot"></i>
             </AddresIcon>
             <div className="form-container" id="AddressField">
