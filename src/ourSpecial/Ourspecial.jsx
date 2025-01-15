@@ -233,7 +233,7 @@ export const Ourspecial = () => {
 
   const FetchAllProduct = async () => {
     const res = await axios
-      .get("https://lakahdatarbackend.onrender.com/food")
+      .get("https://lakahdatarbackend.onrender.com/food/our-special")
       .catch((error) => {
         console.log(error);
       });
