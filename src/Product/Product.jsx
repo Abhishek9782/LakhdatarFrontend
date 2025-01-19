@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { styled } from "styled-components";
+import { axiosGet } from "../axios";
 
 //  Styled
 const ProductContainer = styled.div`
@@ -75,9 +76,7 @@ export const Product = () => {
   const [product, setProduct] = useState([]);
   console.log(product);
   const GetProduct = async () => {
-    const res = await axios.get(
-      `https://lakahdatarbackend.onrender.com/food/productopen/${productId}`
-    );
+    const res = await axiosGet(`food/productopen/${productId}`);
     if (res.data) {
       setProduct(res.data);
     }

@@ -3,6 +3,7 @@ import "./Register.css";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
+import { axiosPost } from "../axios";
 
 export const Register = () => {
   const navigate = useNavigate();
@@ -38,14 +39,12 @@ export const Register = () => {
   //  Create user on sumbit
   const createUser = async (e) => {
     e.preventDefault();
-    const res = await axios
-      .post("https://lakahdatarbackend.onrender.com/user-register", credential)
-      .catch((error) => {
-        document.getElementById("isMatch").innerText =
-          error.response.data.message;
-        document.getElementById("isMatch").style.color = "red";
-        document.getElementById("isMatch").style.display = "block";
-      });
+    const res = await axiosPost("user-register", credential).catch((error) => {
+      document.getElementById("isMatch").innerText =
+        error.response.data.message;
+      document.getElementById("isMatch").style.color = "red";
+      document.getElementById("isMatch").style.display = "block";
+    });
     if (res.data) {
       Swal.fire({
         title: "Account Create Sucessfully ",

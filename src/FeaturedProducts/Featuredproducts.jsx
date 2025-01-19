@@ -3,6 +3,7 @@ import "./FeaturedProducts.css";
 import axios from "axios";
 import { cartAdd, cartClear, cartQuantityHandle } from "../store/cartSlice";
 import { useDispatch, useSelector } from "react-redux";
+import { axiosGet, axiosPost } from "../axios";
 
 export const Featuredproducts = () => {
   const [FeatureProducts, setFeatureProducts] = useState([]);
@@ -13,11 +14,9 @@ export const Featuredproducts = () => {
 
   const getFeatureData = async () => {
     setloader(true);
-    const res = await axios
-      .get("https://lakahdatarbackend.onrender.com/food/featureProducts")
-      .catch((error) => {
-        console.log(error);
-      });
+    const res = await axiosGet("food/featureProducts").catch((error) => {
+      console.log(error);
+    });
 
     if (res.data) {
       setloader(false);
@@ -50,14 +49,11 @@ export const Featuredproducts = () => {
       if (carts !== null) {
         console.log("carts!==null");
         const addtocart = async () => {
-          const res = await axios
-            .post(
-              `https://lakahdatarbackend.onrender.com/user-cart-add/${user._id}`,
-              data
-            )
-            .catch((error) => {
+          const res = await axiosPost(`user-cart-add/${user._id}`, data).catch(
+            (error) => {
               console.log(error);
-            });
+            }
+          );
           if (res.data) {
             console.log(res.data);
             dispatch(cartClear(null));
@@ -68,14 +64,11 @@ export const Featuredproducts = () => {
       } else {
         const addtocart = async () => {
           console.log("carts==null");
-          const res = await axios
-            .post(
-              `https://lakahdatarbackend.onrender.com/user-cart-add/${user._id}`,
-              data
-            )
-            .catch((error) => {
+          const res = await axiosPost(`user-cart-add/${user._id}`, data).catch(
+            (error) => {
               console.log(error);
-            });
+            }
+          );
 
           if (res.data) {
             console.log("I have no localstorage ", res.data);

@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { Link, Navigate, useNavigate } from "react-router-dom";
+import { Await, Link, Navigate, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import "./cart.css";
 import axios from "axios";
 import { cartQuantityHandle } from "../store/cartSlice";
+import { axiosGet, axiosPost } from "../axios";
 //  This is our all styled Components of any component
 const CartBody = styled.div`
   width: 100%;
@@ -379,18 +380,11 @@ export const Cart = () => {
   //  For getting all carts by user id from databases
 
   const getCarts = async () => {
-    const res = await axios
-      .get(
-        `https://lakahdatarbackend.onrender.com/get-carts-by-user/${stateUser._id}`
-      )
-      .catch((error) => {
-        console.log(error);
-      });
-    if (res.data) {
-      setcart(res.data);
-      setCartValue(res.data.length);
-      setLoader(false);
-    }
+    const res = await axiosGet(`get-carts-by-user/${stateUser._id}`);
+
+    setcart(res.data);
+    setCartValue(res.data.length);
+    setLoader(false);
   };
 
   useEffect(() => {
@@ -401,13 +395,11 @@ export const Cart = () => {
 
   //  Here we handle cartquantity decrease or increase
   async function handleDecreaseqty(e, id) {
-    const res = await axios
-      .post(`https://lakahdatarbackend.onrender.com/cart/decreaseqty/${id}`, {
-        userId: stateUser._id,
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    const res = await axiosPost(`cart/decreaseqty/${id}`, {
+      userId: stateUser._id,
+    }).catch((error) => {
+      console.log(error);
+    });
     if (res.data) {
       setLoader(false);
       dispatch(cartQuantityHandle(-1));
@@ -417,13 +409,12 @@ export const Cart = () => {
   // Handle Increament cart Qauntity
 
   async function handleIncrement(e, id) {
-    const res = await axios
-      .post(`https://lakahdatarbackend.onrender.com/cart/increment/${id}`, {
-        userId: stateUser._id,
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    const res = await axiosPost(`cart/increment/${id}`, {
+      userId: stateUser._id,
+    }).catch((error) => {
+      console.log(error);
+    });
+    console.log(res.data, ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
     if (res.data) {
       setLoader(false);
       dispatch(cartQuantityHandle(1));

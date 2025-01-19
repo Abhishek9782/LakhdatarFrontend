@@ -2,7 +2,7 @@ import {
   BrowserRouter as Router,
   Routes,
   Route,
-  useNavigate,
+  useLocation,
 } from "react-router-dom"; //this is for using rounting & we can say in html anker tag
 import "./App.css";
 import { Menu } from "./MenuSction/MenuPartiels/Menu";
@@ -18,6 +18,7 @@ import { Ourspecial } from "./ourSpecial/Ourspecial";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import { Product } from "./Product/Product";
+import { PageNotFound } from "./PageNotFound/PageNotFound";
 
 function App() {
   //  animation by default setting i set it
@@ -25,7 +26,7 @@ function App() {
     offset: 300,
     delay: 200,
   });
-  // console.log(url);
+  //  Gete the Current Location
 
   return (
     <>
@@ -41,6 +42,7 @@ function App() {
           <Route path="/user-register" element={<Register />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/our-special" element={<Ourspecial />} />
+          <Route path="*" element={<PageNotFound />} />
         </Routes>
         <Footer />
       </Router>

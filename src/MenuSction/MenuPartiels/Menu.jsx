@@ -5,6 +5,7 @@ import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { cartClear, cartQuantityHandle } from "../../store/cartSlice";
 import { FavCheck } from "../../store/FavPSlice";
+import { axiosGet, axiosPost } from "../../axios";
 
 export const Menu = () => {
   const carts = useSelector((state) => state.carts.carts);
@@ -23,9 +24,7 @@ export const Menu = () => {
   let skip = (pageNum - 1) * limit;
   //here we get all products from database
   const GetProducts = async () => {
-    const res = await axios.get(
-      `https://lakahdatarbackend.onrender.com/food/?limit=${limit}&skip=${skip}`
-    );
+    const res = await axiosGet(`food/?limit=${limit}&skip=${skip}`);
     setFood(true);
     if (res.data) {
       setFood(res.data.allProducts);
@@ -49,9 +48,7 @@ export const Menu = () => {
     //  After save foodType i add on that element class which one i clicked
     e.target.className = "foodtype active";
     const getFilteredProduct = async () => {
-      const res = await axios.get(
-        `https://lakahdatarbackend.onrender.com/food/type/${type}`
-      );
+      const res = await axiosGet(`food/type/${type}`);
       if (res.data) {
         setFood(res.data);
       }
@@ -81,11 +78,11 @@ export const Menu = () => {
       if (carts !== null) {
         console.log("carts!==null");
         const addtocart = async () => {
-          const res = await axios
-            .post(`http://localhost:5000/user-cart-add/${user._id}`, data)
-            .catch((error) => {
+          const res = await axiosPost(`user-cart-add/${user._id}`, data).catch(
+            (error) => {
               console.log(error);
-            });
+            }
+          );
           if (res.data) {
             console.log(res.data);
             dispatch(cartClear(null));
@@ -96,11 +93,11 @@ export const Menu = () => {
       } else {
         const addtocart = async () => {
           console.log("carts==null");
-          const res = await axios
-            .post(`http://localhost:5000/user-cart-add/${user._id}`, data)
-            .catch((error) => {
+          const res = await axiosPost(`user-cart-add/${user._id}`, data).catch(
+            (error) => {
               console.log(error);
-            });
+            }
+          );
 
           if (res.data) {
             console.log("I have no localstorage ", res.data);

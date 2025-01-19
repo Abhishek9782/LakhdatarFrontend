@@ -6,6 +6,7 @@ import Swal from "sweetalert2";
 import { useDispatch, useSelector } from "react-redux";
 import { loginStart, loginSucess, loginFail } from "../store/userSlice";
 import { cartClear, cartQuantityHandle } from "../store/cartSlice";
+import { axiosPost } from "../axios";
 
 export const Login = () => {
   const stateCart = useSelector((state) => state.carts.carts);
@@ -30,19 +31,17 @@ export const Login = () => {
   const checkuser = async (e) => {
     e.preventDefault();
     dispatch(loginStart());
-    const res = await axios
-      .post("https://lakahdatarbackend.onrender.com/user-login", {
-        user: user,
-        cart: stateCart,
-      })
-      .catch((error) => {
-        Swal.fire({
-          icon: "error",
-          title: "Oops...",
-          text: `${error.response.data.message}`,
-        });
-        dispatch(loginFail());
+    const res = await axiosPost("user-login", {
+      user: user,
+      cart: stateCart,
+    }).catch((error) => {
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: `${error.response.data.message}`,
       });
+      dispatch(loginFail());
+    });
 
     // If alll is good email and id both are good then run it
 

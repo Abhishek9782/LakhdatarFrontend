@@ -7,6 +7,7 @@ import { cartQuantityHandle } from "../store/cartSlice";
 import { useDispatch } from "react-redux";
 import Swal from "sweetalert2";
 import axios from "axios";
+import { axiosGet, axiosPost } from "../axios";
 
 export const Navbar = () => {
   const dispatch = useDispatch();
@@ -27,16 +28,14 @@ export const Navbar = () => {
   const handleLogout = async (e) => {
     document.getElementById("menuSlider").style.display = "none";
     e.preventDefault();
-    const res = await axios
-      .post(`https://lakahdatarbackend.onrender.com/user-cart-lose/${user._id}`)
-      .catch((error) => {
-        Swal.fire({
-          icon: "error",
-          title: "Oops...",
-          text: `${error.response.data.message}`,
-        });
-        // console.log(error.response.data.message);
+    const res = await axiosPost(`user-cart-lose/${user._id}`).catch((error) => {
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: `${error.response.data.message}`,
       });
+      // console.log(error.response.data.message);
+    });
     // console.log(res.data);
 
     if (res.data) {
@@ -74,13 +73,11 @@ export const Navbar = () => {
   //  Getting all Faviorate products data from data base
 
   async function getFavData() {
-    const res = await axios
-      .get(
-        `https://lakahdatarbackend.onrender.com/food/favProduct${favProduct}`
-      )
-      .catch((error) => {
+    const res = await axiosGet(`food/favProduct${favProduct}`).catch(
+      (error) => {
         // console.log(error);
-      });
+      }
+    );
 
     if (res.data) {
       setallFavProducts(res.data);
