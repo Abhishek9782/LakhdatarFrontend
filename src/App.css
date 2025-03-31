@@ -1,0 +1,18 @@
+svg {
+  width: 3.25em;
+  transform-origin: center;
+  animation: none !important;
+  color: red !important;
+}
+
+.Toastify__close-button > svg {
+  fill: #999 !important;
+  font-size: 43px;
+  height: 39px;
+  width: 17px;
+  color: red !important;
+}
+.Toastify__close-button {
+  opacity: 1 !important; /* ✅ Always visible */
+  visibility: visible !important;
+}

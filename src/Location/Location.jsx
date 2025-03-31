@@ -1,7 +1,7 @@
 import React from "react";
 import "./Location.css";
 
-export const Location = () => {
+const Location = () => {
   return (
     <>
       <div className="ourLocation">
@@ -48,3 +48,5 @@ export const Location = () => {
     </>
   );
 };
+
+export default Location;

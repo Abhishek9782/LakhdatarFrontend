@@ -1,15 +1,13 @@
 import React, { useState } from "react";
 import "./Login.css";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
-import Swal from "sweetalert2";
 import { useDispatch, useSelector } from "react-redux";
 import { loginStart, loginSucess, loginFail } from "../store/userSlice";
 import { cartClear, cartQuantityHandle } from "../store/cartSlice";
 import { axiosPost } from "../axios";
-
-export const Login = () => {
-  const stateCart = useSelector((state) => state.carts.carts);
+import { toast } from "react-toastify";
+import { userEndPoints } from "../utils/baseUrl";
+const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -19,7 +17,6 @@ export const Login = () => {
     email: undefined,
     password: undefined,
   });
-
   // Here is our functions ------------------------
 
   //  For catch value input and create a user state
@@ -31,37 +28,17 @@ export const Login = () => {
   const checkuser = async (e) => {
     e.preventDefault();
     dispatch(loginStart());
-    const res = await axiosPost("user-login", {
-      user: user,
-      cart: stateCart,
-    }).catch((error) => {
-      Swal.fire({
-        icon: "error",
-        title: "Oops...",
-        text: `${error.response.data.message}`,
-      });
-      dispatch(loginFail());
-    });
+    const res = await axiosPost(userEndPoints.login, user);
 
+    if (res.error && res.error.status == 0) {
+      toast.error(res.error.message);
+    }
     // If alll is good email and id both are good then run it
 
     if (res.data) {
-      Swal.fire({
-        position: "top-center",
-        icon: "success",
-        title: "Login Successfully...",
-        showConfirmButton: false,
-        timer: 1500,
-      }).then(() => {
-        dispatch(cartQuantityHandle(res.data.carts?.length));
-        dispatch(cartClear());
-        dispatch(
-          loginSucess({ data: res.data, cartlength: res.data.carts?.length })
-        );
-        navigate("/");
-
-        console.log(res.data);
-      });
+      toast.success("Login SuccessFully.");
+      dispatch(loginSucess({ data: res.data }));
+      navigate("/");
     }
   };
 
@@ -118,3 +95,4 @@ export const Login = () => {
     </>
   );
 };
+export default Login;

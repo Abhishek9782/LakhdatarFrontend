@@ -6,7 +6,7 @@ const initialState = {
   carts: JSON.parse(window.localStorage.getItem("carts")) || null,
   loading: false,
   error: null,
-  qty: JSON.parse(window.localStorage.getItem("cartQuantity")) || 0,
+  // qty: JSON.parse(window.localStorage.getItem("cartQuantity")) || 0,
 };
 
 export const cartSlice = createSlice({

@@ -110,7 +110,7 @@
 
 /* >>>>>>>>>>>>>>>>>>Loader css is here >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>*/
 /* From Uiverse.io by barisdogansutcu */
-svg {
+.svg-loader {
   width: 3.25em;
   transform-origin: center;
   animation: rotate4 2s linear infinite;
@@ -171,6 +171,7 @@ circle {
   .fpcards {
     display: flex !important;
     flex-direction: column !important;
+    position: relative;
   }
   .fpcard {
     height: max-content !important;
@@ -195,6 +196,13 @@ circle {
   }
   .feature-rating {
     bottom: 14vh !important;
+  }
+  .svg-loader {
+    width: 3.25em;
+    transform-origin: center;
+    animation: rotate4 2s linear infinite;
+    position: absolute;
+    margin-left: 32%;
   }
 }
 @media screen and (min-width: 501px) and (max-width: 767px) {
@@ -275,6 +283,16 @@ circle {
     position: absolute;
     bottom: 43%;
     width: 40%;
+  }
+  .fpcards {
+    margin-bottom: 25px;
+  }
+  .svg-loader {
+    width: 3.25em;
+    transform-origin: center;
+    animation: rotate4 2s linear infinite;
+    position: absolute;
+    margin-left: 32%;
   }
 }
 @media screen and (min-width: 768px) and (max-width: 1023px) {

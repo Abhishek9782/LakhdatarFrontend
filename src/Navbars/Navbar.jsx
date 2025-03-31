@@ -1,106 +1,101 @@
-import React, { useEffect, useState } from "react";
-import "./Navbar.css";
+import React, {
+  useEffect,
+  useState,
+  useCallback,
+  useMemo,
+  useRef,
+} from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../store/userSlice";
-import { cartQuantityHandle } from "../store/cartSlice";
-import { useDispatch } from "react-redux";
+import { axiosGet } from "../axios";
+import { userEndPoints } from "../utils/baseUrl";
+import { useJwt } from "react-jwt";
+import "./Navbar.css";
 import Swal from "sweetalert2";
-import axios from "axios";
-import { axiosGet, axiosPost } from "../axios";
 
-export const Navbar = () => {
+const Navbar = () => {
+  const profileRef = useRef(null);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
-  //  State Managaing here
   const user = useSelector((state) => state.user.user);
-  const cartsQty = useSelector((state) => state.carts.carts);
-  const userCart = useSelector((state) => state.carts);
   const favProduct = useSelector((state) => state.favprod.favProduct);
 
-  // console.log(userCart, "cart Quantity");
-  const CartValue = !user ? cartsQty?.length || 0 : userCart?.qty || 0;
+  // Extract userId directly
+  const { decodedToken } = useJwt(user);
+  const userId = decodedToken?.id || null;
 
-  const [profilehandle, setprofilehandle] = useState("none");
-  const [allFavProduct, setallFavProducts] = useState([]);
-  //Logout Handle here by using this
-  const handleLogout = async (e) => {
-    document.getElementById("menuSlider").style.display = "none";
-    e.preventDefault();
-    const res = await axiosPost(`user-cart-lose/${user._id}`).catch((error) => {
-      Swal.fire({
-        icon: "error",
-        title: "Oops...",
-        text: `${error.response.data.message}`,
-      });
-      // console.log(error.response.data.message);
-    });
-    // console.log(res.data);
+  const [profileHandle, setProfileHandle] = useState(false);
+  const [allFavProduct, setAllFavProducts] = useState([]);
+  const [currentUser, setCurrentUser] = useState({});
 
-    if (res.data) {
+  // Fetch favorite products
+  const getFavData = useCallback(async () => {
+    if (!userId) return;
+    try {
+      const res = await axiosGet(`food/favProduct/${userId}`);
+      if (res?.data) setAllFavProducts(res.data);
+    } catch (error) {
+      console.error("Error fetching favorite products:", error);
+    }
+  }, [userId]);
+
+  // Fetch user profile
+  const getProfile = useCallback(async () => {
+    if (!userId) return;
+    try {
+      const res = await axiosGet(`${userEndPoints.getProfile}/${userId}`);
+      if (res.status === 1) setCurrentUser(res.data);
+    } catch (error) {
+      console.error("Error fetching profile:", error);
+    }
+  }, [userId]);
+
+  // Handle logout
+  const handleLogout = useCallback(
+    (e) => {
+      e.preventDefault();
+      dispatch(logout());
+      setProfileHandle(false);
       Swal.fire({
-        position: "top-center",
+        title: "Logout SuccessFully.",
         icon: "success",
-        title: "Logout SuccessFully...",
-        showConfirmButon: false,
-        timer: 1500,
+        draggable: true,
       }).then(() => {
-        setprofilehandle("");
-        dispatch(logout());
-        navigate("/user-login");
+        navigate(userEndPoints.login);
       });
-    }
-  };
+    },
+    [dispatch, navigate]
+  );
 
-  //  Function here to write handle
-  //  this all functions for mobile device
+  // Handle favorite section toggle
+  const handleFavProduct = useCallback(
+    (e) => {
+      e.preventDefault();
+      setProfileHandle("favorite");
+      getFavData();
+    },
+    [getFavData]
+  );
 
-  function handlemenubutton() {
-    document.getElementById("menuSlider").style.display = "block";
-    document.body.style.overflow = "hidden";
-  }
-  function handlexmarkbutton() {
-    document.getElementById("menuSlider").style.display = "none";
-    document.body.style.overflow = "scroll";
-  }
+  // Memoized cart count
+  const cartCount = useMemo(() => favProduct.length, [favProduct]);
 
-  function handleMenubaronrender() {
-    document.getElementById("menuSlider").style.display = "none";
-    document.body.style.overflow = "scroll";
-  }
-
-  //  Getting all Faviorate products data from data base
-
-  async function getFavData() {
-    const res = await axiosGet(`food/favProduct${favProduct}`).catch(
-      (error) => {
-        // console.log(error);
-      }
-    );
-
-    if (res.data) {
-      setallFavProducts(res.data);
-    }
-  }
-
+  // Fetch user profile and favorite data on mount or userId change
   useEffect(() => {
+    getProfile();
     getFavData();
-  }, []);
+  }, [getProfile, getFavData]);
+
   return (
     <>
-      <div className="navbar" id="navbar">
+      <div className="navbar">
         <div className="logoname">
           <span>
             Lakhdatar Restaurant
             <i
               className="fa-solid fa-utensils"
-              style={{
-                color: "black ",
-                position: "relative",
-                transform: "rotateZ(270deg)",
-                marginLeft: "5px",
-              }}
+              style={{ color: "black", marginLeft: "5px" }}
             ></i>
           </span>
         </div>
@@ -112,202 +107,173 @@ export const Navbar = () => {
             <li>
               <Link to="/menu">Menu</Link>
             </li>
-
             <li>
               <Link to="/our-special">Our Special</Link>
             </li>
             <li>
               <Link to="/help">Help</Link>
             </li>
-
-            {user == null ? (
+            {user ? (
+              <li>
+                <Link onClick={() => setProfileHandle(true)}>Profile</Link>
+              </li>
+            ) : (
               <li>
                 <Link to="/user-login">Login</Link>
               </li>
-            ) : (
-              <>
-                <li>
-                  <Link
-                    onClick={() => {
-                      setprofilehandle("profile");
-                    }}
-                  >
-                    Profile
-                  </Link>
-                </li>
-              </>
             )}
-
             <li>
               <Link to="/cart">
-                Cart
-                <i
-                  style={{ color: "black" }}
-                  className="fa-solid fa-cart-shopping"
-                ></i>
-                <span className="cartCount">{CartValue}</span>
+                Cart <i className="fa-solid fa-cart-shopping"></i>
+                <span className="cartCount">{cartCount}</span>
               </Link>
             </li>
           </ul>
         </div>
-        <span className="menuIcon" id="menuicon" onClick={handlemenubutton}>
+        <span
+          className="menuIcon"
+          onClick={() => document.body.classList.add("menu-open")}
+        >
           <i className="fa-solid fa-bars"></i>
         </span>
       </div>
-      <div className="menuSlider" id="menuSlider">
-        <span className="xmark" id="xmark" onClick={handlexmarkbutton}>
-          <i class="fa-solid fa-xmark"></i>
-        </span>
 
-        {/* This onnclick slider  */}
+      {/* Mobile Menu */}
+      <div className="menuSlider">
+        <span
+          className="xmark"
+          onClick={() => document.body.classList.remove("menu-open")}
+        >
+          <i className="fa-solid fa-xmark"></i>
+        </span>
         <div className="menubarforSlider">
           <ul>
             <li>
-              <Link to="/" onClick={handleMenubaronrender}>
+              <Link
+                to="/"
+                onClick={() => document.body.classList.remove("menu-open")}
+              >
                 Home
               </Link>
             </li>
             <li>
-              <Link to="/menu" onClick={handleMenubaronrender}>
+              <Link
+                to="/menu"
+                onClick={() => document.body.classList.remove("menu-open")}
+              >
                 Menu
               </Link>
             </li>
-
             <li>
-              <Link to="/our-special" onClick={handleMenubaronrender}>
+              <Link
+                to="/our-special"
+                onClick={() => document.body.classList.remove("menu-open")}
+              >
                 Our Special
               </Link>
             </li>
             <li>
-              <Link to="/help" onClick={handleMenubaronrender}>
+              <Link
+                to="/help"
+                onClick={() => document.body.classList.remove("menu-open")}
+              >
                 Help
               </Link>
             </li>
-
-            {user == null ? (
-              <li>
-                <Link to="/user-login" onClick={handleMenubaronrender}>
-                  Login
-                </Link>
-              </li>
-            ) : (
+            {user ? (
               <>
                 <li>
-                  <Link to="" onClick={handleMenubaronrender}>
+                  <Link to="#" onClick={() => setProfileHandle(true)}>
                     Profile
                   </Link>
                 </li>
                 <li>
-                  <Link to="" onClick={handleLogout}>
-                    logout
+                  <Link to="#" onClick={handleLogout}>
+                    Logout
                   </Link>
                 </li>
               </>
+            ) : (
+              <li>
+                <Link to="/user-login">Login</Link>
+              </li>
             )}
-
             <li>
-              <Link to="/cart" onClick={handleMenubaronrender}>
-                Cart ({CartValue})
-              </Link>
+              <Link to="/cart">Cart ({cartCount})</Link>
             </li>
           </ul>
         </div>
       </div>
-      {profilehandle == "profile" ? (
-        <div className="profilebody">
-          <div className="xmark">
-            <i
-              class="fa-solid fa-xmark"
-              onClick={() => {
-                setprofilehandle("");
-              }}
-            ></i>
-          </div>
-          <div className="prilfilelist">
-            <div className="logo">
-              <img
-                src="https://www.shutterstock.com/image-vector/user-profile-icon-vector-avatar-600nw-2247726673.jpg"
-                alt=""
-              />
-            </div>
-            <ul>
-              <li className="username">
-                <b>Hey ! {user?.fullname}</b>
-              </li>
-              <li>
-                <i class="fa-solid fa-bag-shopping"></i> Your Orders
-              </li>
-              <li
-                onClick={(e) => {
-                  setprofilehandle("favorite");
-                }}
-              >
-                <i class="fa-regular fa-heart"></i> Favorite
-              </li>
-              <li>
-                <i class="fa fa-ticket" aria-hidden="true"></i> Your Ticket
-              </li>
-              <li>
-                <i class="fa-regular fa-handshake"></i>Help
-              </li>
-              <li>
-                <i class="fa-solid fa-cart-shopping"></i>
-                Cart
-              </li>
 
-              <li className="logoutbtn">
-                <Link
-                  to=""
-                  onClick={(e) => {
-                    handleLogout(e);
-                  }}
-                >
-                  <button className="LBtn"> Logout</button>
-                </Link>
-              </li>
-            </ul>
+      {/* Profile Popup */}
+      {profileHandle && (
+        <div className="profilebody" ref={profileRef}>
+          <div className="xmark" onClick={() => setProfileHandle(false)}>
+            <i className="fa-solid fa-xmark"></i>
           </div>
+          {profileHandle === "favorite" ? (
+            <div className="favioratedetails">
+              <span className="favoritelogo">Lakhdatar Restaurant</span>
+              <h3>Your Favorite Products</h3>
+              {allFavProduct.length > 0 ? (
+                allFavProduct.map((data) => (
+                  <div className="favproductList" key={data._id}>
+                    <ul>
+                      <li className="img">
+                        <img src={data.src} alt={data.name} />
+                      </li>
+                      <li style={{ flex: "2" }}>{data.name}</li>
+                      <li className="deleteicon">
+                        <i
+                          className="fa-solid fa-trash"
+                          title="Remove from favorite"
+                        ></i>
+                      </li>
+                    </ul>
+                  </div>
+                ))
+              ) : (
+                <h2 className="EmptyFav">No Favorite products available</h2>
+              )}
+            </div>
+          ) : (
+            <div className="prilfilelist">
+              <div className="logo">
+                <img
+                  src={currentUser?.img || "https://via.placeholder.com/150"}
+                  alt="Profile"
+                  loading="lazy"
+                />
+              </div>
+              <ul>
+                <li className="username">
+                  <b>Hey! {currentUser.fullname}</b>
+                </li>
+                <li>
+                  <i className="fa-solid fa-bag-shopping"></i> Your Orders
+                </li>
+                <li onClick={handleFavProduct}>
+                  <i className="fa-regular fa-heart"></i> Favorite
+                </li>
+                <li>
+                  <i className="fa fa-ticket"></i> Your Ticket
+                </li>
+                <li>
+                  <i className="fa-regular fa-handshake"></i> Help
+                </li>
+                <li>
+                  <i className="fa-solid fa-cart-shopping"></i> Cart
+                </li>
+                <li onClick={handleLogout}>
+                  <i className="fa-solid fa-address-card"></i> Logout
+                </li>
+              </ul>
+            </div>
+          )}
         </div>
-      ) : profilehandle == "favorite" ? (
-        <div className="profilebody">
-          <div className="xmark">
-            <i
-              class="fa-solid fa-xmark"
-              onClick={() => {
-                setprofilehandle("");
-              }}
-            ></i>
-          </div>
-          <div className="favioratedetails">
-            <span className="favoritelogo">Lakhdatar Restaurant</span>
-            <h3>Your Faviorate Products</h3>
-            {allFavProduct.length > 0 ? (
-              allFavProduct?.map((data) => (
-                <div className="favproductList" key={data._id}>
-                  <ul>
-                    <li className="img">
-                      <img src={data.src} alt="" />
-                    </li>
-                    <li style={{ flex: "2" }}>{data.name}</li>
-                    <li className="deleteicon">
-                      <i
-                        title="remove from faviorate "
-                        class="fa-solid fa-trash"
-                      ></i>
-                    </li>
-                  </ul>
-                </div>
-              ))
-            ) : (
-              <>
-                <h2 className="EmptyFav">No Favioarate product available </h2>
-              </>
-            )}
-          </div>
-        </div>
-      ) : (
-        <></>
       )}
     </>
   );
 };
+
+export default React.memo(Navbar);

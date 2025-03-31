@@ -1,11 +1,11 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useState } from "react";
 import "./Register.css";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import { axiosPost } from "../axios";
+import OtpVerification from "../OtpVerification/Otpverification";
 
-export const Register = () => {
+const Register = () => {
   const navigate = useNavigate();
 
   const [credential, setCredential] = useState({
@@ -117,7 +117,10 @@ export const Register = () => {
             </button>
           </form>
         </div>
+        <OtpVerification />
       </div>
     </>
   );
 };
+
+export default Register;

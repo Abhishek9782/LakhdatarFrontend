@@ -37,7 +37,6 @@
   width: 100%;
   display: inline;
   padding: 15px 30px;
-  border-radius: 10px;
 }
 .menuslider > .menubar > span {
   margin: 0px 40px;
@@ -66,6 +65,7 @@
   /* grid-template-rows: 1fr; */
   row-gap: 15px;
   column-gap: 15px;
+  margin-top: 50px;
 }
 .apperance {
   font-size: 20px;
@@ -186,11 +186,17 @@
   transition: all ease 0.5s;
 }
 .price > .buttons > .quantity > span:hover {
-  background-color: white;
+  background-color: green;
   color: black;
+  cursor: pointer;
   border-radius: 5px;
 }
-
+.qty_active {
+  border: 1px solid green;
+  padding: 0px;
+  background-color: green;
+  color: white;
+}
 .bgchange {
   background-color: white;
   color: black;
@@ -306,7 +312,7 @@ circle {
     width: 90%;
     align-self: center;
     padding: 10px 10px;
-    /* margin-top: 0px  */
+    margin-bottom: 100px;
   }
   .menuslider > .menubar > span {
     margin: 0px;

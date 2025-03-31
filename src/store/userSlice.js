@@ -1,9 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
-import axios from "axios";
 
 //  THis is opur intial state
 const initialState = {
-  user: JSON.parse(window.localStorage.getItem("user")) || null,
+  user: window.localStorage.getItem("user") || null,
   loading: false,
   error: null,
 };
@@ -21,10 +20,6 @@ export const counterSlice = createSlice({
       state.error = false;
       state.user = action.payload;
       window.localStorage.setItem("user", JSON.stringify(action.payload.data));
-      window.localStorage.setItem(
-        "cartQuantity",
-        JSON.stringify(action.payload.cartlength)
-      );
     },
     loginFail: (state) => {
       state.loading = false;

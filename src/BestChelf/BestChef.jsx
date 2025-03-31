@@ -1,6 +1,6 @@
 import React from "react";
 import "./BestChef.css";
-export const BestChef = () => {
+const BestChef = () => {
   return (
     <div className="ChefContaner">
       <h3>
@@ -71,3 +71,5 @@ export const BestChef = () => {
     </div>
   );
 };
+
+export default BestChef;

@@ -1,6 +1,6 @@
 import React from "react";
 import "./Navbarbg.css";
-export const Navbarbg = () => {
+const Navbarbg = () => {
   return (
     <div className="bgImgwtext">
       <img
@@ -18,3 +18,5 @@ export const Navbarbg = () => {
     </div>
   );
 };
+
+export default Navbarbg;

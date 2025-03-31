@@ -1,10 +1,8 @@
 import React, { useState, useRef } from "react";
 import "./Help.css";
-import { Navbar } from "../Navbars/Navbar";
-import { Footer } from "../Footer/Footer";
 import { Link } from "react-router-dom";
 
-export const Help = () => {
+const Help = () => {
   const [showHide, setShowHide] = useState("hide");
   const [secondshowHide, setsecondShowHide] = useState("hide");
   function handleClick(e, value) {
@@ -91,3 +89,4 @@ export const Help = () => {
     </>
   );
 };
+export default Help;

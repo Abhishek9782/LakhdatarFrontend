@@ -1,7 +1,7 @@
 import React from "react";
 import "./Offers.css";
 
-export const Offers = () => {
+const Offers = () => {
   return (
     <div className="offersSection">
       <div className="container">
@@ -125,3 +125,5 @@ export const Offers = () => {
     </div>
   );
 };
+
+export default Offers;

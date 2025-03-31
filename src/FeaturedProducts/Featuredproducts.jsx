@@ -1,84 +1,58 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import "./FeaturedProducts.css";
-import axios from "axios";
 import { cartAdd, cartClear, cartQuantityHandle } from "../store/cartSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { axiosGet, axiosPost } from "../axios";
+import { axiosGet, axiosPost, imageUrl } from "../axios";
 
-export const Featuredproducts = () => {
+const Featuredproducts = () => {
   const [FeatureProducts, setFeatureProducts] = useState([]);
   const [loader, setloader] = useState(false);
   const carts = useSelector((state) => state.carts.carts);
   const user = useSelector((state) => state.user.user);
   const dispatch = useDispatch();
 
-  const getFeatureData = async () => {
+  const getFeatureData = useCallback(async () => {
     setloader(true);
-    const res = await axiosGet("food/featureProducts").catch((error) => {
-      console.log(error);
-    });
 
-    if (res.data) {
+    const res = await axiosGet("food/featureProducts").catch((error) => {});
+
+    if (res.status == 1) {
       setloader(false);
       setFeatureProducts(res.data);
     }
-  };
+  }, []);
   //  Use effects to get data
 
   useEffect(() => {
     getFeatureData();
-  }, []);
+  }, [getFeatureData]);
 
-  const handleCart = (e, data) => {
-    // console.log(data);
-    e.preventDefault();
-    // this situatuon user in not login
-    if (user === null) {
-      if (carts === null) {
-        const createarrayforcart = [data];
-        dispatch(cartAdd(createarrayforcart));
-        dispatch(cartQuantityHandle(1));
+  const handleCart = useCallback(
+    (e, data) => {
+      e.preventDefault();
+      if (user === null) {
+        if (carts === null) {
+          dispatch(cartAdd([data]));
+          dispatch(cartQuantityHandle(1));
+        } else {
+          dispatch(cartAdd([...carts, data]));
+          dispatch(cartQuantityHandle(1));
+        }
       } else {
-        // console.log(carts);
-        const addcart = [...carts, data];
-        console.log(addcart);
-        dispatch(cartAdd(addcart));
-        dispatch(cartQuantityHandle(1));
-      }
-    } else {
-      if (carts !== null) {
-        console.log("carts!==null");
-        const addtocart = async () => {
-          const res = await axiosPost(`user-cart-add/${user._id}`, data).catch(
-            (error) => {
-              console.log(error);
-            }
-          );
-          if (res.data) {
-            console.log(res.data);
+        const addToCart = async () => {
+          const res = useCallback(() => {
+            axiosPost(`user-cart-add/${user._id}`, data);
+          }, []);
+          if (res?.data) {
             dispatch(cartClear(null));
             dispatch(cartQuantityHandle(1));
           }
         };
-        addtocart();
-      } else {
-        const addtocart = async () => {
-          console.log("carts==null");
-          const res = await axiosPost(`user-cart-add/${user._id}`, data).catch(
-            (error) => {
-              console.log(error);
-            }
-          );
-
-          if (res.data) {
-            console.log("I have no localstorage ", res.data);
-            dispatch(cartQuantityHandle(1));
-          }
-        };
-        addtocart();
+        addToCart();
       }
-    }
-  };
+    },
+    [user, carts, dispatch]
+  );
 
   return (
     <>
@@ -93,7 +67,7 @@ export const Featuredproducts = () => {
                 key={data._id}
                 loading="Lazy"
               >
-                <img src={data.src} alt="" />
+                <img src={`${imageUrl}` + data.src} alt="" loading="lazy" />
                 <div className="fpdetails">
                   <div className="fptop">
                     <h3>{data.name} </h3>
@@ -101,6 +75,7 @@ export const Featuredproducts = () => {
                       className="fptopimage"
                       src="https://i.pinimg.com/originals/e4/1f/f3/e41ff3b10a26b097602560180fb91a62.png"
                       alt=""
+                      loading="lazy"
                     />
                   </div>
                   <span className="feature-rating">
@@ -114,14 +89,14 @@ export const Featuredproducts = () => {
                     >
                       Add To cart
                     </button>
-                    <span>{data.price}₹</span>
+                    <span>{data.halfprice}₹</span>
                   </div>
                 </div>
               </div>
             ))}
 
             {loader && (
-              <svg viewBox="25 25 50 50">
+              <svg className="svg-loader" viewBox="25 25 50 50">
                 <circle r="20" cy="50" cx="50"></circle>
               </svg>
             )}
@@ -131,3 +106,5 @@ export const Featuredproducts = () => {
     </>
   );
 };
+
+export default Featuredproducts;

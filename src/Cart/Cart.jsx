@@ -356,7 +356,7 @@ const RightEmptyImg = styled.img`
 
 //  Here is our function
 
-export const Cart = () => {
+const Cart = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const stateUser = useSelector((state) => state.user.user);
@@ -378,7 +378,6 @@ export const Cart = () => {
   });
 
   //  For getting all carts by user id from databases
-
   const getCarts = async () => {
     const res = await axiosGet(`get-carts-by-user/${stateUser._id}`);
 
@@ -798,3 +797,5 @@ export const Cart = () => {
     </CartBody>
   );
 };
+
+export default Cart;

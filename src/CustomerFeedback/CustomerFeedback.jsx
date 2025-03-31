@@ -1,6 +1,6 @@
 import React from "react";
 import "./CustomerFeedback.css";
-export const CustomerFeedback = () => {
+const CustomerFeedback = () => {
   return (
     <div className="CmFeedback">
       <h3>Customer Feedback</h3>
@@ -93,3 +93,4 @@ export const CustomerFeedback = () => {
     </div>
   );
 };
+export default CustomerFeedback;

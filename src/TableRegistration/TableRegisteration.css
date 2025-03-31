@@ -56,6 +56,18 @@
   margin: 15px;
   color: black;
 }
+.TrForm select {
+  padding: 8px 20px;
+  width: 40%;
+  margin: 15px;
+  color: black;
+  appearance: none;
+}
+.TrForm > select > option {
+  background-color: white;
+  color: black;
+}
+
 .trSumbitButton {
   width: 85%;
   margin: 15px;
@@ -68,6 +80,17 @@
 }
 .trSumbitButton:hover {
   opacity: 1;
+}
+/*  For remove up down sign from input  */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type="number"] {
+  -moz-appearance: textfield;
 }
 @media screen and (min-width: 300px) and (max-width: 500px) {
   .Trhead {

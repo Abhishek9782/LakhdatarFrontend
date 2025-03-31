@@ -1,6 +1,6 @@
 import React from "react";
 import "./RestaurantMenu.css";
-export const RestaurantMenu = () => {
+const RestaurantMenu = () => {
   return (
     <div className="Rm_parent">
       <div className="head_part">
@@ -72,3 +72,5 @@ export const RestaurantMenu = () => {
     </div>
   );
 };
+
+export default RestaurantMenu;

@@ -1,0 +1,364 @@
+/* Global Resets */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+}
+
+.home-container {
+  display: flex;
+  flex-direction: row;
+  min-height: 100vh;
+}
+
+.rightdata {
+  height: 100vh;
+  width: 80%;
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  overflow: hidden;
+}
+
+.top-bar {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding: 10px;
+}
+
+.top-bar input {
+  padding: 8px 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  color: black;
+  flex: 1;
+}
+
+.top-bar input::placeholder {
+  color: #aaa;
+}
+
+.search-btn,
+.add-new-product {
+  padding: 7px 20px;
+  border-radius: 5px;
+  border: 1px solid green;
+  background-color: transparent;
+  color: black;
+  transition: all 0.3s ease;
+  margin: 0px 10px;
+}
+
+.search-btn:hover,
+.add-new-product:hover {
+  background-color: green;
+  color: white;
+  border: none;
+}
+
+.add-new-product {
+  position: relative;
+  left: auto;
+  right: 0;
+}
+
+/* Table Styling */
+.users-table-container {
+  position: relative;
+  top: 10px;
+  width: 100%;
+  height: 78%;
+  overflow-y: auto;
+  padding: 10px;
+}
+
+.table-wrapper {
+  width: 100%;
+  overflow: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+/* Column Specific Styling */
+.product-name {
+  width: 10%;
+}
+
+/* Table headers and cells */
+th,
+td {
+  padding: 10px;
+  text-align: center;
+  vertical-align: middle;
+  border: 1px solid #ddd;
+  font-size: 14px;
+  border: none;
+  box-shadow: none;
+  cursor: pointer;
+}
+
+th {
+  background-color: #f4f4f4;
+  color: black;
+}
+
+td {
+  color: black;
+}
+
+tbody {
+  margin-top: 20px;
+}
+
+th,
+td:hover {
+  background-color: transparent;
+}
+
+.table > :not(caption) > * > * {
+  padding: 0.5rem 0.5rem;
+  background-color: var(--bs-table-bg);
+  border-bottom-width: 1px;
+  box-shadow: none !important;
+}
+
+td img {
+  max-width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
+/* Table rows should not use flex */
+tr {
+  display: table-row;
+}
+
+/* Styling for image column */
+.img-parent {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+}
+
+.produt-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+/* .produt-image:hover {
+  transform: scale(1.1);
+  border: none;
+  outline: none;
+} */
+
+/* Truncate long text in cells */
+.limit-length {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 150px;
+  display: inline-block;
+}
+
+/* Buttons Styling */
+.delete-btn,
+.update-btn {
+  padding: 10px 20px;
+  border-radius: 5px;
+  border: 2px solid;
+  color: black;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.delete-btn {
+  border-color: red;
+}
+
+.delete-btn:hover {
+  background-color: red;
+  color: white;
+}
+
+.update-btn {
+  border-color: green;
+}
+
+.update-btn:hover {
+  background-color: green;
+  color: white;
+}
+
+/*  pagination css */
+.pagination {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+}
+.pagination > span {
+  color: black;
+}
+.pagination-buttons {
+  display: flex;
+}
+
+.pagination-buttons button {
+  padding: 5px 10px;
+  margin: 0 5px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  background-color: transparent;
+  color: black;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.pagination-buttons button:hover {
+  background-color: green;
+  color: white;
+}
+
+.pagination-buttons button.active {
+  background-color: green;
+  color: white;
+  font-weight: bold;
+}
+
+.pagination-buttons button:disabled {
+  cursor: not-allowed;
+  background-color: #ddd;
+}
+
+.pagination span {
+  font-size: 14px;
+}
+
+/*  Pagination page size  */
+.pagination-head {
+  align-self: center;
+  justify-self: center;
+  color: black;
+  margin: 0px 10px;
+}
+.pagination-pagesize {
+  color: black;
+  width: 60px;
+  background-color: transparent;
+  outline: none;
+  border: 1px solid black;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.pagination-pagesize > option {
+  background-color: white;
+  color: black;
+  text-align: center;
+}
+/* no-product-container */
+.no-product-container {
+  width: 75vw;
+  height: 80vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.no-products {
+  color: black;
+  font-family: sans-serif;
+  font-weight: bold;
+}
+
+/* Media Query for responsiveness */
+@media (max-width: 768px) {
+  .home-container {
+    flex-direction: column;
+  }
+
+  .rightdata {
+    width: 100%;
+    padding: 20px;
+  }
+
+  .top-bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .top-bar input {
+    margin-bottom: 10px;
+  }
+
+  .add-new-product {
+    position: static;
+    margin-top: 10px;
+    align-self: flex-end;
+  }
+
+  /* Adjust table layout for smaller screens */
+  table {
+    width: 100%;
+    overflow-x: auto;
+  }
+
+  th,
+  td {
+    font-size: 12px;
+    padding: 8px;
+  }
+
+  .img-parent {
+    width: 80px;
+    height: 80px;
+  }
+
+  .produt-image {
+    height: 80px;
+  }
+}
+
+/* For Edit button inside Image */
+.edit-btn {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.3);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.img-parent:hover .edit-btn {
+  display: flex;
+}
+
+.edit-btn i {
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+}

@@ -1,0 +1,80 @@
+.add-productparent {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.form-box {
+  width: 800px;
+  height: 600px;
+  margin-left: 200px;
+  background-color: white;
+  border-radius: 5px;
+  box-shadow: 2px 2px 10px #999;
+  position: relative;
+  /* overflow-y: scroll; */
+  padding: 10px;
+}
+.closebtn {
+  background-color: red;
+  padding: 5px 10px;
+  border-radius: 50%;
+  position: absolute;
+  right: 10px;
+  top: 5px;
+  cursor: pointer;
+}
+.closebtn i {
+  color: white;
+  font-size: 20px;
+}
+
+.form-box > form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.form-box > form > h2 {
+  color: black;
+  font-size: 24px;
+  text-transform: capitalize;
+  margin: 10px 0px;
+  font-family: "Kanit", " sans-serif";
+}
+
+.form-box > form > input {
+  width: 80%;
+  margin: 15px 0px;
+  padding: 5px 5px;
+  color: black;
+}
+.form-box > form > select {
+  width: 80%;
+  margin: 0px 0px 10px 0px;
+  padding: 8px 5px;
+  cursor: pointer;
+  color: black;
+}
+.form-box > form > select > option {
+  background-color: white;
+  color: black;
+}
+
+.form-box > form > button {
+  width: 80%;
+  background-color: transparent;
+  color: black;
+  border: 1px solid green;
+  transition: all ease 0.7s;
+}
+.form-box > form > button:hover {
+  background-color: green;
+  color: white;
+}

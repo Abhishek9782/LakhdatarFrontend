@@ -3,51 +3,100 @@ import {
   Routes,
   Route,
   useLocation,
-} from "react-router-dom"; //this is for using rounting & we can say in html anker tag
-import "./App.css";
-import { Menu } from "./MenuSction/MenuPartiels/Menu";
-import { Home } from "./Home";
-import { Help } from "./HelpSection/Help";
-import { HelpLegal } from "./HelpSection/HelpLegal";
-import { Login } from "./Login/Login";
-import { Register } from "./Register/Register";
-import { Navbar } from "./Navbars/Navbar";
-import { Footer } from "./Footer/Footer";
-import { Cart } from "./Cart/Cart";
-import { Ourspecial } from "./ourSpecial/Ourspecial";
+} from "react-router-dom";
+import React, { lazy, Suspense, useEffect, useMemo } from "react";
 import AOS from "aos";
 import "aos/dist/aos.css";
-import { Product } from "./Product/Product";
-import { PageNotFound } from "./PageNotFound/PageNotFound";
+import { ToastContainer, Bounce } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import "./App.css";
 
-function App() {
-  //  animation by default setting i set it
-  AOS.init({
-    offset: 300,
-    delay: 200,
-  });
-  //  Gete the Current Location
+// Lazy Loading Components for Faster Performance
+const Menu = lazy(() => import("./MenuSction/MenuPartiels/Menu"));
+const Home = lazy(() => import("./Home"));
+const Help = lazy(() => import("./HelpSection/Help"));
+const HelpLegal = lazy(() => import("./HelpSection/HelpLegal"));
+const Login = lazy(() => import("./Login/Login"));
+const Register = lazy(() => import("./Register/Register"));
+const Navbar = lazy(() => import("./Navbars/Navbar"));
+const Cart = lazy(() => import("./Cart/Cart"));
+const Ourspecial = lazy(() => import("./ourSpecial/Ourspecial"));
+const Product = lazy(() => import("./Product/Product"));
+const PageNotFound = lazy(() => import("./PageNotFound/PageNotFound"));
+const AdminLogin = lazy(() =>
+  import("./admin/AdminPages/AdminLogin/AdminLogin")
+);
+const AdminProducts = lazy(() =>
+  import("./admin/AdminPages/AdminProducts/AdminProducts")
+);
+const AdminHome = lazy(() => import("./admin/AdminPages/AdminHome/AdminHome"));
+const Footer = lazy(() => import("./Footer/Footer"));
+
+function AppContent() {
+  // Optimize AOS initialization using useEffect to prevent multiple executions
+  useEffect(() => {
+    AOS.init({ offset: 300, delay: 200 });
+  }, []);
+
+  const location = useLocation();
+
+  // Memoize Admin Routes Check for Performance Optimization
+  const isAdminRoutes = useMemo(
+    () =>
+      [
+        "/lakhdatar/admin/login",
+        "/lakhdatar/admin/home",
+        "/lakhdatar/admin/products",
+      ].includes(location.pathname),
+    [location.pathname]
+  );
 
   return (
-    <>
-      <Router>
-        <Navbar />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/menu" element={<Menu />} />
-          <Route path="/menu/:id" element={<Product />} />
-          <Route path="/help" element={<Help />} />
-          <Route path="/help/legal" element={<HelpLegal />} />
-          <Route path="/user-login" element={<Login />} />
-          <Route path="/user-register" element={<Register />} />
-          <Route path="/cart" element={<Cart />} />
-          <Route path="/our-special" element={<Ourspecial />} />
-          <Route path="*" element={<PageNotFound />} />
-        </Routes>
-        <Footer />
-      </Router>
-    </>
+    <Suspense fallback={<div>Loading...</div>}>
+      {!isAdminRoutes && <Navbar />}
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/menu" element={<Menu />} />
+        <Route path="/menu/:id" element={<Product />} />
+        <Route path="/help" element={<Help />} />
+        <Route path="/help/legal" element={<HelpLegal />} />
+        <Route path="/user-login" element={<Login />} />
+        <Route path="/user-register" element={<Register />} />
+        <Route path="/cart" element={<Cart />} />
+        <Route path="/our-special" element={<Ourspecial />} />
+        <Route path="*" element={<PageNotFound />} />
+
+        {/* Admin Routes */}
+        <Route path="/lakhdatar/admin/login" element={<AdminLogin />} />
+        <Route path="/lakhdatar/admin/home" element={<AdminHome />} />
+        <Route path="/lakhdatar/admin/products" element={<AdminProducts />} />
+      </Routes>
+      {!isAdminRoutes && <Footer />}
+
+      <ToastContainer
+        position="top-right"
+        closeButton={true}
+        autoClose={2000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick={false}
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+        transition={Bounce}
+      />
+    </Suspense>
   );
 }
 
-export default App;
+function App() {
+  return (
+    <Router>
+      <AppContent />
+    </Router>
+  );
+}
+
+export default React.memo(App); // Prevent unnecessary re-renders

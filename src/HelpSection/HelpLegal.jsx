@@ -1,11 +1,9 @@
 import React from "react";
 import "./HelpLegal.css";
-import { Navbar } from "../Navbars/Navbar";
-import { Footer } from "../Footer/Footer";
 import { Link } from "react-router-dom";
 import { Legaldata } from "../Data";
 
-export const HelpLegal = () => {
+const HelpLegal = () => {
   return (
     <>
       <div className="legalhelpContainer ">
@@ -48,3 +46,5 @@ export const HelpLegal = () => {
     </>
   );
 };
+
+export default HelpLegal;

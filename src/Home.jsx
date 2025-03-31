@@ -1,27 +1,55 @@
-import React from "react";
-import { Navbar } from "./Navbars/Navbar";
-import { Offers } from "./Offers/Offers";
-import { Featuredproducts } from "./FeaturedProducts/Featuredproducts";
-import { TableRegisteration } from "./TableRegistration/TableRegisteration";
-import { RestaurantMenu } from "./RestaurantMenu/RestaurantMenu";
-import { CustomerFeedback } from "./CustomerFeedback/CustomerFeedback";
-import { BestChef } from "./BestChelf/BestChef";
-import { Location } from "./Location/Location";
-import { Footer } from "./Footer/Footer";
-import { Navbarbg } from "./NavbarBg/Navbarbg";
+import React, { Suspense, lazy } from "react";
 
-export const Home = () => {
+const Navbarbg = lazy(() => import("./NavbarBg/Navbarbg"));
+const Offers = lazy(() => import("./Offers/Offers"));
+const Featuredproducts = lazy(() =>
+  import("./FeaturedProducts/Featuredproducts")
+);
+const TableRegisteration = lazy(() =>
+  import("./TableRegistration/TableRegisteration")
+);
+const RestaurantMenu = lazy(() => import("./RestaurantMenu/RestaurantMenu"));
+const CustomerFeedback = lazy(() =>
+  import("./CustomerFeedback/CustomerFeedback")
+);
+const BestChef = lazy(() => import("./BestChelf/BestChef"));
+const Location = lazy(() => import("./Location/Location"));
+
+const Home = () => {
   return (
     <div>
-      <Navbarbg />
-      <Offers />
-      <Featuredproducts />
-      <TableRegisteration />
-      <RestaurantMenu />
-      <CustomerFeedback />
-      <BestChef />
-      <Location />
-      {/* <Footer /> */}
+      <Suspense fallback={<div>Loading Navbar...</div>}>
+        <Navbarbg />
+      </Suspense>
+
+      <Suspense fallback={<div>Loading Offers...</div>}>
+        <Offers />
+      </Suspense>
+
+      <Suspense fallback={<div>Loading Featured Products...</div>}>
+        <Featuredproducts />
+      </Suspense>
+
+      <Suspense fallback={<div>Loading Table Registration...</div>}>
+        <TableRegisteration />
+      </Suspense>
+
+      <Suspense fallback={<div>Loading Menu...</div>}>
+        <RestaurantMenu />
+      </Suspense>
+
+      <Suspense fallback={<div>Loading Feedback...</div>}>
+        <CustomerFeedback />
+      </Suspense>
+
+      <Suspense fallback={<div>Loading Best Chef...</div>}>
+        <BestChef />
+      </Suspense>
+
+      <Suspense fallback={<div>Loading Location...</div>}>
+        <Location />
+      </Suspense>
     </div>
   );
 };
+export default Home;

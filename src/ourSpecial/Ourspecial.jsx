@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import axios from "axios";
 
-export const Ourspecial = () => {
+const Ourspecial = () => {
   const OurSpecialParent = styled.div`
     height: max-content;
     color: red;
@@ -333,3 +333,5 @@ export const Ourspecial = () => {
     </>
   );
 };
+
+export default Ourspecial;

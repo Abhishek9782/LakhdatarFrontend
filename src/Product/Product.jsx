@@ -1,8 +1,7 @@
-import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { styled } from "styled-components";
 import { axiosGet } from "../axios";
-
+import { imageUrl } from "../axios";
 //  Styled
 const ProductContainer = styled.div`
   width: 100%;
@@ -71,16 +70,21 @@ const Span = styled.span`
   margin: 10px 0px;
 `;
 
-export const Product = () => {
+const Product = () => {
   let productId = location.href.split("/")[4];
   const [product, setProduct] = useState([]);
   console.log(product);
-  const GetProduct = async () => {
-    const res = await axiosGet(`food/productopen/${productId}`);
-    if (res.data) {
-      setProduct(res.data);
+  const GetProduct = useCallback(async () => {
+    try {
+      const res = await axiosGet(`food/getProduct/${productId}`);
+      console.log(res.data);
+      if (res.data) {
+        setProduct(res.data);
+      }
+    } catch (error) {
+      console.log(error);
     }
-  };
+  }, []);
   useEffect(() => {
     GetProduct();
   }, []);
@@ -91,7 +95,11 @@ export const Product = () => {
           <ProductHead>Product Details Are here </ProductHead>
           <PdetailSection>
             <PImage>
-              <Image src={product.src} alt="Image not Found" />
+              <Image
+                src={`${imageUrl}/${product.src}`}
+                loading="lazy"
+                alt="Image not Found"
+              />
             </PImage>
             <PDetails>
               <ProductHead style={{ textAlign: "left" }}>
@@ -122,3 +130,4 @@ export const Product = () => {
     </>
   );
 };
+export default Product;

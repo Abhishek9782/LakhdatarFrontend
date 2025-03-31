@@ -1,9 +1,8 @@
 import { useLocation } from "react-router-dom";
 
 // import React from "react";
-export const PageNotFound = () => {
+const PageNotFound = () => {
   const location = useLocation();
-  console.log(location);
   return (
     <div
       style={{
@@ -33,3 +32,4 @@ export const PageNotFound = () => {
     </div>
   );
 };
+export default PageNotFound;
