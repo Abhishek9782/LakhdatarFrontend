@@ -19,7 +19,7 @@ export const counterSlice = createSlice({
       state.loading = false;
       state.error = false;
       state.user = action.payload;
-      window.localStorage.setItem("user", JSON.stringify(action.payload.data));
+      window.localStorage.setItem("user", action.payload.data);
     },
     loginFail: (state) => {
       state.loading = false;

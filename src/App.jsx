@@ -10,6 +10,7 @@ import "aos/dist/aos.css";
 import { ToastContainer, Bounce } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
+import { Toaster } from "react-hot-toast";
 
 // Lazy Loading Components for Faster Performance
 const Menu = lazy(() => import("./MenuSction/MenuPartiels/Menu"));
@@ -87,6 +88,7 @@ function AppContent() {
         theme="light"
         transition={Bounce}
       />
+      <Toaster position="bottom-center" reverseOrder={false} />
     </Suspense>
   );
 }

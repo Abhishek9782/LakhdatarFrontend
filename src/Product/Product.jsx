@@ -1,83 +1,53 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { styled } from "styled-components";
+import {
+  Box,
+  Typography,
+  Card,
+  CardContent,
+  CardMedia,
+  Avatar,
+  Rating,
+  Stack,
+  Divider,
+  Chip,
+  Button,
+  TextField,
+  List,
+  ListItem,
+  ListItemAvatar,
+  ListItemText,
+} from "@mui/material";
 import { axiosGet } from "../axios";
 import { imageUrl } from "../axios";
-//  Styled
-const ProductContainer = styled.div`
-  width: 100%;
-  height: 100%;
-  /* background-color: yellow; */
-  margin-top: 12vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: black;
-`;
-const Productparent = styled.div`
-  width: 100%;
-  max-width: 1024px;
-  height: 100%;
-  background-color: white;
-  display: flex;
-  flex-direction: column;
-`;
-const ProductHead = styled.h5`
-  text-align: center;
-  padding: 10px 0px;
-  font-family: "Kanit";
-  color: black;
-`;
-const PdetailSection = styled.div`
-  width: 100%;
-  height: 40vh;
-  background-color: white;
-  align-self: center;
-  display: flex;
-  border-radius: 5px;
-`;
-const PImage = styled.div`
-  flex: 1;
-  display: flex;
-  justify-content: center;
-`;
-const Image = styled.img`
-  width: 90%;
-  height: 90%;
-  object-fit: cover;
-  object-position: center;
-  justify-self: center;
-  align-self: center;
-`;
-const PDetails = styled.div`
-  flex: 2;
-  padding: 10px 20px;
-`;
-const PSummary = styled.div`
-  width: 100%;
-  align-self: center;
-  height: 50vh;
-  overflow-y: scroll;
-  color: black;
-  font-family: sans-serif;
-  padding: 0px 20px;
-`;
-const Previews = styled.div``;
-const Span = styled.span`
-  color: black;
-  padding: 0px 10px;
-  font-family: sans-serif;
-  display: block;
-  margin: 10px 0px;
-`;
+
+const dummyReviews = [
+  {
+    name: "Anjali",
+    rating: 5,
+    comment: "Delicious and flavorful! Loved it!",
+    avatar: "https://i.pravatar.cc/150?img=1",
+  },
+  {
+    name: "Ravi",
+    rating: 4,
+    comment: "Tastes authentic. A bit spicy for me though.",
+    avatar: "https://i.pravatar.cc/150?img=2",
+  },
+  {
+    name: "Neha",
+    rating: 4.5,
+    comment: "Paneer was soft and creamy. Will order again!",
+    avatar: "https://i.pravatar.cc/150?img=3",
+  },
+];
 
 const Product = () => {
   let productId = location.href.split("/")[4];
-  const [product, setProduct] = useState([]);
-  console.log(product);
+  const [product, setProduct] = useState({});
+
   const GetProduct = useCallback(async () => {
     try {
       const res = await axiosGet(`food/getProduct/${productId}`);
-      console.log(res.data);
       if (res.data) {
         setProduct(res.data);
       }
@@ -85,49 +55,140 @@ const Product = () => {
       console.log(error);
     }
   }, []);
+
   useEffect(() => {
     GetProduct();
   }, []);
+
   return (
-    <>
-      <ProductContainer>
-        <Productparent>
-          <ProductHead>Product Details Are here </ProductHead>
-          <PdetailSection>
-            <PImage>
-              <Image
-                src={`${imageUrl}/${product.src}`}
-                loading="lazy"
-                alt="Image not Found"
-              />
-            </PImage>
-            <PDetails>
-              <ProductHead style={{ textAlign: "left" }}>
-                {product.name}
-              </ProductHead>
-              <Span>{product.food}</Span>
-              <Span>
-                <strong style={{ color: "black" }}>Type:-</strong>{" "}
-                {product.foodType}
-              </Span>
-            </PDetails>
-          </PdetailSection>
-          <PSummary>
-            <h5
-              style={{
-                textAlign: "center",
-                margin: "5px 0px ",
-                color: "black",
-              }}
-            >
-              Product Summary{" "}
-            </h5>
+    <Box sx={{ mt: 12, px: 4, maxWidth: 1024, mx: "auto" }}>
+      <Typography
+        variant="h4"
+        fontWeight="bold"
+        textAlign="center"
+        gutterBottom
+        color="#0288d1"
+      >
+        Product Details
+      </Typography>
+
+      <Card
+        sx={{ display: "flex", borderRadius: 4, overflow: "hidden", mb: 4 }}
+      >
+        <CardMedia
+          component="img"
+          image={`${imageUrl}${product.src}`}
+          alt={product.name}
+          sx={{ width: 300, height: 300, objectFit: "cover" }}
+        />
+        <CardContent sx={{ flex: 1 }}>
+          <Typography
+            variant="h5"
+            fontWeight="bold"
+            gutterBottom
+            color="text.primary"
+          >
+            {product.name}
+          </Typography>
+          <Typography variant="subtitle1" gutterBottom color="text.secondary">
+            {product.food} | {product.foodType}
+          </Typography>
+          <Chip label="In Stock" color="success" sx={{ mr: 2 }} />
+          <Chip label="10% Off Today" color="warning" />
+          <Typography variant="body1" mt={2} color="text.primary">
             {product.desc}
-          </PSummary>
-          <Previews></Previews>
-        </Productparent>
-      </ProductContainer>
-    </>
+          </Typography>
+          <Stack direction="row" spacing={2} mt={2}>
+            <Button variant="contained" color="primary">
+              Add to Cart
+            </Button>
+            <Button variant="outlined" color="primary">
+              Buy Now
+            </Button>
+          </Stack>
+        </CardContent>
+      </Card>
+
+      <Box mb={4}>
+        <Typography variant="h6" fontWeight="bold" gutterBottom color="#0288d1">
+          Ingredients
+        </Typography>
+        <Stack direction="row" spacing={1} flexWrap="wrap">
+          {["Paneer", "Butter", "Tomatoes", "Cream", "Spices"].map(
+            (item, index) => (
+              <Chip
+                key={index}
+                label={item}
+                color="info"
+                variant="outlined"
+                sx={{
+                  "& .MuiChip-label": {
+                    color: "black",
+                  },
+                  borderColor: "#0288d1", // Optional: make sure border color matches or customize
+                }}
+              />
+            )
+          )}
+        </Stack>
+      </Box>
+
+      <Box mb={4}>
+        <Typography variant="h6" fontWeight="bold" gutterBottom color="#0288d1">
+          Nutritional Info
+        </Typography>
+        <Stack direction="row" spacing={4}>
+          <Typography variant="body1" color="black">
+            Calories: 320 kcal
+          </Typography>
+          <Typography variant="body1" color="black">
+            Protein: 12g
+          </Typography>
+          <Typography variant="body1" color="black">
+            Fat: 24g
+          </Typography>
+          <Typography variant="body1" color="black">
+            Carbs: 18g
+          </Typography>
+        </Stack>
+      </Box>
+
+      <Divider sx={{ my: 4 }} />
+
+      <Box>
+        <Typography variant="h6" fontWeight="bold" gutterBottom color="#0288d1">
+          Customer Reviews
+        </Typography>
+        <List>
+          {dummyReviews.map((review, i) => (
+            <ListItem alignItems="flex-start" key={i}>
+              <ListItemAvatar>
+                <Avatar src={review.avatar} alt={review.name} />
+              </ListItemAvatar>
+              <ListItemText
+                primary={
+                  <Stack direction="row" alignItems="center" spacing={1}>
+                    <Typography variant="subtitle1" fontWeight="bold">
+                      {review.name}
+                    </Typography>
+                    <Rating
+                      value={review.rating}
+                      precision={0.5}
+                      readOnly
+                      size="small"
+                    />
+                  </Stack>
+                }
+                secondary={
+                  <Typography color="text.primary">{review.comment}</Typography>
+                }
+              />
+            </ListItem>
+          ))}
+        </List>
+      </Box>
+    </Box>
   );
 };
+
 export default Product;

@@ -3,6 +3,7 @@ import "./FeaturedProducts.css";
 import { cartAdd, cartClear, cartQuantityHandle } from "../store/cartSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { axiosGet, axiosPost, imageUrl } from "../axios";
+import { toast } from "react-toastify";
 
 const Featuredproducts = () => {
   const [FeatureProducts, setFeatureProducts] = useState([]);
@@ -27,32 +28,44 @@ const Featuredproducts = () => {
     getFeatureData();
   }, [getFeatureData]);
 
-  const handleCart = useCallback(
-    (e, data) => {
-      e.preventDefault();
-      if (user === null) {
-        if (carts === null) {
-          dispatch(cartAdd([data]));
-          dispatch(cartQuantityHandle(1));
-        } else {
-          dispatch(cartAdd([...carts, data]));
-          dispatch(cartQuantityHandle(1));
-        }
-      } else {
-        const addToCart = async () => {
-          const res = useCallback(() => {
-            axiosPost(`user-cart-add/${user._id}`, data);
-          }, []);
-          if (res?.data) {
-            dispatch(cartClear(null));
-            dispatch(cartQuantityHandle(1));
-          }
-        };
-        addToCart();
+  // const handleCart = useCallback(
+  //   (e, data) => {
+  //     e.preventDefault();
+  //     if (user === null) {
+  //       if (carts === null) {
+  //         dispatch(cartAdd([data]));
+  //         dispatch(cartQuantityHandle(1));
+  //       } else {
+  //         dispatch(cartAdd([...carts, data]));
+  //         dispatch(cartQuantityHandle(1));
+  //       }
+  //     } else {
+  //       const addToCart = async () => {
+  //         const res = useCallback(() => {
+  //           axiosPost(`user-cart-add/${user._id}`, data);
+  //         }, []);
+  //         if (res?.data) {
+  //           dispatch(cartClear(null));
+  //           dispatch(cartQuantityHandle(1));
+  //         }
+  //       };
+  //       addToCart();
+  //     }
+  //   },
+  //   [user, carts, dispatch]
+  // );
+
+  async function handleCart(e, id) {
+    e.preventDefault();
+    const res = await axiosPost(`addToCart/${id}`).catch((err) => {
+      if (err) {
+        toast.error(err.message);
       }
-    },
-    [user, carts, dispatch]
-  );
+    });
+    if (res.status) {
+      toast.success(res.message);
+    }
+  }
 
   return (
     <>
@@ -84,7 +97,7 @@ const Featuredproducts = () => {
                   <div className="fpbottom">
                     <button
                       onClick={(e) => {
-                        handleCart(e, data);
+                        handleCart(e, data._id);
                       }}
                     >
                       Add To cart

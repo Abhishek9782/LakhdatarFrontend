@@ -4,9 +4,10 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { useCookies } from "react-cookie";
 import { useNavigate } from "react-router-dom";
+import { loginAdmin } from "../../../services/authService";
 
 const AdminLogin = () => {
-  const [cookies, setCookie] = useCookies(["jwt"]);
+  const [cookies, setCookie] = useCookies(["user"]);
   const navigate = useNavigate();
   let [user, setUser] = useState({
     email: "",
@@ -20,24 +21,13 @@ const AdminLogin = () => {
   //  Here we are handle form sumbiting
   async function handleSumbit(e) {
     e.preventDefault();
-    const res = await axios
-      .post("http://localhost:5000/lakhdatar/admin/login", user, {
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-        },
-      })
-      .catch((error) => {
-        if (error.response?.data.message) {
-          toast.error(error.response?.data.message, {
-            icon: true,
-            autoClose: 3000,
-          });
-        }
-      });
 
-    if (res.data) {
-      toast.success(res.data.message, { autoClose: 2000 });
-      setCookie("jwt", res.data.data);
+    //  here we login admin
+    const res = await loginAdmin(user);
+    if (res.status == 1) {
+      console.log(res);
+      toast.success(res.message, { autoClose: 1000 });
+      localStorage.setItem("user", res.data);
       navigate("/lakhdatar/admin/home");
     }
   }

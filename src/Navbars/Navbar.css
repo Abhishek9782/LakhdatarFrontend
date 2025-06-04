@@ -14,7 +14,22 @@
   --blackColor: #000;
   --kanitFont: "Kanit", sans-serif;
 }
-
+.cartCount {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: white;
+  color: black;
+  position: absolute;
+  top: -8px;
+  font-family: "kanit";
+  right: -13px;
+  font-size: 10px;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 .logoname span {
   font-family: "Montserrat", sans-serif;
   font-size: 20px;
@@ -131,9 +146,10 @@
 /*  Profile css is here  */
 .profilebody {
   width: 30vw;
-  height: 90vh;
+  height: 85vh;
   position: fixed;
   z-index: 4;
+  top: 5rem;
   right: 0;
   backdrop-filter: blur(7px) saturate(110%);
   -webkit-backdrop-filter: blur(7px) saturate(110%);

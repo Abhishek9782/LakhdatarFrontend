@@ -8,7 +8,7 @@ import React, {
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../store/userSlice";
-import { axiosGet } from "../axios";
+import { axiosGet, axiosPost, imageUrl } from "../axios";
 import { userEndPoints } from "../utils/baseUrl";
 import { useJwt } from "react-jwt";
 import "./Navbar.css";
@@ -20,20 +20,22 @@ const Navbar = () => {
   const navigate = useNavigate();
   const user = useSelector((state) => state.user.user);
   const favProduct = useSelector((state) => state.favprod.favProduct);
+  const cartQuantity = useSelector((state) => state.carts.qty);
 
   // Extract userId directly
   const { decodedToken } = useJwt(user);
   const userId = decodedToken?.id || null;
 
   const [profileHandle, setProfileHandle] = useState(false);
-  const [allFavProduct, setAllFavProducts] = useState([]);
+  const [allFavProduct, setAllFavProducts] = useState(null);
   const [currentUser, setCurrentUser] = useState({});
 
   // Fetch favorite products
   const getFavData = useCallback(async () => {
     if (!userId) return;
     try {
-      const res = await axiosGet(`food/favProduct/${userId}`);
+      const res = await axiosPost(`food/favProduct`, favProduct);
+
       if (res?.data) setAllFavProducts(res.data);
     } catch (error) {
       console.error("Error fetching favorite products:", error);
@@ -78,7 +80,7 @@ const Navbar = () => {
     [getFavData]
   );
 
-  // Memoized cart count
+  // Memoized faviorate product value
   const cartCount = useMemo(() => favProduct.length, [favProduct]);
 
   // Fetch user profile and favorite data on mount or userId change
@@ -87,17 +89,39 @@ const Navbar = () => {
     getFavData();
   }, [getProfile, getFavData]);
 
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (profileRef.current && !profileRef.current.contains(event.target)) {
+        setProfileHandle(false);
+      }
+    };
+
+    if (profileHandle) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [profileHandle]);
+
   return (
     <>
       <div className="navbar">
         <div className="logoname">
-          <span>
-            Lakhdatar Restaurant
-            <i
-              className="fa-solid fa-utensils"
-              style={{ color: "black", marginLeft: "5px" }}
-            ></i>
-          </span>
+          <Link
+            to="/"
+            title="Go to home page "
+            style={{ textDecoration: "none" }}
+          >
+            <span>
+              Lakhdatar Restaurant
+              <i
+                className="fa-solid fa-utensils"
+                style={{ color: "black", marginLeft: "5px" }}
+              ></i>
+            </span>
+          </Link>
         </div>
         <div className="menu">
           <ul>
@@ -124,8 +148,12 @@ const Navbar = () => {
             )}
             <li>
               <Link to="/cart">
-                Cart <i className="fa-solid fa-cart-shopping"></i>
-                <span className="cartCount">{cartCount}</span>
+                Cart{" "}
+                <i
+                  className="fa-solid fa-cart-shopping"
+                  style={{ color: "black" }}
+                ></i>
+                <span className="cartCount cartCount">{cartQuantity}</span>
               </Link>
             </li>
           </ul>
@@ -199,7 +227,7 @@ const Navbar = () => {
               </li>
             )}
             <li>
-              <Link to="/cart">Cart ({cartCount})</Link>
+              <Link to="/cart">Cart ({cartQuantity})</Link>
             </li>
           </ul>
         </div>
@@ -215,12 +243,13 @@ const Navbar = () => {
             <div className="favioratedetails">
               <span className="favoritelogo">Lakhdatar Restaurant</span>
               <h3>Your Favorite Products</h3>
+
               {allFavProduct.length > 0 ? (
                 allFavProduct.map((data) => (
                   <div className="favproductList" key={data._id}>
                     <ul>
                       <li className="img">
-                        <img src={data.src} alt={data.name} />
+                        <img src={`${imageUrl}/${data.src}`} alt={data.name} />
                       </li>
                       <li style={{ flex: "2" }}>{data.name}</li>
                       <li className="deleteicon">

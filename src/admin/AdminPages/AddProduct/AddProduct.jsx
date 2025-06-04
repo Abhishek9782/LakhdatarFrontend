@@ -36,11 +36,7 @@ export const AddProduct = ({ setisAdd, getAllproducts }) => {
       formData.append("src", file); // Append file with key 'image'
     }
     try {
-      const res = await axiosForImage(
-        "lakhdatar/admin/productadd",
-        formData,
-        cookies.jwt
-      );
+      const res = await axiosPost("productadd", formData);
 
       if (res?.data) {
         toast.success(res.data.message, {
@@ -119,7 +115,7 @@ export const AddProduct = ({ setisAdd, getAllproducts }) => {
             }}
           >
             <option unselectable="">Choose Product Type</option>
-            <option value="Launch">Launch</option>
+            <option value="Lunch">Lunch</option>
             <option value="Dinner">Dinner </option>
             <option value="BreakFast">BreakFast</option>
           </select>

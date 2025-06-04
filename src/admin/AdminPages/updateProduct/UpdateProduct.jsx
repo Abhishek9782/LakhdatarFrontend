@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "./UpdateProduct.css";
-import { axiosforUpdate, axiosPost, imageurl } from "../../../axios";
+import { axiosPost, imageUrl } from "../../../axios";
 import { toast } from "react-toastify";
 import { useCookies } from "react-cookie";
 
@@ -27,7 +27,7 @@ export const UpdateProduct = ({ product, onUpdate, onClose }) => {
     if (image) {
       formData.src = image[0];
     }
-    const res = await axiosforUpdate(
+    const res = await axiosPost(
       `lakhdatar/admin/updateproduct/${product._id}`,
       formData,
       cookies.jwt

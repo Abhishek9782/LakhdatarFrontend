@@ -1,11 +1,50 @@
-import "./AdminProducts.css";
-import React, { useEffect, useState, useCallback, useRef } from "react";
-import { axiosPost, deleteaxios, imageurl } from "../../../axios";
+import React, { useEffect, useState, useCallback } from "react";
+import { useCookies } from "react-cookie";
+import { toast } from "react-toastify";
+import { getProducts } from "../../../services/authService";
 import { Nav } from "../Components/LeftSlid/Nav";
 import { UpdateProduct } from "../updateProduct/UpdateProduct";
 import { AddProduct } from "../AddProduct/AddProduct";
-import { useCookies } from "react-cookie";
-import { toast } from "react-toastify";
+import { imageUrl } from "../../../axios";
+
+// Material-UI Components
+import {
+  Box,
+  Button,
+  Container,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  TextField,
+  Typography,
+  Pagination,
+  Select,
+  MenuItem,
+  InputAdornment,
+  IconButton,
+  Avatar,
+  Chip,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  CircularProgress,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material";
+import {
+  Search as SearchIcon,
+  Add as AddIcon,
+  Edit as EditIcon,
+  Delete as DeleteIcon,
+  ChevronLeft,
+  ChevronRight,
+} from "@mui/icons-material";
+import { useNavigate } from "react-router-dom";
 
 const AdminProducts = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -14,231 +53,392 @@ const AdminProducts = () => {
   const [products, setProducts] = useState([]);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [isAdd, setIsAdd] = useState(false);
+  const [totalProducts, setTotalProducts] = useState(0);
   const [cookies] = useCookies(["jwt"]);
-  const [totalproducts, setTotalproducts] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [productToDelete, setProductToDelete] = useState(null);
 
-  // ref use here
-  const hasMounted = useRef(false);
+  const theme = useTheme();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
+  const navigate = useNavigate();
 
-  //  search All Products
-  const getAllProducts = useCallback(
-    async (pageNumber, pageSize, searchItem) => {
-      const res = await axiosPost(
-        "lakhdatar/admin/getAllproduct",
-        { pageNumber, pageSize, searchItem },
+  // Fetch products with pagination & search
+  const getAllProducts = useCallback(async () => {
+    setLoading(true);
+    try {
+      const res = await getProducts({
+        pageSize,
+        pageNumber: currentPage,
+        searchItem,
+      });
+      if (res.status === 1) {
+        setProducts(res.data.products);
+        setTotalProducts(res.data.totalproduct);
+      } else {
+        toast.error("Failed to fetch products");
+      }
+    } catch (error) {
+      // toast.error(error?.response?.data?.message || "Something went wrong");
+      if (!toast.isActive("server-error")) {
+        toast.error(error?.response?.data?.message || "Something went wrong", {
+          toastId: "server-error",
+        });
+      }
+      // navigate("/lakhdatar/admin/login");
+    } finally {
+      setLoading(false);
+    }
+  }, [currentPage, pageSize, searchItem]);
+
+  useEffect(() => {
+    getAllProducts();
+    console.log("Here is getAllproducts are listen");
+  }, [getAllProducts]);
+
+  // Handle product deletion
+  const handleDelete = async (id) => {
+    try {
+      const res = await deleteaxios(
+        `lakhdatar/admin/deleteproduct/${id}`,
         cookies.jwt
       );
-      if (res.data) {
-        setProducts(res.data.data.products);
-        setTotalproducts(res.data.data.totalproduct);
-        // setTotalproducts(res.data.data.totalProduct);
-      }
-      if (res.response.data.message) {
-        toast.error(res.response.data.message);
-      }
-    },
-    [cookies.jwt, currentPage, pageSize, searchItem]
-  );
-
-  // fetch data of getallProducts
-  useEffect(() => {
-    if (!hasMounted.current) {
-      hasMounted.current = true; // After first render, set to true
-      return; // Skip the first render
-    }
-    getAllProducts(currentPage, pageSize, searchItem);
-  }, [getAllProducts, currentPage, pageSize, searchItem]);
-
-  // handleUpdate function
-  const handleUpdate = () => {
-    setSelectedProduct(null);
-    getAllProducts(); // Re-fetch after update
-  };
-
-  // handle close updatebtn
-  const handleCloseUpdate = () => {
-    setSelectedProduct(null); // Not false
-  };
-
-  const handleAddProduct = () => {
-    setIsAdd(true);
-  };
-
-  // function for delete product
-  async function handleDelete(e, id) {
-    e.preventDefault();
-    const res = await deleteaxios(
-      `lakhdatar/admin/deleteproduct/${id}`,
-      cookies.jwt
-    ).catch((error) => {
-      toast(error?.response.data.message);
-    });
-    if (res) {
       toast.success(res);
       getAllProducts();
+    } catch (error) {
+      toast.error(error?.response?.data?.message || "Failed to delete product");
+    } finally {
+      setDeleteDialogOpen(false);
     }
-  }
+  };
 
-  //  change pageNumber of pagination
-  const handlePageChange = useCallback((pageNumber) => {
-    setCurrentPage(pageNumber);
-  });
+  // Handle pagination
+  const handlePageChange = (event, pageNumber) => {
+    if (pageNumber >= 1 && pageNumber <= Math.ceil(totalProducts / pageSize)) {
+      setCurrentPage(pageNumber);
+    }
+  };
 
-  //  handle page size
-  async function handlepagesize(e, size) {
+  // Handle page size change
+  const handlePageSizeChange = (e) => {
+    setPageSize(Number(e.target.value));
+    setCurrentPage(1); // Reset to first page
+  };
+
+  // Handle product search
+  const handleSearch = (e) => {
+    setSearchItem(e.target.value);
+    setCurrentPage(1); // Reset to first page
+  };
+
+  // Handle search submit
+  const handleSearchSubmit = (e) => {
     e.preventDefault();
-    setPageSize(size);
-  }
+    getAllProducts();
+  };
 
-  // here we are using search filter
-  async function searchProducts(e, value) {
-    e.preventDefault();
-    setSearchItem(value);
-  }
+  const handleDeleteClick = (product) => {
+    setProductToDelete(product);
+    setDeleteDialogOpen(true);
+  };
+
+  const handleDeleteCancel = () => {
+    setDeleteDialogOpen(false);
+    setProductToDelete(null);
+  };
 
   return (
-    <div className="home-container">
+    <Box sx={{ display: "flex", minHeight: "100vh" }}>
       <Nav />
-      <div className="rightdata">
-        <div className="top-bar">
-          <input
-            type="text"
-            placeholder="Search Food"
-            onChange={(e) => {
-              searchProducts(e, e.target.value);
+      <Box
+        component="main"
+        sx={{
+          flexGrow: 1,
+          p: 3,
+          backgroundColor: theme.palette.background.default,
+        }}
+      >
+        <Container maxWidth="xl">
+          {/* Top Bar with Search and Add Product */}
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: isSmallScreen ? "column" : "row",
+              justifyContent: "space-between",
+              alignItems: "center",
+              mb: 3,
+              gap: 2,
             }}
-          />
+          >
+            <Box
+              component="form"
+              onSubmit={handleSearchSubmit}
+              sx={{ width: isSmallScreen ? "100%" : "auto" }}
+            >
+              <TextField
+                fullWidth
+                size="small"
+                placeholder="Search products..."
+                variant="outlined"
+                value={searchItem}
+                onChange={handleSearch}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <SearchIcon />
+                    </InputAdornment>
+                  ),
+                  endAdornment: searchItem && (
+                    <IconButton
+                      type="submit"
+                      color="primary"
+                      disabled={!searchItem}
+                    >
+                      <SearchIcon />
+                    </IconButton>
+                  ),
+                }}
+                sx={{
+                  minWidth: isSmallScreen ? "100%" : 300,
+                  backgroundColor: theme.palette.background.paper,
+                }}
+              />
+            </Box>
 
-          <button className="search-btn" disabled={products.length == 0}>
-            Search
-          </button>
-          <button className="add-new-product" onClick={handleAddProduct}>
-            Add Product
-          </button>
-        </div>
-        <div className="users-table-container">
-          <div className="table-wrapper">
-            <table className="table table-hover">
-              <thead>
-                <tr>
-                  <th>Product Image</th>
-                  <th>Product Name</th>
-                  <th>Full Price</th>
-                  <th>Half Price</th>
-                  <th>Food Type</th>
-                  <th>Update Product</th>
-                  <th>Delete Product</th>
-                </tr>
-              </thead>
-              <tbody>
-                {products.length > 0 ? (
-                  products.map((prod) => (
-                    <tr key={prod._id}>
-                      <td className="img-parent">
-                        <img
-                          src={`${imageurl}${prod.src}`}
-                          alt="img Not Found"
-                          className="produt-image"
-                          loading="lazy"
-                        />
-                        <span className="edit-btn">
-                          <i className="fa-solid fa-pen-to-square"></i>
-                        </span>
-                      </td>
-                      <td className="product-name">{prod.name}</td>
-                      <td>{prod.fullprice}</td>
-                      <td>{prod.halfprice}</td>
-                      <td>{prod.foodType}</td>
-                      <td>
-                        <button
-                          className="update-btn"
-                          onClick={() => setSelectedProduct(prod)}
-                        >
-                          Update
-                        </button>
-                      </td>
-                      <td>
-                        <button
-                          className="delete-btn"
-                          onClick={(e) => {
-                            handleDelete(e, prod._id);
+            <Button
+              variant="contained"
+              color="primary"
+              startIcon={<AddIcon />}
+              onClick={() => setIsAdd(true)}
+              sx={{
+                ml: isSmallScreen ? 0 : 2,
+                width: isSmallScreen ? "100%" : "auto",
+              }}
+            >
+              Add Product
+            </Button>
+          </Box>
+
+          {/* Products Table */}
+          <Paper
+            elevation={3}
+            sx={{
+              mb: 3,
+              overflow: "hidden",
+              borderRadius: 2,
+            }}
+          >
+            {loading ? (
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  height: 200,
+                }}
+              >
+                <CircularProgress />
+              </Box>
+            ) : (
+              <TableContainer>
+                <Table>
+                  <TableHead>
+                    <TableRow
+                      sx={{ backgroundColor: theme.palette.primary.main }}
+                    >
+                      <TableCell sx={{ color: "white" }}>Image</TableCell>
+                      <TableCell sx={{ color: "white" }}>Name</TableCell>
+                      <TableCell sx={{ color: "white" }}>Full Price</TableCell>
+                      <TableCell sx={{ color: "white" }}>Half Price</TableCell>
+                      <TableCell sx={{ color: "white" }}>Type</TableCell>
+                      <TableCell sx={{ color: "white" }} align="center">
+                        Actions
+                      </TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {products.length > 0 ? (
+                      products.map((prod) => (
+                        <TableRow
+                          key={prod._id}
+                          hover
+                          sx={{
+                            "&:last-child td, &:last-child th": { border: 0 },
                           }}
                         >
-                          Delete
-                        </button>
-                      </td>
-                    </tr>
-                  ))
-                ) : (
-                  <div className="no-product-container">
-                    <span className="no-products">No Products Available </span>
-                  </div>
-                )}
-              </tbody>
-            </table>
-          </div>
-        </div>
-        {totalproducts.length !== 0 && (
-          <div className="pagination">
-            <span>
-              Showing {currentPage} to {Math.min(10, products.length)} of-
-              {pageSize} results
-            </span>
-            <div className="pagination-buttons">
-              <button
-                onClick={() => handlePageChange(currentPage - 1)}
-                disabled={currentPage === 1}
-              >
-                Prev
-              </button>
-              {[...Array(10).keys()].map((pageNumber) => (
-                <button
-                  key={pageNumber}
-                  onClick={() => handlePageChange(pageNumber + 1)}
-                  className={currentPage === pageNumber + 1 ? "active" : ""}
-                >
-                  {pageNumber + 1}
-                </button>
-              ))}
-              <button
-                onClick={() => handlePageChange(currentPage + 1)}
-                disabled={currentPage === 10}
-              >
-                Next
-              </button>
-              <span style={{ color: "black" }} className="pagination-head">
-                Rows Per Page
-              </span>
-              <select
-                name=""
-                id=""
-                className="pagination-pagesize"
-                onChange={(e) => handlepagesize(e, e.target.value)}
-              >
-                <option value={10}>10</option>
-                <option value={20}>20</option>
-                <option value={50}>50</option>
-                <option value={100}>100</option>
-              </select>
-            </div>
-          </div>
-        )}
-      </div>
+                          <TableCell>
+                            <Avatar
+                              src={`${imageUrl}${prod.src}`}
+                              alt={prod.name}
+                              variant="rounded"
+                              sx={{ width: 56, height: 56 }}
+                            />
+                          </TableCell>
+                          <TableCell>
+                            <Typography
+                              variant="body1"
+                              fontWeight="medium"
+                              sx={{ color: "black" }}
+                            >
+                              {prod.name}
+                            </Typography>
+                          </TableCell>
+                          <TableCell>
+                            <Chip
+                              label={`${prod.fullprice}₹`}
+                              color="success"
+                              size="small"
+                            />
+                          </TableCell>
+                          <TableCell>
+                            <Chip
+                              label={`${prod.halfprice}₹`}
+                              color="info"
+                              size="small"
+                            />
+                          </TableCell>
+                          <TableCell>
+                            <Chip
+                              label={prod.foodType}
+                              color={
+                                prod.foodType === "veg" ? "success" : "error"
+                              }
+                              size="small"
+                            />
+                          </TableCell>
+                          <TableCell
+                            align="center"
+                            sx={{
+                              justifyContent: "space-around",
+                            }}
+                          >
+                            <Box sx={{ display: "flex", gap: 1 }}>
+                              <IconButton
+                                color="error"
+                                onClick={() => setSelectedProduct(prod)}
+                                aria-label="edit"
+                                sx={{ backgroundColor: "green" }}
+                              >
+                                <EditIcon />
+                              </IconButton>
+                              <IconButton
+                                color="error"
+                                onClick={() => handleDeleteClick(prod)}
+                                aria-label="delete"
+                                sx={{
+                                  backgroundColor: "red",
+                                }}
+                              >
+                                <DeleteIcon />
+                              </IconButton>
+                            </Box>
+                          </TableCell>
+                        </TableRow>
+                      ))
+                    ) : (
+                      <TableRow>
+                        <TableCell colSpan={6} align="center">
+                          <Typography variant="body1" color="textSecondary">
+                            No products available
+                          </Typography>
+                        </TableCell>
+                      </TableRow>
+                    )}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            )}
+          </Paper>
 
-      {/* Render UpdateProduct if a product is selected */}
+          {/* Pagination */}
+          {totalProducts > 0 && (
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: isSmallScreen ? "column" : "row",
+                justifyContent: "space-between",
+                alignItems: "center",
+                gap: 2,
+                p: 2,
+              }}
+            >
+              <Typography variant="body2" color="text.secondary">
+                Showing{" "}
+                {Math.min((currentPage - 1) * pageSize + 1, totalProducts)} to{" "}
+                {Math.min(currentPage * pageSize, totalProducts)} of{" "}
+                {totalProducts} products
+              </Typography>
+
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 2,
+                }}
+              >
+                <Pagination
+                  count={Math.ceil(totalProducts / pageSize)}
+                  page={currentPage}
+                  onChange={handlePageChange}
+                  shape="rounded"
+                  color="primary"
+                  siblingCount={isSmallScreen ? 0 : 1}
+                />
+
+                <Select
+                  size="small"
+                  value={pageSize}
+                  onChange={handlePageSizeChange}
+                  sx={{ minWidth: 80 }}
+                >
+                  {[10, 20, 50, 100].map((size) => (
+                    <MenuItem key={size} value={size}>
+                      {size}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </Box>
+            </Box>
+          )}
+        </Container>
+      </Box>
+
+      {/* Update Product Dialog */}
       {selectedProduct && (
         <UpdateProduct
           product={selectedProduct}
-          onUpdate={handleUpdate}
-          onClose={handleCloseUpdate}
+          onUpdate={getAllProducts}
+          onClose={() => setSelectedProduct(null)}
         />
       )}
 
-      {/* Render AddProduct if isAdd is true */}
+      {/* Add Product Dialog */}
       {isAdd && (
-        <AddProduct setisAdd={setIsAdd} getAllProducts={getAllProducts} />
+        <AddProduct setIsAdd={setIsAdd} getAllProducts={getAllProducts} />
       )}
-    </div>
+
+      {/* Delete Confirmation Dialog */}
+      <Dialog open={deleteDialogOpen} onClose={handleDeleteCancel}>
+        <DialogTitle sx={{ color: "black" }}>Confirm Delete</DialogTitle>
+        <DialogContent>
+          <Typography sx={{ color: "black" }}>
+            Are you sure you want to delete{" "}
+            <strong style={{ color: "black" }}>{productToDelete?.name}</strong>?
+            This action cannot be undone.
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleDeleteCancel}>Cancel</Button>
+          <Button
+            onClick={() => handleDelete(productToDelete?._id)}
+            color="error"
+            variant="contained"
+          >
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </Box>
   );
 };
 

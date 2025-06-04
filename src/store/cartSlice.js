@@ -3,10 +3,10 @@ import { createSlice } from "@reduxjs/toolkit";
 //  THis is opur intial state
 
 const initialState = {
-  carts: JSON.parse(window.localStorage.getItem("carts")) || null,
+  carts: JSON.parse(window.localStorage.getItem("carts")) || [],
   loading: false,
   error: null,
-  // qty: JSON.parse(window.localStorage.getItem("cartQuantity")) || 0,
+  qty: JSON.parse(window.localStorage.getItem("cartQuantity")) || 0,
 };
 
 export const cartSlice = createSlice({
@@ -16,10 +16,10 @@ export const cartSlice = createSlice({
     cartAdd: (state, action) => {
       state.loading = false;
       state.error = null;
-      state.carts = action.payload;
-      // console.log(action.payload);
-      window.localStorage.setItem("carts", JSON.stringify(action.payload));
+      state.carts.push(action.payload);
+      window.localStorage.setItem("carts", JSON.stringify(state.carts));
     },
+
     cartClear: (state) => {
       state.carts = null;
       state.error = false;
@@ -27,8 +27,6 @@ export const cartSlice = createSlice({
       window.localStorage.clear("carts");
     },
     cartQuantityHandle: (state, action) => {
-      // console.log(state.qty);
-      // console.log(action.payload)
       state.qty = state.qty + action.payload;
       window.localStorage.setItem("cartQuantity", state.qty);
     },

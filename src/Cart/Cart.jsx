@@ -1,11 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
 import { Await, Link, Navigate, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import "./cart.css";
 import axios from "axios";
+
 import { cartQuantityHandle } from "../store/cartSlice";
-import { axiosGet, axiosPost } from "../axios";
+import { axiosGet, axiosPost, imageUrl } from "../axios";
+import { toast } from "react-toastify";
+import { jwtDecode } from "jwt-decode";
+
 //  This is our all styled Components of any component
 const CartBody = styled.div`
   width: 100%;
@@ -361,12 +365,16 @@ const Cart = () => {
   const navigate = useNavigate();
   const stateUser = useSelector((state) => state.user.user);
   const stateCarts = useSelector((state) => state.carts.carts);
-  const [cartValue, setCartValue] = useState(stateCarts?.length);
-
+  const [cartValue, setCartValue] = useState(0);
   const [loader, setLoader] = useState(true);
   const [addclicked, SetaddClicked] = useState(false);
   const [paymentclicked, SetPaymentClicked] = useState(false);
-  const [cart, setcart] = useState(stateCarts);
+  const [cart, setcart] = useState([]);
+  const [deliveryTip, setDeliveryTip] = useState(20);
+  const [platfromFees, setplatfromFees] = useState(50);
+  const [currentUserId, setCurrentUserId] = useState(jwtDecode(stateUser));
+  const [userDetails, setUserDetails] = useState(null);
+
   const [deliveryAddress, setDeliveryAddress] = useState({
     fullName: "",
     phone: "",
@@ -378,72 +386,76 @@ const Cart = () => {
   });
 
   //  For getting all carts by user id from databases
-  const getCarts = async () => {
-    const res = await axiosGet(`get-carts-by-user/${stateUser._id}`);
-
+  const getCarts = useCallback(async () => {
+    const res = await axiosGet(
+      `getAllCarts`,
+      localStorage.getItem("user")
+    ).catch((err) => {
+      if (err && err.response.status == 401) {
+        toast.error(err.response.data.message);
+      }
+    });
     setcart(res.data);
-    setCartValue(res.data.length);
+    if (res.data !== null) {
+      setCartValue(res.data.carts.length);
+    } else {
+      setCartValue(0);
+    }
     setLoader(false);
-  };
+  }, []); // empty dependency array is correct here
 
-  useEffect(() => {
-    stateUser && getCarts();
-  }, []);
-
-  //  oncliked event
-
-  //  Here we handle cartquantity decrease or increase
   async function handleDecreaseqty(e, id) {
-    const res = await axiosPost(`cart/decreaseqty/${id}`, {
+    const res = await axiosPost(`cartDecreaseQty/${id}`, {
       userId: stateUser._id,
     }).catch((error) => {
       console.log(error);
     });
-    if (res.data) {
+    if (res?.status) {
       setLoader(false);
       dispatch(cartQuantityHandle(-1));
-      getCarts();
+      getCarts(); // ❗ You missed this earlier
     }
   }
-  // Handle Increament cart Qauntity
 
   async function handleIncrement(e, id) {
-    const res = await axiosPost(`cart/increment/${id}`, {
+    const res = await axiosPost(`cartIncreaseQty/${id}`, {
       userId: stateUser._id,
     }).catch((error) => {
       console.log(error);
     });
-    console.log(res.data, ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
-    if (res.data) {
+    if (res?.status) {
       setLoader(false);
       dispatch(cartQuantityHandle(1));
-      getCarts();
+      getCarts(); // ✅ This was already correct
     }
   }
 
+  useEffect(() => {
+    getCarts();
+  }, [getCarts]);
   let totalAmount = 0;
-  if (cart?.length > 1) {
-    for (let i = 0; i < cart?.length; i++) {
-      totalAmount += cart[i]?.price * cart[i]?.qty;
+  if (cartValue > 1) {
+    for (let i = 0; i < cart?.carts.length; i++) {
+      totalAmount += cart?.carts[i]?.price * cart?.carts[i]?.qty;
     }
   } else {
-    for (let i = 0; i < cart?.length; i++) {
-      totalAmount += cart[i]?.price * cart[i]?.qty;
+    for (let i = 0; i < cart?.carts?.length; i++) {
+      totalAmount += cart?.carts[i]?.price * cart?.carts[i]?.qty;
     }
   }
 
   const GST = (totalAmount * 5) / 100;
 
+  const finalAmount = totalAmount + GST + deliveryTip + platfromFees;
+
   //  Delivery address data handle from here--------------------------
   function handleaddressField(e) {
-    SetaddClicked(!addclicked);
-    if (addclicked) {
-      e.preventDefault();
-      document.getElementById("AddressField").style.display = "Block";
-    } else {
-      e.preventDefault();
-      document.getElementById("AddressField").style.display = "none";
-    }
+    e.preventDefault();
+    document.getElementById("AddressField").style.display = "Block";
+  }
+  function handlecloseAddress(e) {
+    e.preventDefault();
+    document.getElementById("AddressField").style.display = "none";
   }
 
   const handleChange = (e) => {
@@ -457,7 +469,6 @@ const Cart = () => {
   const handleSubmit = (e) => {
     e.stopPropagation();
     e.preventDefault();
-    console.log(deliveryAddress);
     SetaddClicked(!addclicked);
     alert("Form submitted successfully!");
   };
@@ -469,6 +480,66 @@ const Cart = () => {
     // } else {
     // }
   }
+  //  -----------------------get current user details ----------------------
+  useEffect(() => {
+    const fetchUserDetails = async () => {
+      try {
+        const res = await axiosGet(`getProfile/${currentUserId.id}`);
+        if (res && res.data) {
+          setUserDetails(res.data);
+        }
+      } catch (error) {
+        console.error("Failed to fetch user details:", error);
+      }
+    };
+
+    fetchUserDetails();
+  }, [currentUserId.id]);
+
+  // ----------------Payment Integration ----------------------
+  const handlePayment = async () => {
+    const res = await axiosPost("api/create-order", { amount: finalAmount });
+    // const res = await fetch("/api/create-order", {
+    //   method: "POST",
+    //   headers: { "Content-Type": "application/json" },
+    //   body: JSON.stringify({ amount: totalAmount }),
+    // });
+
+    const options = {
+      key: "rzp_test_sDX2c2fCWsiXsN",
+      amount: finalAmount,
+      currency: "INR",
+      name: userDetails.fullname,
+      description: "Order Payment",
+      order_id: res.order.id,
+      handler: async (response) => {
+        // Send payment verification data to backend
+        // await fetch("/api/verify-payment", {
+        //   method: "POST",
+        //   headers: { "Content-Type": "application/json" },
+        //   body: JSON.stringify(response),
+        // });
+
+        const paymentcheck = await axiosPost("api/verify-payment", response);
+        if (paymentcheck.success) {
+          toast.success("Payment Done Successfully.");
+        }
+        // Update order status here
+      },
+      prefill: {
+        name: userDetails.fullname,
+        email: userDetails.email,
+        contact: userDetails.mobile,
+      },
+      theme: {
+        color: "#0288d1",
+      },
+    };
+
+    const rzp = new Razorpay(options);
+    rzp.open();
+  };
+
   return (
     <CartBody>
       {cartValue == 0 && stateUser !== null && (
@@ -522,119 +593,123 @@ const Cart = () => {
           ) : (
             <></>
           )}
-          <DeliveryAddress
-            onClick={(e) => {
-              handleaddressField(e);
-            }}
-          >
-            Delivery Address
-            <AddresIcon>
-              <i className="fa-solid fa-location-dot"></i>
-            </AddresIcon>
-            <div className="form-container" id="AddressField">
-              <h2>Address Form</h2>
-              <form onSubmit={handleSubmit}>
-                <div className="form-group">
-                  <label>Full Name</label>
-                  <input
-                    type="text"
-                    name="fullName"
-                    placeholder="Enter Your Full Name"
-                    value={deliveryAddress.fullName}
-                    onChange={handleChange}
-                    required
-                  />
+          {cartValue > 0 && (
+            <>
+              <DeliveryAddress
+                onClick={(e) => {
+                  handleaddressField(e);
+                }}
+              >
+                Delivery Address
+                <AddresIcon>
+                  <i className="fa-solid fa-location-dot"></i>
+                </AddresIcon>
+                <div className="form-container" id="AddressField">
+                  <h2>Address Form</h2>
+                  <form onSubmit={handleSubmit}>
+                    <div className="form-group">
+                      <label>Full Name</label>
+                      <input
+                        type="text"
+                        name="fullName"
+                        placeholder="Enter Your Full Name"
+                        value={deliveryAddress.fullName}
+                        onChange={handleChange}
+                        required
+                      />
+                    </div>
+
+                    <div className="form-group">
+                      <label>Phone Number</label>
+                      <input
+                        type="tel"
+                        name="phone"
+                        placeholder="Enter Your Mobile No."
+                        value={deliveryAddress.phone}
+                        onChange={handleChange}
+                        required
+                      />
+                    </div>
+
+                    <div className="form-group">
+                      <label>Address</label>
+                      <input
+                        type="text"
+                        name="address"
+                        placeholder="Street"
+                        value={deliveryAddress.address}
+                        onChange={handleChange}
+                        required
+                      />
+                    </div>
+
+                    <div className="form-row">
+                      <div className="form-group">
+                        <label>City</label>
+                        <input
+                          type="text"
+                          name="city"
+                          placeholder="City"
+                          value={deliveryAddress.city}
+                          onChange={handleChange}
+                          required
+                        />
+                      </div>
+
+                      <div className="form-group">
+                        <label>State</label>
+                        <input
+                          type="text"
+                          name="state"
+                          placeholder="State"
+                          value={deliveryAddress.state}
+                          onChange={handleChange}
+                          required
+                        />
+                      </div>
+                    </div>
+
+                    <div className="form-row">
+                      <div className="form-group">
+                        <label>Postal Code</label>
+                        <input
+                          type="text"
+                          name="postalCode"
+                          placeholder="Postal Code"
+                          value={deliveryAddress.postalCode}
+                          onChange={handleChange}
+                          required
+                        />
+                      </div>
+
+                      <div className="form-group">
+                        <label>Country</label>
+                        <input
+                          type="text"
+                          name="country"
+                          placeholder="Country"
+                          value={deliveryAddress.country}
+                          onChange={handleChange}
+                          required
+                        />
+                      </div>
+                    </div>
+
+                    <button type="submit">Save</button>
+                  </form>
                 </div>
-
-                <div className="form-group">
-                  <label>Phone Number</label>
-                  <input
-                    type="tel"
-                    name="phone"
-                    placeholder="Enter Your Mobile No."
-                    value={deliveryAddress.phone}
-                    onChange={handleChange}
-                    required
-                  />
-                </div>
-
-                <div className="form-group">
-                  <label>Address</label>
-                  <input
-                    type="text"
-                    name="address"
-                    placeholder="Street"
-                    value={deliveryAddress.address}
-                    onChange={handleChange}
-                    required
-                  />
-                </div>
-
-                <div className="form-row">
-                  <div className="form-group">
-                    <label>City</label>
-                    <input
-                      type="text"
-                      name="city"
-                      placeholder="City"
-                      value={deliveryAddress.city}
-                      onChange={handleChange}
-                      required
-                    />
-                  </div>
-
-                  <div className="form-group">
-                    <label>State</label>
-                    <input
-                      type="text"
-                      name="state"
-                      placeholder="State"
-                      value={deliveryAddress.state}
-                      onChange={handleChange}
-                      required
-                    />
-                  </div>
-                </div>
-
-                <div className="form-row">
-                  <div className="form-group">
-                    <label>Postal Code</label>
-                    <input
-                      type="text"
-                      name="postalCode"
-                      placeholder="Postal Code"
-                      value={deliveryAddress.postalCode}
-                      onChange={handleChange}
-                      required
-                    />
-                  </div>
-
-                  <div className="form-group">
-                    <label>Country</label>
-                    <input
-                      type="text"
-                      name="country"
-                      placeholder="Country"
-                      value={deliveryAddress.country}
-                      onChange={handleChange}
-                      required
-                    />
-                  </div>
-                </div>
-
-                <button type="submit">Submit</button>
-              </form>
-            </div>
-          </DeliveryAddress>
-          <Payment>
-            Payment
-            <PaymentIcon onClick={handlePaymentClick}>
-              <i
-                style={{ color: "white", fontSize: "20px" }}
-                class="fa-solid fa-wallet"
-              ></i>
-            </PaymentIcon>
-          </Payment>
+              </DeliveryAddress>
+              <Payment>
+                Payment
+                <PaymentIcon onClick={handlePaymentClick}>
+                  <i
+                    style={{ color: "white", fontSize: "20px" }}
+                    class="fa-solid fa-wallet"
+                  ></i>
+                </PaymentIcon>
+              </Payment>
+            </>
+          )}
         </LeftPart>
         {cartValue > 0 ? (
           <RightPart className={stateUser ? "rightPart" : ""}>
@@ -653,7 +728,7 @@ const Cart = () => {
             <OverflowScroll>
               {/* Cart item is here  */}
 
-              {cart?.map((cart) => (
+              {cart?.carts.map((cart) => (
                 <>
                   <CartItem key={cart._id}>
                     <span
@@ -665,8 +740,11 @@ const Cart = () => {
                     >
                       {0}
                     </span>
-                    <CartImage src={cart.src} className="cartImage" />
-                    <CartItemName>{cart.name}</CartItemName>
+                    <CartImage
+                      src={`${imageUrl}/${cart.prodId.src}`}
+                      className="cartImage"
+                    />
+                    <CartItemName>{`${cart.prodId.name}`}</CartItemName>
                     <CartItemQuantity>
                       <span
                         style={{
@@ -675,7 +753,7 @@ const Cart = () => {
                           cursor: "pointer",
                         }}
                         onClick={(e) => {
-                          handleDecreaseqty(e, cart._id);
+                          handleDecreaseqty(e, cart.prodId?._id);
                         }}
                       >
                         -
@@ -697,7 +775,7 @@ const Cart = () => {
                           cursor: "pointer",
                         }}
                         onClick={(e) => {
-                          handleIncrement(e, cart._id);
+                          handleIncrement(e, cart.prodId._id);
                         }}
                       >
                         +
@@ -754,8 +832,8 @@ const Cart = () => {
                   <BillDeatilSpan> Gst And Restaurant Charges </BillDeatilSpan>
                 </BillDeatilSpans>
                 <BillDeatilSpans>
-                  <BillDeatilSpan>₹ 20</BillDeatilSpan>
-                  <BillDeatilSpan>₹ 10</BillDeatilSpan>
+                  <BillDeatilSpan>₹ {deliveryTip}</BillDeatilSpan>
+                  <BillDeatilSpan>₹ {platfromFees}</BillDeatilSpan>
                   <BillDeatilSpan>₹ {GST}</BillDeatilSpan>
                 </BillDeatilSpans>
               </DeliveryDetails>
@@ -763,7 +841,7 @@ const Cart = () => {
             {/*  Final Payment */}
             <PaymentSection className={stateUser ? "toPaysection" : ""}>
               <PaymentSpan>To Pay</PaymentSpan>
-              <PaymentSpan> ₹{totalAmount + GST + 10 + 20}</PaymentSpan>
+              <PaymentSpan> ₹{finalAmount}</PaymentSpan>
             </PaymentSection>
           </RightPart>
         ) : (
@@ -775,9 +853,16 @@ const Cart = () => {
           )
         )}
       </CartSection>
+      <button
+        onClick={(e) => {
+          handlePayment(e);
+        }}
+      >
+        Pay now{" "}
+      </button>
 
       {/* Loader is here  */}
-      <div
+      {/* <div
         class="spinner center"
         style={{ display: loader ? "block" : "none" }}
       >
@@ -793,7 +878,7 @@ const Cart = () => {
         <div class="spinner-blade"></div>
         <div class="spinner-blade"></div>
         <div class="spinner-blade"></div>
-      </div>
+      </div> */}
     </CartBody>
   );
 };
