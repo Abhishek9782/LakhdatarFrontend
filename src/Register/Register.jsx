@@ -3,7 +3,7 @@ import "./Register.css";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import { axiosPost } from "../axios";
-import OtpVerification from "../OtpVerification/Otpverification";
+import OtpVerification from "../OtpVerification/OtpVerification";
 
 const Register = () => {
   const navigate = useNavigate();
