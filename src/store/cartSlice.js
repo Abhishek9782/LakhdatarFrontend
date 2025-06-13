@@ -27,8 +27,12 @@ export const cartSlice = createSlice({
       window.localStorage.clear("carts");
     },
     cartQuantityHandle: (state, action) => {
-      state.qty = state.qty + action.payload;
-      window.localStorage.setItem("cartQuantity", state.qty);
+      if (action.payload == 0) {
+        window.localStorage.setItem("cartQuantity", action.payload);
+      } else {
+        state.qty = state.qty + action.payload;
+        window.localStorage.setItem("cartQuantity", state.qty);
+      }
     },
   },
 });

@@ -11,6 +11,7 @@ import { ToastContainer, Bounce } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
 import { Toaster } from "react-hot-toast";
+import Orders from "./Orders/Orders";
 
 // Lazy Loading Components for Faster Performance
 const Menu = lazy(() => import("./MenuSction/MenuPartiels/Menu"));
@@ -65,6 +66,7 @@ function AppContent() {
         <Route path="/user-register" element={<Register />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/our-special" element={<Ourspecial />} />
+        <Route path="/orders" element={<Orders />} />
         <Route path="*" element={<PageNotFound />} />
 
         {/* Admin Routes */}

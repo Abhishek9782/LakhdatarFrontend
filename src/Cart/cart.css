@@ -171,7 +171,7 @@ body {
 }
 
 .form-container {
-  max-width: 600px;
+  max-width: 800px;
   margin: 20px auto;
   padding: 20px;
   background-color: #fff;
@@ -196,7 +196,7 @@ body {
   flex-direction: column;
 }
 
-.form-container > form > label {
+.form-group > label {
   margin-bottom: 4px;
   font-weight: 500;
   color: #555;

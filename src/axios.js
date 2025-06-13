@@ -1,16 +1,26 @@
 import axios from "axios";
-import { USER_BASE_URL, ADMIN_BASE_URL, userEndPoints } from "./utils/baseUrl";
 import { toast } from "react-toastify";
-import { useDispatch } from "react-redux";
-import { logout } from "./store/userSlice";
-import { useNavigate } from "react-router-dom";
 
+// Base URLs
+import { USER_BASE_URL, ADMIN_BASE_URL } from "./utils/baseUrl";
+
+// Create axios instance with base config
 const axiosInstance = axios.create({
-  baseURL: USER_BASE_URL, // Ensure it's correctly set in your utils/baseUrl
-  headers: { "Content-Type": "application/json" },
+  baseURL: USER_BASE_URL,
+  headers: {
+    "Content-Type": "application/json",
+  },
+  withCredentials: true,
 });
 
-const token = window.localStorage.getItem("user");
+// Interceptor to add Authorization header dynamically
+axiosInstance.interceptors.request.use((config) => {
+  const token = window.localStorage.getItem("user");
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
 
 // Generic error handler
 const handleAxiosError = (error) => {
@@ -24,55 +34,55 @@ const handleAxiosError = (error) => {
 // GET request
 export const axiosGet = async (url) => {
   try {
-    const response = await axiosInstance.get(`${USER_BASE_URL}/${url}`, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
+    const response = await axiosInstance.get(url);
     return response.data;
   } catch (error) {
-    // toast.error(error.response.data.message);
+    // Optional: toast.error(error.response?.data?.message || "Something went wrong");
     throw error;
   }
 };
 
-// POST request (JSON & Multipart Support)
+// POST request (supports JSON and FormData)
 export const axiosPost = async (url, data, isFormData = false) => {
   try {
-    const response = await axiosInstance.post(`${USER_BASE_URL}/${url}`, data, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        ...(isFormData && { "Content-Type": "multipart/form-data" }),
-      },
-    });
+    const headers = isFormData
+      ? { "Content-Type": "multipart/form-data" }
+      : { "Content-Type": "application/json" };
+
+    const response = await axiosInstance.post(url, data, { headers });
     return response.data;
   } catch (error) {
-    toast.error(error.response.data.message);
+    toast.error(error.response?.data?.message || "Something went wrong");
     throw error;
   }
 };
 
-// PUT request (for Delete operations)
-export const axiosDelete = async (url, token) => {
+// PUT request (used for update/delete actions)
+export const axiosPut = async (url, data = {}) => {
   try {
-    const response = await axiosInstance.put(
-      url,
-      {},
-      {
-        headers: { Authorization: `Bearer ${token}` },
-      }
-    );
-    return response.data.message;
+    const response = await axiosInstance.put(url, data);
+    return response.data;
   } catch (error) {
-    return handleAxiosError(error);
+    toast.error(error.response?.data?.message || "Something went wrong");
+    throw error;
   }
 };
 
-// Image Upload API
-export const axiosForImage = async (url, data, token) => {
-  return axiosPost(url, data, token, true);
+// DELETE request (if you need a real DELETE)
+export const axiosDelete = async (url) => {
+  try {
+    const response = await axiosInstance.delete(url);
+    return response.data;
+  } catch (error) {
+    toast.error(error.response?.data?.message || "Something went wrong");
+    throw error;
+  }
 };
 
-// Image Base URL for local
-// export const imageUrl = "http://localhost:5000/uploads/";
-// for live
+// Image Upload helper
+export const axiosForImage = async (url, data) => {
+  return axiosPost(url, data, true);
+};
 
+// Image base URL
 export const imageUrl = "https://lakahdatarbackend.onrender.com/uploads/";

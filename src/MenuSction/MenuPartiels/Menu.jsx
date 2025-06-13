@@ -155,7 +155,7 @@ const Menu = () => {
         }
       });
       if (res.status) {
-        toast.success(res.message);
+        toast.success("Product added successfully.");
         dispatch(cartQuantityHandle(1));
       }
     }

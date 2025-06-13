@@ -160,7 +160,9 @@ const Navbar = () => {
         </div>
         <span
           className="menuIcon"
-          onClick={() => document.body.classList.add("menu-open")}
+          onClick={() => {
+            document.body.classList.add("menu-open");
+          }}
         >
           <i className="fa-solid fa-bars"></i>
         </span>
@@ -275,26 +277,53 @@ const Navbar = () => {
                 />
               </div>
               <ul>
-                <li className="username">
+                <li className="username" style={{ listStyle: "none" }}>
                   <b>Hey! {currentUser.fullname}</b>
                 </li>
-                <li>
-                  <i className="fa-solid fa-bag-shopping"></i> Your Orders
-                </li>
-                <li onClick={handleFavProduct}>
-                  <i className="fa-regular fa-heart"></i> Favorite
-                </li>
-                <li>
-                  <i className="fa fa-ticket"></i> Your Ticket
-                </li>
-                <li>
-                  <i className="fa-regular fa-handshake"></i> Help
-                </li>
-                <li>
-                  <i className="fa-solid fa-cart-shopping"></i> Cart
-                </li>
-                <li onClick={handleLogout}>
-                  <i className="fa-solid fa-address-card"></i> Logout
+                <a href="/orders">
+                  <li>
+                    <i className="fa-solid fa-bag-shopping"></i> Your Orders
+                  </li>
+                </a>
+                <a href="">
+                  <li onClick={handleFavProduct}>
+                    <i className="fa-regular fa-heart"></i> Favorite
+                  </li>
+                </a>
+                <a href="">
+                  <li>
+                    <i className="fa fa-ticket"></i> Your Ticket
+                  </li>
+                </a>
+                <a href="">
+                  <li>
+                    <i className="fa-regular fa-handshake"></i> Help
+                  </li>
+                </a>
+
+                <a href="">
+                  <li>
+                    <i className="fa-solid fa-cart-shopping"></i> Cart
+                  </li>
+                </a>
+                <li
+                  onClick={handleLogout}
+                  style={{
+                    listStyle: "none",
+                    color: "black",
+                    listStyle: "none",
+                    lineHeight: "70px",
+                    fontFamily: "Kanit",
+                    fontSize: "17px",
+                    width: "100%",
+                    cursor: "pointer",
+                  }}
+                >
+                  <i
+                    className="fa-solid fa-address-card"
+                    style={{ color: "black" }}
+                  ></i>{" "}
+                  Logout
                 </li>
               </ul>
             </div>

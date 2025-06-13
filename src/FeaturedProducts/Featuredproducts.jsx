@@ -3,7 +3,8 @@ import "./FeaturedProducts.css";
 import { cartAdd, cartClear, cartQuantityHandle } from "../store/cartSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { axiosGet, axiosPost, imageUrl } from "../axios";
-import { toast } from "react-toastify";
+// import { toast } from "react-toastify";
+import { toast } from "react-hot-toast";
 
 const Featuredproducts = () => {
   const [FeatureProducts, setFeatureProducts] = useState([]);
@@ -55,18 +56,35 @@ const Featuredproducts = () => {
   //   [user, carts, dispatch]
   // );
 
+  // async function handleCart(e, id) {
+  //   e.preventDefault();
+  //   const res = await axiosPost(`addToCart/${id}`).catch((err) => {
+  //     if (err) {
+  //       toast.error(err.message);
+  //     }
+  //   });
+  //   if (res.status) {
+  //     toast.success(res.message);
+  //   }
+  // }
+
   async function handleCart(e, id) {
     e.preventDefault();
-    const res = await axiosPost(`addToCart/${id}`).catch((err) => {
-      if (err) {
-        toast.error(err.message);
+    if (user == null) {
+      dispatch(cartAdd(id));
+      dispatch(cartQuantityHandle(1));
+    } else {
+      const res = await axiosPost(`addToCart/${id}`).catch((err) => {
+        if (err) {
+          toast.error(err.message);
+        }
+      });
+      if (res.status) {
+        toast.success(res.message);
+        dispatch(cartQuantityHandle(1));
       }
-    });
-    if (res.status) {
-      toast.success(res.message);
     }
   }
-
   return (
     <>
       <div className="FpContainer">

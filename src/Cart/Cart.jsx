@@ -7,7 +7,7 @@ import axios from "axios";
 
 import { cartQuantityHandle } from "../store/cartSlice";
 import { axiosGet, axiosPost, imageUrl } from "../axios";
-import { toast } from "react-toastify";
+import { toast } from "react-hot-toast";
 import { jwtDecode } from "jwt-decode";
 
 //  This is our all styled Components of any component
@@ -374,6 +374,7 @@ const Cart = () => {
   const [platfromFees, setplatfromFees] = useState(50);
   const [currentUserId, setCurrentUserId] = useState(jwtDecode(stateUser));
   const [userDetails, setUserDetails] = useState(null);
+  const [errors, setErrors] = useState({});
 
   const [deliveryAddress, setDeliveryAddress] = useState({
     fullName: "",
@@ -430,9 +431,6 @@ const Cart = () => {
     }
   }
 
-  useEffect(() => {
-    getCarts();
-  }, [getCarts]);
   let totalAmount = 0;
   if (cartValue > 1) {
     for (let i = 0; i < cart?.carts.length; i++) {
@@ -466,11 +464,25 @@ const Cart = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
-    e.stopPropagation();
-    e.preventDefault();
-    SetaddClicked(!addclicked);
-    alert("Form submitted successfully!");
+  const handleSubmit = async (e) => {
+    e.preventDefault(); // Prevent page reload
+
+    const isValid = validate();
+
+    if (isValid) {
+      console.log("Submitting form...");
+      try {
+        const res = await axiosPost("/addaddress", deliveryAddress);
+        if (res.status) {
+          toast.success(res.message);
+          document.getElementById("AddressField").style.display = "none";
+        }
+      } catch (error) {
+        console.error("Submission error:", error);
+      }
+    } else {
+      console.log("Validation failed", errors);
+    }
   };
 
   //  handle Payment click by event
@@ -481,6 +493,10 @@ const Cart = () => {
     // }
   }
   //  -----------------------get current user details ----------------------
+
+  useEffect(() => {
+    getCarts();
+  }, [getCarts]);
   useEffect(() => {
     const fetchUserDetails = async () => {
       try {
@@ -495,15 +511,17 @@ const Cart = () => {
 
     fetchUserDetails();
   }, [currentUserId.id]);
-
   // ----------------Payment Integration ----------------------
   const handlePayment = async () => {
-    const res = await axiosPost("api/create-order", { amount: finalAmount });
-    // const res = await fetch("/api/create-order", {
-    //   method: "POST",
-    //   headers: { "Content-Type": "application/json" },
-    //   body: JSON.stringify({ amount: totalAmount }),
-    // });
+    const { success, order } = await axiosPost("api/create-payment-order", {
+      finalAmount: finalAmount,
+      // in future we can optimize it using showing ul all address and by selecting i give that idf
+    });
+
+    if (!success || !order?.id) {
+      toast.error("Failed to create payment order");
+      return;
+    }
 
     const options = {
       key: "rzp_test_sDX2c2fCWsiXsN",
@@ -511,7 +529,7 @@ const Cart = () => {
       currency: "INR",
       name: userDetails.fullname,
       description: "Order Payment",
-      order_id: res.order.id,
+      order_id: order.id,
       handler: async (response) => {
         // Send payment verification data to backend
         // await fetch("/api/verify-payment", {
@@ -521,8 +539,27 @@ const Cart = () => {
         // });
 
         const paymentcheck = await axiosPost("api/verify-payment", response);
+        console.log(paymentcheck, "payment is checking here ");
         if (paymentcheck.success) {
           toast.success("Payment Done Successfully.");
+          const saveorder = await axiosPost("/save-order", {
+            finalAmount: finalAmount,
+            gst: GST,
+            deliveryTip: deliveryTip,
+            platfromFees: platfromFees,
+            deliveryAddress: "684481b6a1c6b8d80554fd78",
+            razorpay_order_id: paymentcheck.paymentDetails.order_id,
+            razorpay_payment_id: paymentcheck.paymentDetails.id,
+            paymentMethod: paymentcheck.paymentMethod,
+            deliveryAdd: "684481b6a1c6b8d80554fd78",
+          });
+          if (saveorder.success) {
+            toast.success("order placed SuccessFully.");
+            dispatch(cartQuantityHandle(0));
+            navigate(0);
+          }
+        } else {
+          toast.error("Payment verification Failed ");
         }
         // Update order status here
       },
@@ -538,6 +575,70 @@ const Cart = () => {
 
     const rzp = new Razorpay(options);
     rzp.open();
+  };
+
+  // all inputs fields
+  const inputFields = [
+    {
+      name: "fullName",
+      label: "Full Name",
+      type: "text",
+      placeholder: "Enter Your Full Name",
+    },
+    {
+      name: "phone",
+      label: "Phone Number",
+      type: "number",
+      placeholder: "Enter Your Mobile No.",
+    },
+    { name: "address", label: "Address", type: "text", placeholder: "Street" },
+    { name: "city", label: "City", type: "text", placeholder: "City" },
+    { name: "state", label: "State", type: "text", placeholder: "State" },
+    {
+      name: "postalCode",
+      label: "Postal Code",
+      type: "text",
+      placeholder: "Postal Code",
+    },
+    { name: "country", label: "Country", type: "text", placeholder: "Country" },
+  ];
+
+  //  calidation check error
+  const validate = () => {
+    const newErrors = {};
+
+    if (!deliveryAddress.fullName.trim()) {
+      newErrors.fullName = "Full Name is required";
+    }
+
+    if (!/^\d{10}$/.test(deliveryAddress.phone)) {
+      newErrors.phone = "Phone number must be 10 digits";
+    }
+
+    if (!deliveryAddress.address.trim()) {
+      newErrors.address = "Address is required";
+    }
+
+    if (!deliveryAddress.city.trim()) {
+      newErrors.city = "City is required";
+    }
+
+    if (!deliveryAddress.state.trim()) {
+      newErrors.state = "State is required";
+    }
+
+    if (!deliveryAddress.postalCode.trim()) {
+      newErrors.postalCode = "Postal Code is required";
+    }
+
+    if (!deliveryAddress.country.trim()) {
+      newErrors.country = "Country is required";
+    }
+
+    setErrors(newErrors); // Update the errors state
+
+    // Return true if no errors
+    return Object.keys(newErrors).length === 0;
   };
 
   return (
@@ -606,96 +707,44 @@ const Cart = () => {
                 </AddresIcon>
                 <div className="form-container" id="AddressField">
                   <h2>Address Form</h2>
-                  <form onSubmit={handleSubmit}>
-                    <div className="form-group">
-                      <label>Full Name</label>
-                      <input
-                        type="text"
-                        name="fullName"
-                        placeholder="Enter Your Full Name"
-                        value={deliveryAddress.fullName}
-                        onChange={handleChange}
-                        required
-                      />
-                    </div>
+                  <form>
+                    {inputFields.map(({ name, label, type, placeholder }) => (
+                      <div className="form-group" key={name}>
+                        <label>
+                          {label}
+                          {/* Show error if exists for this field */}
+                          {errors[name] && (
+                            <span
+                              style={{
+                                color: "red",
+                                marginLeft: "15px",
+                                fontSize: "0.9em",
+                              }}
+                            >
+                              {errors[name]}
+                            </span>
+                          )}
+                        </label>
 
-                    <div className="form-group">
-                      <label>Phone Number</label>
-                      <input
-                        type="tel"
-                        name="phone"
-                        placeholder="Enter Your Mobile No."
-                        value={deliveryAddress.phone}
-                        onChange={handleChange}
-                        required
-                      />
-                    </div>
-
-                    <div className="form-group">
-                      <label>Address</label>
-                      <input
-                        type="text"
-                        name="address"
-                        placeholder="Street"
-                        value={deliveryAddress.address}
-                        onChange={handleChange}
-                        required
-                      />
-                    </div>
-
-                    <div className="form-row">
-                      <div className="form-group">
-                        <label>City</label>
                         <input
-                          type="text"
-                          name="city"
-                          placeholder="City"
-                          value={deliveryAddress.city}
+                          type={type}
+                          name={name}
+                          placeholder={placeholder}
+                          value={deliveryAddress[name]}
                           onChange={handleChange}
                           required
                         />
                       </div>
+                    ))}
 
-                      <div className="form-group">
-                        <label>State</label>
-                        <input
-                          type="text"
-                          name="state"
-                          placeholder="State"
-                          value={deliveryAddress.state}
-                          onChange={handleChange}
-                          required
-                        />
-                      </div>
-                    </div>
-
-                    <div className="form-row">
-                      <div className="form-group">
-                        <label>Postal Code</label>
-                        <input
-                          type="text"
-                          name="postalCode"
-                          placeholder="Postal Code"
-                          value={deliveryAddress.postalCode}
-                          onChange={handleChange}
-                          required
-                        />
-                      </div>
-
-                      <div className="form-group">
-                        <label>Country</label>
-                        <input
-                          type="text"
-                          name="country"
-                          placeholder="Country"
-                          value={deliveryAddress.country}
-                          onChange={handleChange}
-                          required
-                        />
-                      </div>
-                    </div>
-
-                    <button type="submit">Save</button>
+                    <button
+                      type="submit"
+                      onClick={(e) => {
+                        handleSubmit(e);
+                      }}
+                    >
+                      Save
+                    </button>
                   </form>
                 </div>
               </DeliveryAddress>
@@ -853,32 +902,15 @@ const Cart = () => {
           )
         )}
       </CartSection>
-      <button
-        onClick={(e) => {
-          handlePayment(e);
-        }}
-      >
-        Pay now{" "}
-      </button>
-
-      {/* Loader is here  */}
-      {/* <div
-        class="spinner center"
-        style={{ display: loader ? "block" : "none" }}
-      >
-        <div class="spinner-blade"></div>
-        <div class="spinner-blade"></div>
-        <div class="spinner-blade"></div>
-        <div class="spinner-blade"></div>
-        <div class="spinner-blade"></div>
-        <div class="spinner-blade"></div>
-        <div class="spinner-blade"></div>
-        <div class="spinner-blade"></div>
-        <div class="spinner-blade"></div>
-        <div class="spinner-blade"></div>
-        <div class="spinner-blade"></div>
-        <div class="spinner-blade"></div>
-      </div> */}
+      {cart !== null && (
+        <button
+          onClick={(e) => {
+            handlePayment(e);
+          }}
+        >
+          Place Your Order{" "}
+        </button>
+      )}
     </CartBody>
   );
 };
