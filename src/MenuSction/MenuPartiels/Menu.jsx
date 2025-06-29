@@ -24,7 +24,7 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import { motion } from "framer-motion";
 import { useDispatch, useSelector } from "react-redux";
 import { FavCheck } from "../../store/FavPSlice";
-import { axiosGet, axiosPost, imageUrl } from "../../axios";
+import { axiosGet, axiosPost, imageUrl, imageUrlLocal } from "../../axios";
 // import { toast } from "react-toastify";
 import { toast } from "react-hot-toast";
 import { useJwt } from "react-jwt";
@@ -67,7 +67,8 @@ const Menu = () => {
         pageNumber: pageNum,
         pageSize: rowsPerPage,
       });
-      if (res.status === 1) {
+
+      if (res.status) {
         setFood(res.data.data);
         setNextPage(res.data.hasNextPage);
       }
@@ -115,7 +116,8 @@ const Menu = () => {
       if (res.status === 1) setFood(res.data);
       else setFood([]);
     } catch (err) {
-      toast.error("Error loading food");
+      toast.error(err.response?.data.message);
+      setFood([]);
     } finally {
       setLoading(false);
     }
@@ -317,13 +319,14 @@ const Menu = () => {
                         <CardMedia
                           component="img"
                           height="200"
-                          image={`${imageUrl}/${item.src}`}
+                          image={`${imageUrlLocal}/${item.src}`}
                           alt={item.name}
                           sx={{
                             objectFit: "cover",
                             borderTopLeftRadius: 16,
                             borderTopRightRadius: 16,
                           }}
+                          loading="Lazy"
                         />
                       </Link>
                       <IconButton

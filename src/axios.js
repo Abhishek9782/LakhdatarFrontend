@@ -85,4 +85,6 @@ export const axiosForImage = async (url, data) => {
 };
 
 // Image base URL
-export const imageUrl = "https://lakahdatarbackend.onrender.com/uploads/";
+export const imageUrl =
+  "https://lakahdatarbackend.onrender.com/uploads/productImages";
+export const imageUrlLocal = "http://localhost:5000/uploads/productImages";

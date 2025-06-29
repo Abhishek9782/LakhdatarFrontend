@@ -20,28 +20,25 @@
   width: 100%;
 }
 .legalhelpContainer > .helpLegalheader > h3 {
-  color: black;
+  color: #000;
   font-size: 28px;
   font-weight: 600;
-  font-family: "kanit";
+  font-family: kanit;
   margin: 0;
   padding: 0;
 }
 .legalhelpContainer > .helpLegalheader > span {
-  color: black;
+  color: #000;
   font-size: 16px;
   font-weight: 400;
-  font-family: "Kanit";
+  font-family: Kanit;
 }
-
-/*  Help seciton css is here  */
 .LegalhelpSection {
   background-color: rgb(198 190 190 / 19%);
   max-width: 1024px;
   width: 100%;
   height: auto;
-  margin: 10px 0px;
-  margin-bottom: 100px;
+  margin: 10px 0 100px;
   display: flex;
   padding: 15px;
   flex-direction: row;
@@ -56,101 +53,91 @@
   flex-direction: column;
   text-align: center;
   font-size: 18px;
-  font-family: "Kanit";
+  font-family: Kanit;
   align-items: center;
   margin: 40px 5px;
 }
 .LegalhelpSection > .LeagalhelpHeader > .link {
-  /* color: black !important; */
-  margin: 20px 0px;
+  margin: 20px 0;
   border-bottom: none;
   text-decoration: none;
   width: 250px;
   padding: 5px 10px;
 }
 .LegalhelpSection > .LeagalhelpHeader > .link > span {
-  color: black;
+  color: #000;
   width: 250px;
 }
-
 .LegalhelpSection > .LeagalhelpHeader > .link:nth-child(2) {
-  border: 1px solid white;
-  border: 1px solid white;
+  border: 1px solid #fff;
   padding: 5px 10px;
-  box-shadow: 2px 2px 5px white;
+  box-shadow: 2px 2px 5px #fff;
 }
-
 .Legalhelptype {
   width: 100%;
-  /* background-color: green; */
 }
 .Legalhelptype > ul {
   padding: 10px;
 }
 .Legalhelptype > ul > li {
   list-style: none;
-  padding: 20px 0px 20px 0px;
-  border-bottom: 1px solid black;
+  padding: 20px 0;
+  border-bottom: 1px solid #000;
   display: flex;
   position: relative;
 }
-
 .Legalhelptype > ul > li > .text > span {
   margin: 5px 30px;
-  color: black;
-  font-family: "Kanit";
+  color: #000;
+  font-family: Kanit;
   font-weight: 400;
   font-size: 20px;
 }
-
 .Legalhelptype > ul > li > .text > .show {
   display: block;
-  color: black;
+  color: #000;
   padding: 10px 20px;
-  transition: all ease-in 0.5s;
+  transition: 0.5s ease-in;
 }
 .Legalhelptype > ul > li > .text > .show > p {
-  color: orangered;
+  color: #ff4500;
   font-size: 16px;
-  font-family: "kanit";
+  font-family: kanit;
   margin: 10px 20px;
 }
-
 .Legalhelptype > ul > li > .text > .hide {
   display: none;
 }
 .Legalhelptype > ul > li > .text > .show > h3 {
-  color: black;
-  font-family: "kanit";
+  color: #000;
+  font-family: kanit;
   font-size: 23px;
 }
 .Legalhelptype > ul > li > .text > .show > button {
-  color: white;
+  color: #fff;
   padding: 5px 10px;
-  border: 1px solid orangered;
-  background-color: orangered;
-  font-family: "Kanit";
-  margin: 0px 10px;
+  border: 1px solid #ff4500;
+  background-color: #ff4500;
+  font-family: Kanit;
+  margin: 0 10px;
 }
 .Legalhelptype > ul > li > .text > .show > button:hover {
-  color: black;
+  color: #000;
   background-color: transparent;
-  border: 1px solid orangered;
+  border: 1px solid #ff4500;
 }
 .Legalhelptype > ul > li > .text > .show > span {
-  color: black;
+  color: #000;
   display: block;
   font-size: 10px;
   margin: 5px 10px;
 }
-
 .Legalhelptype > ul > li > .icon > i {
   position: absolute;
   right: 30px;
   cursor: pointer;
-  color: black;
+  color: #000;
 }
-
 @media screen and (max-width: 767px) {
   .legalhelpContainer {
     position: relative;
@@ -162,18 +149,18 @@
     align-items: center;
   }
   .legalhelpContainer > .helpLegalheader > h3 {
-    color: black;
+    color: #000;
     font-size: 22px;
     font-weight: 600;
-    font-family: "kanit";
+    font-family: kanit;
     margin: 0;
     padding: 0;
   }
   .legalhelpContainer > .helpLegalheader > span {
-    color: black;
+    color: #000;
     font-size: 14px;
     font-weight: 400;
-    font-family: "Kanit";
+    font-family: Kanit;
   }
   .LegalhelpSection {
     display: flex;
@@ -186,8 +173,8 @@
   }
   .Legalhelptype > ul > li > .text > span {
     margin: 5px 30px;
-    color: black;
-    font-family: "Kanit";
+    color: #000;
+    font-family: Kanit;
     font-weight: 400;
     font-size: 17px;
   }

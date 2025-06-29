@@ -10,17 +10,17 @@
 .ChefContaner > h3 {
   position: relative;
   bottom: 40px;
-  color: black;
+  color: #000;
   text-transform: uppercase;
   text-align: center;
-  font-family: "Kanit", sans-serif;
+  font-family: Kanit, sans-serif;
   font-size: 35px;
   text-shadow: 2px 2px 5px #999;
 }
 .ChefContaner > h3 > i {
-  color: black;
+  color: #000;
   font-size: 25px;
-  margin: 0px 5px;
+  margin: 0 5px;
 }
 .chefcards {
   width: 80%;
@@ -35,7 +35,7 @@
 .chefcards .chefcard {
   width: 250px;
   height: 100%;
-  border: 1px solid black;
+  border: 1px solid #000;
   border-radius: 10px;
   position: relative;
 }
@@ -50,32 +50,30 @@
   margin-top: 195px;
 }
 .aboutchef h5 {
-  color: black;
+  color: #000;
   font-size: 16px;
   text-align: center;
-  margin: 0px 0px;
-  font-family: "Pacifico", "cursive";
+  margin: 0;
+  font-family: Pacifico, "cursive";
 }
 .aboutchef h3 {
   font-size: 17px;
   text-align: center;
   text-transform: capitalize;
-  margin: 4px 0px;
-  color: black;
-  font-family: "Kanit", sans-serif;
+  margin: 4px 0;
+  color: #000;
+  font-family: Kanit, sans-serif;
 }
 .chefmedia {
   text-align: center;
-  margin: 10px 0px;
+  margin: 10px 0;
 }
 .chefmedia > i {
   font-size: 22px;
-  color: black;
-  margin: 0px 10px;
+  color: #000;
+  margin: 0 10px;
   cursor: pointer;
 }
-
-/* media query for responsive website   */
 @media screen and (max-width: 767px) {
   .ChefContaner {
     margin-top: 10vh;
@@ -97,11 +95,4 @@
   .chefcard {
     margin-top: 20vh;
   }
-}
-@media screen and (min-width: 768px) and (max-width: 1023px) {
-}
-
-@media screen and (min-width: 1024px) and (max-width: 1439px) {
-}
-@media screen and (min-width: 1440px) {
 }

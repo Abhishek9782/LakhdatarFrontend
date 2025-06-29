@@ -4,7 +4,7 @@ import { axiosForImage, axiosPost } from "../../../axios";
 import { toast, Bounce } from "react-toastify";
 import { useCookies } from "react-cookie";
 
-export const AddProduct = ({ setisAdd, getAllproducts }) => {
+export const AddProduct = ({ setIsAdd, getAllproducts }) => {
   const [product, setProduct] = useState({
     name: "",
     fullprice: "",
@@ -36,10 +36,14 @@ export const AddProduct = ({ setisAdd, getAllproducts }) => {
       formData.append("src", file); // Append file with key 'image'
     }
     try {
-      const res = await axiosPost("productadd", formData);
+      const res = await axiosPost(
+        "lakhdatar/admin/product/productadd",
+        formData,
+        true
+      );
 
-      if (res?.data) {
-        toast.success(res.data.message, {
+      if (res?.status) {
+        toast.success(res.message, {
           position: "top-right",
           autoClose: 5000,
           hideProgressBar: false,
@@ -50,7 +54,7 @@ export const AddProduct = ({ setisAdd, getAllproducts }) => {
           theme: "light",
           transition: Bounce,
         });
-        setisAdd(false);
+        setIsAdd(false);
         getAllproducts();
       }
 
@@ -64,7 +68,12 @@ export const AddProduct = ({ setisAdd, getAllproducts }) => {
   return (
     <div className="add-productparent ">
       <div className="form-box">
-        <span className="closebtn" onClick={() => setisAdd(false)}>
+        <span
+          className="closebtn"
+          onClick={() => {
+            setIsAdd(false);
+          }}
+        >
           <i className="fa-solid fa-xmark"></i>
         </span>
         <form

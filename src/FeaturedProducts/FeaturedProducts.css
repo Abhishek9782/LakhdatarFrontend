@@ -1,3 +1,8 @@
+.fpHead,
+.fpbottom button,
+.fpdetails .fptop h3 {
+  font-family: Kanit, sans-serif;
+}
 .FpContainer {
   width: 100%;
   height: 70vh;
@@ -9,26 +14,27 @@
   justify-content: center;
   position: relative;
 }
-
 .fpchildcontainer {
   width: 80%;
   height: 100%;
-  color: black;
+  color: #000;
   display: flex;
   flex-direction: column;
   justify-content: center;
 }
+.fpcards,
+.fpdetails .fptop {
+  flex-direction: row;
+  display: flex;
+}
 .fpHead {
-  color: black;
+  color: #000;
   text-align: center;
   position: relative;
   bottom: 25px;
-  font-family: "Kanit", sans-serif;
   font-size: 35px;
 }
 .fpcards {
-  display: flex;
-  flex-direction: row;
   justify-content: space-evenly;
 }
 .fpcard {
@@ -49,16 +55,12 @@
 }
 .fpdetails .fptop {
   height: 50%;
-  display: flex;
-  flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  /* border-bottom: 1px solid black; */
 }
 .fpdetails .fptop h3 {
-  font-family: "Kanit", sans-serif;
   font-size: 16px;
-  color: black;
+  color: #000;
   margin-left: 10px;
 }
 .fpdetails > .fptop > .fptopimage {
@@ -79,43 +81,37 @@
 .fpbottom button {
   padding: 5px 10px;
   border-radius: 4px;
-  background-color: black;
+  background-color: #000;
   cursor: pointer;
   margin-left: 20px;
   box-shadow: 2px 2px 5px #999;
   opacity: 0.8;
-  transition: all ease-in 0.5s;
-  font-family: "Kanit", sans-serif;
+  transition: 0.5s ease-in;
 }
 .fpbottom button:hover {
   opacity: 1;
 }
 .fpbottom span {
   font-size: 24px;
-  color: black;
+  color: #000;
   margin-right: 20px;
 }
 .feature-rating {
   width: 20%;
   position: absolute;
   right: -1px;
-  /* top: 0px; */
-  color: white;
-  font-family: "kanit";
+  color: #fff;
+  font-family: kanit;
   background-color: green;
   text-align: center;
   bottom: 16vh;
   letter-spacing: 2px;
 }
-
-/* >>>>>>>>>>>>>>>>>>Loader css is here >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>*/
-/* From Uiverse.io by barisdogansutcu */
 .svg-loader {
   width: 3.25em;
   transform-origin: center;
-  animation: rotate4 2s linear infinite;
+  animation: 2s linear infinite rotate4;
 }
-
 circle {
   fill: none;
   stroke: hsl(214, 97%, 59%);
@@ -123,40 +119,33 @@ circle {
   stroke-dasharray: 1, 200;
   stroke-dashoffset: 0;
   stroke-linecap: round;
-  animation: dash4 1.5s ease-in-out infinite;
+  animation: 1.5s ease-in-out infinite dash4;
 }
-
 @keyframes rotate4 {
   100% {
     transform: rotate(360deg);
   }
 }
-
 @keyframes dash4 {
   0% {
     stroke-dasharray: 1, 200;
     stroke-dashoffset: 0;
   }
-
   50% {
     stroke-dasharray: 90, 200;
     stroke-dashoffset: -35px;
   }
-
   100% {
     stroke-dashoffset: -125px;
   }
 }
-
-/* >>>>>>>>>>>>>>>>>>>>>>>>>>>>Media Query Is here >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> */
-
 @media screen and (min-width: 300px) and (max-width: 500px) {
   h1,
   h2,
   h3,
   h4,
   p {
-    margin: 0px;
+    margin: 0;
   }
   .FpContainer {
     width: 100%;
@@ -182,7 +171,7 @@ circle {
     height: 20vh !important;
   }
   .fpdetails {
-    margin: 5px 0px 0px 0px !important;
+    margin: 5px 0 0 !important;
   }
   .fpdetails .fptop {
     padding: 10px;
@@ -192,7 +181,7 @@ circle {
     font-weight: 400;
   }
   .fpbottom {
-    padding: 23px 0px !important;
+    padding: 23px 0 !important;
   }
   .feature-rating {
     bottom: 14vh !important;
@@ -200,22 +189,26 @@ circle {
   .svg-loader {
     width: 3.25em;
     transform-origin: center;
-    animation: rotate4 2s linear infinite;
+    animation: 2s linear infinite rotate4;
     position: absolute;
     margin-left: 32%;
   }
 }
 @media screen and (min-width: 501px) and (max-width: 767px) {
+  .FpContainer,
+  .fpcard,
+  .fpcards {
+    height: max-content;
+  }
   h1,
   h2,
   h3,
   h4,
   p {
-    margin: 0px;
+    margin: 0;
   }
   .FpContainer {
     width: 100%;
-    height: max-content;
   }
   .fpchildcontainer {
     width: 80%;
@@ -227,46 +220,42 @@ circle {
     display: grid;
     flex-direction: column;
     width: 100%;
-    height: max-content;
     grid-template-columns: 1fr 1fr;
     row-gap: 20px;
     gap: 20px;
   }
   .fpcard {
     width: 100%;
-    margin: 20px 0px 0px 0px;
-    height: max-content;
+    margin: 20px 0 0;
     padding-bottom: 20px;
   }
   .fpcard > img {
     height: 15vh !important;
   }
   .feature-rating {
-    width: 20%;
-    position: absolute;
     right: -1px;
-    /* top: 0px; */
-    color: white;
-    font-family: "kanit";
+    color: #fff;
+    font-family: kanit;
     background-color: green;
     text-align: center;
-    bottom: 25vh;
     letter-spacing: 2px;
+    position: absolute;
+    bottom: 43%;
+    width: 40%;
   }
   .fpbottom {
     display: flex;
     flex-direction: column-reverse;
-
-    margin: 0px;
+    margin: 0;
   }
   .fpbottom button {
     width: 100%;
-    padding: 0px !important;
-    margin: 0px !important;
+    padding: 0 !important;
+    margin: 0 !important;
   }
   .fpbottom span {
     font-size: 1rem;
-    color: black;
+    color: #000;
     margin-right: 20px;
     text-align: end;
     display: block;
@@ -274,15 +263,10 @@ circle {
     left: 40%;
   }
   .fptop {
-    margin: 10px 0px;
+    margin: 10px 0;
   }
   .fptop > h3 {
     font-size: 12px !important;
-  }
-  .feature-rating {
-    position: absolute;
-    bottom: 43%;
-    width: 40%;
   }
   .fpcards {
     margin-bottom: 25px;
@@ -290,7 +274,7 @@ circle {
   .svg-loader {
     width: 3.25em;
     transform-origin: center;
-    animation: rotate4 2s linear infinite;
+    animation: 2s linear infinite rotate4;
     position: absolute;
     margin-left: 32%;
   }
@@ -306,9 +290,4 @@ circle {
   .fpcard {
     width: 35vw !important;
   }
-}
-
-@media screen and (min-width: 1024px) and (max-width: 1439px) {
-}
-@media screen and (min-width: 1440px) {
 }

@@ -6,12 +6,10 @@
   width: 100%;
   height: 80vh;
   object-fit: cover;
-  animation: kenburns-top 5s ease-out both;
+  animation: 5s ease-out both kenburns-top;
   z-index: 1;
   filter: brightness(0.5);
 }
-/*  animation css is here */
-
 @keyframes kenburns-top {
   0% {
     -webkit-transform: scale(1) translateY(0);
@@ -26,7 +24,6 @@
     transform-origin: top;
   }
 }
-
 .greetingmessage {
   z-index: 1;
   font-size: 50px;
@@ -37,31 +34,29 @@
 }
 .greetingmessage span {
   z-index: 2;
-  font-size: 50px;
   font-family: var(--kanitFont);
   font-weight: 400;
   font-size: 45px;
-  color: white;
+  color: #fff;
 }
 .greetingmessage span p {
   display: inline;
-  margin: 0px 10px;
-  color: yellow;
+  margin: 0 10px;
+  color: #ff0;
   width: 100%;
 }
 .family {
   margin-left: 66px;
 }
-
 .cartCount {
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  background-color: white;
-  color: black;
+  background-color: #fff;
+  color: #000;
   position: absolute;
   top: -8px;
-  font-family: "kanit";
+  font-family: kanit;
   right: -13px;
   font-size: 10px;
   text-align: center;
@@ -69,8 +64,6 @@
   align-items: center;
   justify-content: center;
 }
-
-/*  Media Query for responsive  */
 @media screen and (max-width: 767px) {
   .bgImgwtext {
     width: 100%;
@@ -79,8 +72,7 @@
   }
   .homebgimage {
     min-width: 100%;
-    height: 30vh !important
-    ;
+    height: 30vh !important;
   }
   .greetingmessage {
     width: 100%;
@@ -90,7 +82,7 @@
   }
   .greetingmessage > span {
     font-size: 1rem;
-    color: white;
+    color: #fff;
   }
   .family {
     position: absolute;
@@ -107,8 +99,7 @@
   }
   .homebgimage {
     min-width: 154%;
-    height: 70vh !important
-    ;
+    height: 70vh !important;
   }
   .greetingmessage {
     width: 100%;
@@ -118,7 +109,7 @@
   }
   .greetingmessage > span {
     font-size: 2rem;
-    color: white;
+    color: #fff;
     line-height: 10px;
   }
   .family {
@@ -126,9 +117,4 @@
     top: 4em;
     left: -1em;
   }
-}
-
-@media screen and (min-width: 1024px) and (max-width: 1439px) {
-}
-@media screen and (min-width: 1440px) {
 }

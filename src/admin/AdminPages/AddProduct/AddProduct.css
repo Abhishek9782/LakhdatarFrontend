@@ -9,16 +9,14 @@
   justify-content: center;
   align-items: center;
 }
-
 .form-box {
   width: 800px;
   height: 600px;
   margin-left: 200px;
-  background-color: white;
+  background-color: #fff;
   border-radius: 5px;
   box-shadow: 2px 2px 10px #999;
   position: relative;
-  /* overflow-y: scroll; */
   padding: 10px;
 }
 .closebtn {
@@ -31,10 +29,9 @@
   cursor: pointer;
 }
 .closebtn i {
-  color: white;
+  color: #fff;
   font-size: 20px;
 }
-
 .form-box > form {
   display: flex;
   flex-direction: column;
@@ -42,39 +39,37 @@
   align-items: center;
 }
 .form-box > form > h2 {
-  color: black;
+  color: #000;
   font-size: 24px;
   text-transform: capitalize;
-  margin: 10px 0px;
-  font-family: "Kanit", " sans-serif";
+  margin: 10px 0;
+  font-family: Kanit, " sans-serif";
 }
-
 .form-box > form > input {
   width: 80%;
-  margin: 15px 0px;
-  padding: 5px 5px;
-  color: black;
+  margin: 15px 0;
+  padding: 5px;
+  color: #000;
 }
 .form-box > form > select {
   width: 80%;
-  margin: 0px 0px 10px 0px;
+  margin: 0 0 10px;
   padding: 8px 5px;
   cursor: pointer;
-  color: black;
+  color: #000;
 }
 .form-box > form > select > option {
-  background-color: white;
-  color: black;
+  background-color: #fff;
+  color: #000;
 }
-
 .form-box > form > button {
   width: 80%;
   background-color: transparent;
-  color: black;
+  color: #000;
   border: 1px solid green;
-  transition: all ease 0.7s;
+  transition: 0.7s;
 }
 .form-box > form > button:hover {
   background-color: green;
-  color: white;
+  color: #fff;
 }

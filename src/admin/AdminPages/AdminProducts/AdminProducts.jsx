@@ -5,7 +5,7 @@ import { getProducts } from "../../../services/authService";
 import { Nav } from "../Components/LeftSlid/Nav";
 import { UpdateProduct } from "../updateProduct/UpdateProduct";
 import { AddProduct } from "../AddProduct/AddProduct";
-import { imageUrl } from "../../../axios";
+import { axiosPut, imageUrl } from "../../../axios";
 
 // Material-UI Components
 import {
@@ -45,6 +45,8 @@ import {
   ChevronRight,
 } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { ADMIN_BASE_URL } from "../../../utils/baseUrl";
 
 const AdminProducts = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -61,6 +63,7 @@ const AdminProducts = () => {
 
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
+  const token = window.localStorage.getItem("user");
   const navigate = useNavigate();
 
   // Fetch products with pagination & search
@@ -99,10 +102,17 @@ const AdminProducts = () => {
   // Handle product deletion
   const handleDelete = async (id) => {
     try {
-      const res = await deleteaxios(
-        `lakhdatar/admin/deleteproduct/${id}`,
-        cookies.jwt
+      const res = await axios.put(
+        `${ADMIN_BASE_URL}/product/deleteproduct/${id}`,
+        {},
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
+      console.log(res);
       toast.success(res);
       getAllProducts();
     } catch (error) {
@@ -145,6 +155,11 @@ const AdminProducts = () => {
   const handleDeleteCancel = () => {
     setDeleteDialogOpen(false);
     setProductToDelete(null);
+  };
+
+  const handleSetisAdd = (value) => {
+    console.log(value, "value is here ");
+    setIsAdd(value);
   };
 
   return (
@@ -407,14 +422,14 @@ const AdminProducts = () => {
       {selectedProduct && (
         <UpdateProduct
           product={selectedProduct}
-          onUpdate={getAllProducts}
-          onClose={() => setSelectedProduct(null)}
+          getAllProducts={getAllProducts}
+          hide={setSelectedProduct}
         />
       )}
 
       {/* Add Product Dialog */}
       {isAdd && (
-        <AddProduct setIsAdd={setIsAdd} getAllProducts={getAllProducts} />
+        <AddProduct setIsAdd={handleSetisAdd} getAllProducts={getAllProducts} />
       )}
 
       {/* Delete Confirmation Dialog */}

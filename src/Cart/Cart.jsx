@@ -363,6 +363,7 @@ const RightEmptyImg = styled.img`
 const Cart = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
   const stateUser = useSelector((state) => state.user.user);
   const stateCarts = useSelector((state) => state.carts.carts);
   const [cartValue, setCartValue] = useState(0);
@@ -512,7 +513,31 @@ const Cart = () => {
     fetchUserDetails();
   }, [currentUserId.id]);
   // ----------------Payment Integration ----------------------
+  const loadRazorpayScript = () => {
+    return new Promise((resolve) => {
+      if (window.Razorpay) {
+        return resolve(true);
+      }
+
+      const script = document.createElement("script");
+      script.src = "https://checkout.razorpay.com/v1/checkout.js";
+      script.onload = () => resolve(true);
+      script.onerror = () => resolve(false);
+      document.body.appendChild(script);
+    });
+  };
+
   const handlePayment = async () => {
+    // first we are load script
+    const isLoaded = await loadRazorpayScript();
+
+    // not loaded then give us error
+    if (!isLoaded) {
+      toast.error("Razorpay SDK failed to load. Are you online?");
+      return;
+    }
+
+    // create order
     const { success, order } = await axiosPost("api/create-payment-order", {
       finalAmount: finalAmount,
       // in future we can optimize it using showing ul all address and by selecting i give that idf
@@ -524,45 +549,12 @@ const Cart = () => {
     }
 
     const options = {
-      key: "rzp_test_sDX2c2fCWsiXsN",
+      key: "rzp_test_sDX2c2fCWsiXsN", // ✅ Use ENV in production
       amount: finalAmount,
       currency: "INR",
       name: userDetails.fullname,
       description: "Order Payment",
       order_id: order.id,
-      handler: async (response) => {
-        // Send payment verification data to backend
-        // await fetch("/api/verify-payment", {
-        //   method: "POST",
-        //   headers: { "Content-Type": "application/json" },
-        //   body: JSON.stringify(response),
-        // });
-
-        const paymentcheck = await axiosPost("api/verify-payment", response);
-        console.log(paymentcheck, "payment is checking here ");
-        if (paymentcheck.success) {
-          toast.success("Payment Done Successfully.");
-          const saveorder = await axiosPost("/save-order", {
-            finalAmount: finalAmount,
-            gst: GST,
-            deliveryTip: deliveryTip,
-            platfromFees: platfromFees,
-            deliveryAddress: "684481b6a1c6b8d80554fd78",
-            razorpay_order_id: paymentcheck.paymentDetails.order_id,
-            razorpay_payment_id: paymentcheck.paymentDetails.id,
-            paymentMethod: paymentcheck.paymentMethod,
-            deliveryAdd: "684481b6a1c6b8d80554fd78",
-          });
-          if (saveorder.success) {
-            toast.success("order placed SuccessFully.");
-            dispatch(cartQuantityHandle(0));
-            navigate(0);
-          }
-        } else {
-          toast.error("Payment verification Failed ");
-        }
-        // Update order status here
-      },
       prefill: {
         name: userDetails.fullname,
         email: userDetails.email,
@@ -571,13 +563,48 @@ const Cart = () => {
       theme: {
         color: "#0288d1",
       },
-    };
+      handler: async (response) => {
+        // 2. Verify Payment
+        const { success, paymentDetails, paymentMethod } = await axiosPost(
+          "api/verify-payment",
+          response
+        );
 
+        if (!success) {
+          toast.error("Payment verification failed");
+          return;
+        }
+
+        // 3. Save Order
+        const saveOrderRes = await axiosPost("/save-order", {
+          finalAmount,
+          gst: GST,
+          deliveryTip,
+          platfromFees,
+          deliveryAddress: "684481b6a1c6b8d80554fd78",
+          razorpay_order_id: paymentDetails.order_id,
+          razorpay_payment_id: paymentDetails.id,
+          paymentMethod,
+        });
+
+        if (saveOrderRes.success) {
+          toast.success("Order placed successfully!");
+          dispatch(cartQuantityHandle(0));
+          navigate(0);
+        } else {
+          toast.error("Failed to save order");
+        }
+      },
+      modal: {
+        ondismiss: () => {
+          toast.warn("Payment popup closed.");
+        },
+      },
+    };
     const rzp = new Razorpay(options);
     rzp.open();
   };
 
-  // all inputs fields
   const inputFields = [
     {
       name: "fullName",

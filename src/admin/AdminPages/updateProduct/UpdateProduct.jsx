@@ -4,7 +4,7 @@ import { axiosPost, imageUrl } from "../../../axios";
 import { toast } from "react-toastify";
 import { useCookies } from "react-cookie";
 
-export const UpdateProduct = ({ product, onUpdate, onClose }) => {
+export const UpdateProduct = ({ product, getAllProducts, hide }) => {
   const [image, setImage] = useState("");
   const [cookies] = useCookies(["jwt"]);
 
@@ -28,9 +28,9 @@ export const UpdateProduct = ({ product, onUpdate, onClose }) => {
       formData.src = image[0];
     }
     const res = await axiosPost(
-      `lakhdatar/admin/updateproduct/${product._id}`,
+      `lakhdatar/admin/product/updateproduct/${product._id}`,
       formData,
-      cookies.jwt
+      true
     );
     if (res.response?.data) {
       toast.error(res.response.data.message);
@@ -41,12 +41,13 @@ export const UpdateProduct = ({ product, onUpdate, onClose }) => {
       // });
     }
 
-    if (res.data) {
+    if (res.status) {
       Swal.fire({
         icon: "success",
-        text: res.data.message,
+        text: res.message,
       }).then(() => {
-        onUpdate(product._id, formData);
+        getAllProducts();
+        hide(null);
       });
     }
   };
@@ -54,7 +55,7 @@ export const UpdateProduct = ({ product, onUpdate, onClose }) => {
   return (
     <div className="update-product-modal">
       <div className="update-product-content">
-        <button className="close-btn" onClick={onClose}>
+        <button className="close-btn" onClick={() => hide(null)}>
           &times;
         </button>
         <h2>Update Product</h2>
