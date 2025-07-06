@@ -99,7 +99,6 @@ const Featuredproducts = () => {
                 loading="Lazy"
               >
                 {/* for locally we use this */}
-                {/* <img src={`${imageUrl}` + data.src} alt="" loading="lazy" /> */}
                 <img src={data.src} alt="" loading="lazy" />
 
                 <div className="fpdetails">

@@ -315,11 +315,11 @@ const Menu = () => {
                   >
                     {/* Image */}
                     <Box sx={{ position: "relative" }}>
+                      {console.log(item)}
                       <Link to={`/menu/${item._id}`}>
                         <CardMedia
                           component="img"
                           height="200"
-                          // image={`${imageUrl}/${item.src}`} // for local image store
                           image={item.src} // get direct clodinary image
                           alt={item.name}
                           sx={{
