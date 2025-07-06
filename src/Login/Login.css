@@ -38,6 +38,9 @@
   top: 30px;
   font-family: Kanit, "sans-serif";
 }
+.Loginform > form > h3 {
+  color: black;
+}
 .Loginform > form > input {
   width: 80%;
   border: none;
@@ -70,4 +73,9 @@ button[type="sumbit"]:hover {
 }
 .RegisterLink {
   bottom: -70px;
+}
+.errortag {
+  position: absolute;
+  top: calc(10px + 20%);
+  color: red;
 }

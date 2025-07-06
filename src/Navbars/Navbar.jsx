@@ -309,7 +309,6 @@ const Navbar = () => {
                 <li
                   onClick={handleLogout}
                   style={{
-                    listStyle: "none",
                     color: "black",
                     listStyle: "none",
                     lineHeight: "70px",

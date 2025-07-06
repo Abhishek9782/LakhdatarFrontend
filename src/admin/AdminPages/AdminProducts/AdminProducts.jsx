@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { useCookies } from "react-cookie";
-import { toast } from "react-toastify";
+import { toast } from "react-hot-toast";
 import { getProducts } from "../../../services/authService";
 import { Nav } from "../Components/LeftSlid/Nav";
 import { UpdateProduct } from "../updateProduct/UpdateProduct";
@@ -60,11 +60,21 @@ const AdminProducts = () => {
   const [loading, setLoading] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [productToDelete, setProductToDelete] = useState(null);
+  const [debouncedSearchItem, setDebouncedSearchItem] = useState("");
 
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
   const token = window.localStorage.getItem("user");
   const navigate = useNavigate();
+
+  // Debouncing
+  useEffect(() => {
+    const delayDebounce = setTimeout(() => {
+      setDebouncedSearchItem(searchItem);
+    }, 400);
+
+    return () => clearTimeout(delayDebounce);
+  }, [searchItem]);
 
   // Fetch products with pagination & search
   const getAllProducts = useCallback(async () => {
@@ -73,8 +83,9 @@ const AdminProducts = () => {
       const res = await getProducts({
         pageSize,
         pageNumber: currentPage,
-        searchItem,
+        searchItem: debouncedSearchItem,
       });
+
       if (res.status === 1) {
         setProducts(res.data.products);
         setTotalProducts(res.data.totalproduct);
@@ -82,21 +93,21 @@ const AdminProducts = () => {
         toast.error("Failed to fetch products");
       }
     } catch (error) {
-      // toast.error(error?.response?.data?.message || "Something went wrong");
-      if (!toast.isActive("server-error")) {
-        toast.error(error?.response?.data?.message || "Something went wrong", {
-          toastId: "server-error",
-        });
-      }
-      // navigate("/lakhdatar/admin/login");
+      console.log("here is your code run ", error);
+      toast.error(error?.response?.data?.message || "Something went wrong");
+      // if (!toast.isActive("server-error")) {
+      //   toast.error(error?.response?.data?.message || "Something went wrong", {
+      //     toastId: "server-error",
+      //   });
+      // }
+      navigate("/lakhdatar/admin/login");
     } finally {
       setLoading(false);
     }
-  }, [currentPage, pageSize, searchItem]);
+  }, [currentPage, pageSize, debouncedSearchItem]);
 
   useEffect(() => {
     getAllProducts();
-    console.log("Here is getAllproducts are listen");
   }, [getAllProducts]);
 
   // Handle product deletion
@@ -142,10 +153,10 @@ const AdminProducts = () => {
   };
 
   // Handle search submit
-  const handleSearchSubmit = (e) => {
-    e.preventDefault();
-    getAllProducts();
-  };
+  // const handleSearchSubmit = (e) => {
+  //   e.preventDefault();
+  //   getAllProducts();
+  // };
 
   const handleDeleteClick = (product) => {
     setProductToDelete(product);
@@ -164,13 +175,15 @@ const AdminProducts = () => {
 
   return (
     <Box sx={{ display: "flex", minHeight: "100vh" }}>
-      <Nav />
+      <Nav activeIndex={1} />
       <Box
         component="main"
         sx={{
           flexGrow: 1,
           p: 3,
           backgroundColor: theme.palette.background.default,
+          height: "100vh",
+          overflow: "scroll",
         }}
       >
         <Container maxWidth="xl">
@@ -187,7 +200,7 @@ const AdminProducts = () => {
           >
             <Box
               component="form"
-              onSubmit={handleSearchSubmit}
+              // onSubmit={handleSearchSubmit}
               sx={{ width: isSmallScreen ? "100%" : "auto" }}
             >
               <TextField
@@ -283,7 +296,8 @@ const AdminProducts = () => {
                         >
                           <TableCell>
                             <Avatar
-                              src={`${imageUrl}${prod.src}`}
+                              // src={`${imageUrl}${prod.src}`}
+                              src={prod.src}
                               alt={prod.name}
                               variant="rounded"
                               sx={{ width: 56, height: 56 }}
@@ -398,13 +412,35 @@ const AdminProducts = () => {
                   shape="rounded"
                   color="primary"
                   siblingCount={isSmallScreen ? 0 : 1}
+                  sx={{ color: "black" }}
                 />
 
                 <Select
                   size="small"
                   value={pageSize}
                   onChange={handlePageSizeChange}
-                  sx={{ minWidth: 80 }}
+                  sx={{
+                    minWidth: 80,
+                    backgroundColor: "rgb(25, 118, 210)",
+                    color: "white",
+                    "& .MuiSelect-icon": {
+                      color: "white",
+                    },
+                    "& .MuiOutlinedInput-notchedOutline": {
+                      borderColor: "rgb(25, 118, 210)",
+                    },
+                    "&:hover .MuiOutlinedInput-notchedOutline": {
+                      borderColor: "white",
+                    },
+                  }}
+                  MenuProps={{
+                    PaperProps: {
+                      sx: {
+                        bgcolor: "rgb(25, 118, 210)",
+                        color: "white",
+                      },
+                    },
+                  }}
                 >
                   {[10, 20, 50, 100].map((size) => (
                     <MenuItem key={size} value={size}>

@@ -2,14 +2,14 @@ import React, { useState } from "react";
 import "./Nav.css";
 import { Link } from "react-router-dom";
 
-export const Nav = () => {
-  const [activeIndex, setactiveIndex] = useState(0);
+export const Nav = ({ activeIndex }) => {
+  // const [activeIndex, setactiveIndex] = useState(0);
 
-  function changeBack(e, active) {
-    e.preventDefault();
-    //  here we set index
-    setactiveIndex(active);
-  }
+  // function changeBack(e, active) {
+  //   e.preventDefault();
+  //   //  here we set index
+  //   setactiveIndex(active);
+  // }
 
   return (
     <div className="leftNav">
@@ -61,7 +61,7 @@ export const Nav = () => {
               changeBack(e, 3);
             }}
           >
-            <Link to="/total-order">Total Orders </Link>
+            <Link to="/total-order">Email Templates </Link>
           </li>
 
           <li
@@ -70,7 +70,7 @@ export const Nav = () => {
               changeBack(e, 4);
             }}
           >
-            <Link>Overview</Link>
+            <Link>Faq Management </Link>
           </li>
         </ul>
       </nav>

@@ -319,7 +319,8 @@ const Menu = () => {
                         <CardMedia
                           component="img"
                           height="200"
-                          image={`${imageUrlLocal}/${item.src}`}
+                          // image={`${imageUrl}/${item.src}`} // for local image store
+                          image={item.src} // get direct clodinary image
                           alt={item.name}
                           sx={{
                             objectFit: "cover",

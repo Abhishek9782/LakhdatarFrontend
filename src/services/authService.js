@@ -21,10 +21,6 @@ export const getProducts = async (userData) => {
     );
     return response.data;
   } catch (error) {
-    // console.error(
-    //   "Update Profile Error:",
-    //   error.response?.data || error.message
-    // );
     throw error;
   }
 };

@@ -77,7 +77,7 @@ const Product = () => {
       >
         <CardMedia
           component="img"
-          image={`${imageUrl}${product.src}`}
+          image={product.src}
           alt={product.name}
           sx={{ width: 300, height: 300, objectFit: "cover" }}
         />

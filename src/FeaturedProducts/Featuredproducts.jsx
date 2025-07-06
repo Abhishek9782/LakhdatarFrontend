@@ -98,7 +98,10 @@ const Featuredproducts = () => {
                 key={data._id}
                 loading="Lazy"
               >
-                <img src={`${imageUrl}` + data.src} alt="" loading="lazy" />
+                {/* for locally we use this */}
+                {/* <img src={`${imageUrl}` + data.src} alt="" loading="lazy" /> */}
+                <img src={data.src} alt="" loading="lazy" />
+
                 <div className="fpdetails">
                   <div className="fptop">
                     <h3>{data.name} </h3>

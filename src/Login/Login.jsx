@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import "./Login.css";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -10,12 +10,13 @@ import { userEndPoints } from "../utils/baseUrl";
 const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const errorRef = useRef(null);
 
   // Here is all state=------------------------------
   const [eyeShow, seteyeShow] = useState("hide");
   const [user, setUser] = useState({
-    email: undefined,
-    password: undefined,
+    email: "",
+    password: "",
   });
   // Here is our functions ------------------------
 
@@ -24,21 +25,43 @@ const Login = () => {
     setUser((prev) => ({ ...prev, [event.target.id]: event.target.value }));
   }
 
-  //  Here is our api call to check user is valid or not
-  const checkuser = async (e) => {
-    e.preventDefault();
-    dispatch(loginStart());
-    const res = await axiosPost(userEndPoints.login, user);
-
-    if (res.error && res.error.status == 0) {
-      toast.error(res.error.message);
+  //  validate user inputs
+  const validate = () => {
+    const gmailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/i;
+    if (!user.email.trim()) {
+      errorRef.current.innerText = "Please Enter a Email Address.";
+      return true;
     }
-    // If alll is good email and id both are good then run it
+    if (!gmailRegex.test(user.email)) {
+      errorRef.current.innerText = "Invalid email format";
+      return true;
+    }
+    if (!user.password.trim()) {
+      errorRef.current.innerText = "Please Enter Password ";
+      return true;
+    }
+    return false;
+  };
 
-    if (res.data) {
-      toast.success("Login SuccessFully.");
-      dispatch(loginSucess({ data: res.data }));
-      navigate("/");
+  //  Here is our api call to check user is valid or not
+  const Login = async (e) => {
+    e.preventDefault();
+    const err = validate();
+    if (!err) {
+      dispatch(loginStart());
+
+      const res = await axiosPost(userEndPoints.login, user);
+
+      if (res.error && res.error.status == 0) {
+        toast.error(res.error.message);
+      }
+      // If alll is good email and id both are good then run it
+
+      if (res.data) {
+        toast.success("Login SuccessFully.");
+        dispatch(loginSucess({ data: res.data }));
+        navigate("/");
+      }
     }
   };
 
@@ -49,10 +72,12 @@ const Login = () => {
           <form
             action=""
             onSubmit={(e) => {
-              checkuser(e);
+              Login(e);
             }}
           >
             <h3>Login Here</h3>
+
+            <span className="errortag" ref={errorRef}></span>
 
             <input
               type="text"

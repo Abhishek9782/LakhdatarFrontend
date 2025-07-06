@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "./AdminLogin.css";
 import axios from "axios";
-import { toast } from "react-toastify";
+import { toast } from "react-hot-toast";
 import { useCookies } from "react-cookie";
 import { useNavigate } from "react-router-dom";
 import { loginAdmin } from "../../../services/authService";

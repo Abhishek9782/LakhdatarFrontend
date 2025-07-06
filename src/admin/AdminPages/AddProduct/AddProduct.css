@@ -73,3 +73,14 @@
   background-color: green;
   color: #fff;
 }
+/*  for react loder | */
+.loader-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 150px;
+  flex-direction: column;
+}
+.loader-message {
+  color: black;
+}

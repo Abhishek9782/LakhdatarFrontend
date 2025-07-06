@@ -59,3 +59,14 @@
 .update-product-content button:hover {
   opacity: 0.8;
 }
+/*  for react loder | */
+.loader-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 150px;
+  flex-direction: column;
+}
+.loader-message {
+  color: black;
+}

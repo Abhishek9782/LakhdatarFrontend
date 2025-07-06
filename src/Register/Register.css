@@ -23,6 +23,10 @@
   top: 30px;
   font-family: Kanit, "sans-serif";
 }
+.Registerform > form > h3 {
+  color: black;
+  margin: 0px;
+}
 .Registerform > form > input {
   width: 80%;
   border: none;

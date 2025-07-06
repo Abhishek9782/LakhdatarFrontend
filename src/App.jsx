@@ -12,6 +12,7 @@ import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
 import { Toaster } from "react-hot-toast";
 import Orders from "./Orders/Orders";
+import UserList from "./admin/AdminPages/AllUser/UserList";
 
 // Lazy Loading Components for Faster Performance
 const Menu = lazy(() => import("./MenuSction/MenuPartiels/Menu"));
@@ -47,8 +48,9 @@ function AppContent() {
     () =>
       [
         "/lakhdatar/admin/login",
-        "/lakhdatar/admin/home",
+        "/lakhdatar/admin/",
         "/lakhdatar/admin/products",
+        "/lakhdatar/admin/allusers",
       ].includes(location.pathname),
     [location.pathname]
   );
@@ -71,8 +73,9 @@ function AppContent() {
 
         {/* Admin Routes */}
         <Route path="/lakhdatar/admin/login" element={<AdminLogin />} />
-        <Route path="/lakhdatar/admin/home" element={<AdminHome />} />
+        <Route path="/lakhdatar/admin/" element={<AdminHome />} />
         <Route path="/lakhdatar/admin/products" element={<AdminProducts />} />
+        <Route path="/lakhdatar/admin/allusers" element={<UserList />} />
       </Routes>
       {!isAdminRoutes && <Footer />}
 
