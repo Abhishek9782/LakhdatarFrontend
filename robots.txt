@@ -1,6 +1,8 @@
 # Allow all search engines to crawl everything
 User-agent: *
 Allow: /
+# Disallow admin routes
+Disallow: /lakhdatar/admin/
 
 # Sitemap location
 Sitemap: https://lakhdatarrestaurant.netlify.app/sitemap.xml

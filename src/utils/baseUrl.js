@@ -88,7 +88,7 @@ export const axiosRequest = async (
 
     return { success: true, data: response.data };
   } catch (error) {
-    if (error.response.statu == 401) {
+    if (error.response.status == 401) {
       console.log(
         "we should naviagte login page and remove all user credential "
       );
