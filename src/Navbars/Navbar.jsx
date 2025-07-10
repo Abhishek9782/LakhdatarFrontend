@@ -18,7 +18,7 @@ const Navbar = () => {
   const profileRef = useRef(null);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const user = useSelector((state) => state.user.user.data);
+  const user = useSelector((state) => state.user?.user?.data);
   const favProduct = useSelector((state) => state.favprod.favProduct);
   const cartQuantity = useSelector((state) => state.carts.qty);
 
