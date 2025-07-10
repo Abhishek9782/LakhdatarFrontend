@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useCallback } from "react";
-import { useCookies } from "react-cookie";
 import { toast } from "react-hot-toast";
-import { getProducts } from "../../../services/authService";
+import { getProducts, deleteProducts } from "../../../services/authService";
 import { Nav } from "../Components/LeftSlid/Nav";
 import { UpdateProduct } from "../updateProduct/UpdateProduct";
 import { AddProduct } from "../AddProduct/AddProduct";
@@ -47,6 +46,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { ADMIN_BASE_URL } from "../../../utils/baseUrl";
+import { useCookies } from "react-cookie";
 
 const AdminProducts = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -93,13 +93,9 @@ const AdminProducts = () => {
         toast.error("Failed to fetch products");
       }
     } catch (error) {
-      console.log("here is your code run ", error);
       toast.error(error?.response?.data?.message || "Something went wrong");
-      // if (!toast.isActive("server-error")) {
-      //   toast.error(error?.response?.data?.message || "Something went wrong", {
-      //     toastId: "server-error",
-      //   });
-      // }
+      // Here we are removing localstorage old token
+      localStorage.removeItem("user");
       navigate("/lakhdatar/admin/login");
     } finally {
       setLoading(false);
@@ -113,19 +109,21 @@ const AdminProducts = () => {
   // Handle product deletion
   const handleDelete = async (id) => {
     try {
-      const res = await axios.put(
-        `${ADMIN_BASE_URL}/product/deleteproduct/${id}`,
-        {},
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      console.log(res);
-      toast.success(res);
-      getAllProducts();
+      // const res = await axios.put(
+      //   `${ADMIN_BASE_URL}/product/deleteproduct/${id}`,
+      //   {},
+      //   {
+      //     headers: {
+      //       "Content-Type": "application/json",
+      //       Authorization: `Bearer ${token}`,
+      //     },
+      //   }
+      // );
+      const res = await deleteProducts(id);
+      if (res.status) {
+        toast.success(res.message);
+        getAllProducts();
+      }
     } catch (error) {
       toast.error(error?.response?.data?.message || "Failed to delete product");
     } finally {

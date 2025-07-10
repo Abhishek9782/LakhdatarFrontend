@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import {
   Card,
   CardContent,
@@ -15,13 +15,19 @@ import {
   Button,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import { green, red, orange, grey } from "@mui/material/colors";
+import { green, red, orange } from "@mui/material/colors";
+import { toast } from "react-hot-toast";
+import {
+  AdminEndpoints,
+  axiosRequest,
+  userEndPoints,
+} from "../../../utils/baseUrl";
+import { UserStatusChange } from "../../../services/authService";
 
 const statusColors = {
   Active: green[500],
-  Blocked: red[500],
   Deactivated: orange[500],
-  Deleted: grey[500],
+  Delete: red[500],
 };
 
 const UserCard = ({ user, setOpenUserDetails }) => {
@@ -29,9 +35,21 @@ const UserCard = ({ user, setOpenUserDetails }) => {
 
   const handleStatusChange = (event) => {
     const newStatus = event.target.value;
-    setStatus(newStatus);
-    console.log("Status changed to:", newStatus);
-    // Trigger API call if needed
+    let status = newStatus == "Active" ? 1 : newStatus == "Deactivate" ? 0 : 2;
+    setStatus(status);
+  };
+
+  // here we update using api
+
+  const handleSubmit = async () => {
+    let params = { id: user._id, status: status };
+
+    const res = await UserStatusChange(params);
+
+    if (res.status) {
+      toast.success(res?.message);
+      setOpenUserDetails(false);
+    }
   };
 
   return (
@@ -117,7 +135,7 @@ const UserCard = ({ user, setOpenUserDetails }) => {
 
             <Chip
               label={
-                status == 1 ? "Active" : status == 0 ? "Deactivated" : "Deleted"
+                status == 1 ? "Active" : status == 0 ? "Deactivate" : "Delete"
               }
               sx={{
                 backgroundColor:
@@ -126,7 +144,7 @@ const UserCard = ({ user, setOpenUserDetails }) => {
                       ? "Active"
                       : status == 0
                       ? "Deactivated"
-                      : "Deleted"
+                      : "Delete"
                   ],
                 color: "white",
                 fontWeight: 500,
@@ -138,26 +156,21 @@ const UserCard = ({ user, setOpenUserDetails }) => {
               <InputLabel>Status</InputLabel>
               <Select
                 value={
-                  status == 1
-                    ? "Active"
-                    : status == 0
-                    ? "Deactivated"
-                    : "Deleted"
+                  status == 1 ? "Active" : status == 0 ? "Deactivate" : "Delete"
                 }
                 label="Status"
+                sx={{ color: "black" }}
                 onChange={handleStatusChange}
               >
                 <MenuItem value="Active" sx={{ color: "black" }}>
-                  Actives
+                  Active
                 </MenuItem>
-                <MenuItem value="Blocked" sx={{ color: "black" }}>
-                  Blocked
+
+                <MenuItem value="Deactivate" sx={{ color: "black" }}>
+                  Deactivate
                 </MenuItem>
-                <MenuItem value="Deactivated" sx={{ color: "black" }}>
-                  Deactivated
-                </MenuItem>
-                <MenuItem value="Deleted" sx={{ color: "black" }}>
-                  Deleted
+                <MenuItem value="Delete" sx={{ color: "black" }}>
+                  Delete
                 </MenuItem>
               </Select>
             </FormControl>
@@ -167,7 +180,7 @@ const UserCard = ({ user, setOpenUserDetails }) => {
               variant="contained"
               color="primary"
               sx={{ mt: 2 }}
-              //   onClick={handleSubmit}
+              onClick={handleSubmit}
             >
               Submit
             </Button>

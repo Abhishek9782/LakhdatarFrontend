@@ -5,6 +5,7 @@ import { toast, Bounce } from "react-toastify";
 import { useCookies } from "react-cookie";
 import Compressor from "compressorjs";
 import { Circles } from "react-loader-spinner";
+import { AdminEndpoints, axiosRequest } from "../../../utils/baseUrl";
 
 export const AddProduct = ({ setIsAdd, getAllproducts }) => {
   const [product, setProduct] = useState({
@@ -56,14 +57,19 @@ export const AddProduct = ({ setIsAdd, getAllproducts }) => {
         });
       }
 
-      const res = await axiosPost(
-        "lakhdatar/admin/product/productadd",
+      const res = await axiosRequest(
+        "admin",
+        "post",
+        AdminEndpoints.addProduct,
         formData,
-        true
+        {},
+        {
+          "Content-Type": "multipart/form-data",
+        }
       );
 
-      if (res?.status) {
-        toast.success(res.message, {
+      if (res.success) {
+        toast.success(res.data.message, {
           position: "top-right",
           autoClose: 5000,
           hideProgressBar: false,

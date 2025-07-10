@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 //  THis is opur intial state
 const initialState = {
-  user: window.localStorage.getItem("user") || null,
+  user: JSON.parse(window.localStorage.getItem("user")) || null,
   loading: false,
   error: null,
 };
@@ -19,7 +19,7 @@ export const counterSlice = createSlice({
       state.loading = false;
       state.error = false;
       state.user = action.payload;
-      window.localStorage.setItem("user", action.payload.data);
+      window.localStorage.setItem("user", JSON.stringify(action.payload));
     },
     loginFail: (state) => {
       state.loading = false;
@@ -27,7 +27,7 @@ export const counterSlice = createSlice({
     },
     logout: (state) => {
       state.user = null;
-      window.localStorage.clear("user");
+      window.localStorage.removeItem("user");
     },
   },
 });

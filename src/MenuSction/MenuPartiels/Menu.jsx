@@ -24,12 +24,15 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import { motion } from "framer-motion";
 import { useDispatch, useSelector } from "react-redux";
 import { FavCheck } from "../../store/FavPSlice";
-import { axiosGet, axiosPost, imageUrl, imageUrlLocal } from "../../axios";
+import { apiRequest } from "../../axios";
+import { logout } from "../../store/userSlice";
+
 // import { toast } from "react-toastify";
 import { toast } from "react-hot-toast";
 import { useJwt } from "react-jwt";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { cartAdd, cartQuantityHandle } from "../../store/cartSlice";
+import { userEndPoints } from "../../utils/baseUrl";
 
 // Custom styled card with glass effect
 const GlassCard = styled(motion.div)(({ theme }) => ({
@@ -49,6 +52,7 @@ const Menu = () => {
   const user = useSelector((state) => state.user.user);
   const favoriteProducts = useSelector((state) => state.favprod.favProduct);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const jwtVerify = useJwt(user);
   const userId = jwtVerify.decodedToken?.id || null;
 
@@ -63,13 +67,15 @@ const Menu = () => {
   const GetProducts = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await axiosPost("food/", {
-        pageNumber: pageNum,
-        pageSize: rowsPerPage,
+      const res = await apiRequest({
+        method: "post",
+        url: userEndPoints.getallmenuProduct,
+        data: {},
+        params: { pageNumber: pageNum, pageSize: rowsPerPage },
       });
 
-      if (res.status) {
-        setFood(res.data.data);
+      if (res.success) {
+        setFood(res.data.data.data);
         setNextPage(res.data.hasNextPage);
       }
     } catch (error) {
@@ -112,8 +118,12 @@ const Menu = () => {
     setLoading(true);
     setSortOption("");
     try {
-      const res = await axiosGet(`food/type/${type}`);
-      if (res.status === 1) setFood(res.data);
+      const res = await apiRequest({
+        method: "get",
+        url: `${userEndPoints.getfoodBytype}/${type}`,
+      });
+
+      if (res.success) setFood(res.data.data);
       else setFood([]);
     } catch (err) {
       toast.error(err.response?.data.message);
@@ -151,14 +161,20 @@ const Menu = () => {
       dispatch(cartAdd(id));
       dispatch(cartQuantityHandle(1));
     } else {
-      const res = await axiosPost(`addToCart/${id}`).catch((err) => {
-        if (err) {
-          toast.error(err.message);
-        }
+      const res = await apiRequest({
+        method: "post",
+        url: `${userEndPoints.addtoCart}/${id}`,
       });
-      if (res.status) {
-        toast.success("Product added successfully.");
+
+      if (res.success) {
+        toast.success(res?.data?.message);
         dispatch(cartQuantityHandle(1));
+      }
+
+      if (!res.success && res.status == 401) {
+        toast.error("Oops session expire please login again...");
+        dispatch(logout());
+        navigate("/user-login");
       }
     }
   }
@@ -315,7 +331,6 @@ const Menu = () => {
                   >
                     {/* Image */}
                     <Box sx={{ position: "relative" }}>
-                      {console.log(item)}
                       <Link to={`/menu/${item._id}`}>
                         <CardMedia
                           component="img"

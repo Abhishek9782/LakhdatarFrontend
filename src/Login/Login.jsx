@@ -4,9 +4,9 @@ import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { loginStart, loginSucess, loginFail } from "../store/userSlice";
 import { cartClear, cartQuantityHandle } from "../store/cartSlice";
-import { axiosPost } from "../axios";
-import { toast } from "react-toastify";
-import { userEndPoints } from "../utils/baseUrl";
+import { apiRequest, axiosPost } from "../axios";
+import { toast } from "react-hot-toast";
+import { axiosRequest, userEndPoints } from "../utils/baseUrl";
 const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -50,16 +50,16 @@ const Login = () => {
     if (!err) {
       dispatch(loginStart());
 
-      const res = await axiosPost(userEndPoints.login, user);
+      const res = await axiosRequest("user", "post", userEndPoints.login, user);
 
       if (res.error && res.error.status == 0) {
         toast.error(res.error.message);
       }
       // If alll is good email and id both are good then run it
 
-      if (res.data) {
-        toast.success("Login SuccessFully.");
-        dispatch(loginSucess({ data: res.data }));
+      if (res.success) {
+        toast.success(res.data.message);
+        dispatch(loginSucess({ data: res.data.data }));
         navigate("/");
       }
     }

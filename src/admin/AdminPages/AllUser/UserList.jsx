@@ -32,6 +32,7 @@ import { ADMIN_BASE_URL } from "../../../utils/baseUrl";
 import { toast } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import UserCard from "../SingleUser/User";
+import { fetchAllUsers } from "../../../services/authService";
 const columns = [
   { id: "fullname", label: "Full Name ", minWidth: 170, align: "center" },
   { id: "email", label: "Email", minWidth: 200, align: "center" },
@@ -81,18 +82,16 @@ export default function UserList() {
 
   const fetchUsers = useCallback(async () => {
     try {
-      const res = await axios.get(`${ADMIN_BASE_URL}/allusers`, {
-        params: {
-          pageNumber: page + 1,
-          pageSize: rowsPerPage,
-        },
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("user")}`,
-        },
-      });
-      if (res.status == 200) {
-        setUsers(res.data.data || []);
-        setTotalUsers(res.data.total || res.data.data.length);
+      let params = {
+        pageNumber: page + 1,
+        pageSize: rowsPerPage,
+      };
+
+      const res = await fetchAllUsers(params);
+
+      if (res.status) {
+        setUsers(res.data || []);
+        setTotalUsers(res.total || res.data.length);
       }
     } catch (error) {
       if (error.response.status == 401) {
@@ -104,7 +103,7 @@ export default function UserList() {
 
   useEffect(() => {
     fetchUsers();
-  }, [fetchUsers]);
+  }, [fetchUsers, openuserDetails]);
 
   const handleChangePage = (_, newPage) => setPage(newPage);
   const handleChangeRowsPerPage = (e) => {
@@ -112,8 +111,15 @@ export default function UserList() {
     setPage(0);
   };
 
-  const filteredUsers = users.filter((user) =>
-    user.fullname?.toLowerCase().includes(debouncedSearchItem.toLowerCase())
+  //  here i do we can filter data like username ,email and mobile number
+
+  const filteredUsers = users.filter(
+    (user) =>
+      user.fullname
+        ?.toLowerCase()
+        .includes(debouncedSearchItem.toLowerCase()) ||
+      user.email?.toLowerCase().includes(debouncedSearchItem.toLowerCase()) ||
+      user.mobile?.toLowerCase().includes(debouncedSearchItem.toLowerCase())
   );
 
   const handlesingleUserDetails = (e, user) => {

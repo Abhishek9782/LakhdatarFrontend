@@ -11,6 +11,7 @@ import {
 import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import PeopleIcon from "@mui/icons-material/People";
+import { useSelector } from "react-redux";
 import {
   BarChart,
   Bar,

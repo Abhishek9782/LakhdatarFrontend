@@ -6,9 +6,10 @@ import "./cart.css";
 import axios from "axios";
 
 import { cartQuantityHandle } from "../store/cartSlice";
-import { axiosGet, axiosPost, imageUrl } from "../axios";
+import { apiRequest, axiosGet, axiosPost, imageUrl } from "../axios";
 import { toast } from "react-hot-toast";
 import { jwtDecode } from "jwt-decode";
+import { userEndPoints } from "../utils/baseUrl";
 
 //  This is our all styled Components of any component
 const CartBody = styled.div`
@@ -364,8 +365,7 @@ const Cart = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const stateUser = useSelector((state) => state.user.user);
-  const stateCarts = useSelector((state) => state.carts.carts);
+  const stateUser = useSelector((state) => state.user.user.data);
   const [cartValue, setCartValue] = useState(0);
   const [loader, setLoader] = useState(true);
   const [addclicked, SetaddClicked] = useState(false);
@@ -376,6 +376,8 @@ const Cart = () => {
   const [currentUserId, setCurrentUserId] = useState(jwtDecode(stateUser));
   const [userDetails, setUserDetails] = useState(null);
   const [errors, setErrors] = useState({});
+  const token = window.localStorage.getItem("user");
+  console.log(stateUser);
 
   const [deliveryAddress, setDeliveryAddress] = useState({
     fullName: "",
@@ -389,45 +391,54 @@ const Cart = () => {
 
   //  For getting all carts by user id from databases
   const getCarts = useCallback(async () => {
-    const res = await axiosGet(
-      `getAllCarts`,
-      localStorage.getItem("user")
-    ).catch((err) => {
-      if (err && err.response.status == 401) {
-        toast.error(err.response.data.message);
-      }
+    const res = await apiRequest({
+      method: "get",
+      url: userEndPoints.allCarts,
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
     });
-    setcart(res.data);
-    if (res.data !== null) {
-      setCartValue(res.data.carts.length);
-    } else {
-      setCartValue(0);
+
+    if (res.success) {
+      setcart(res.data.data);
+      if (res.data.data.length == 0) {
+        setCartValue(0);
+      }
+      setCartValue(res.data?.data?.carts.length);
     }
     setLoader(false);
-  }, []); // empty dependency array is correct here
+  }, []);
 
+  //  handle increase cart quantity
   async function handleDecreaseqty(e, id) {
-    const res = await axiosPost(`cartDecreaseQty/${id}`, {
-      userId: stateUser._id,
-    }).catch((error) => {
-      console.log(error);
+    const res = await apiRequest({
+      method: "post",
+      url: `${userEndPoints.cartDecreaseQty}/${id}`,
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
     });
-    if (res?.status) {
+    if (res.success) {
       setLoader(false);
       dispatch(cartQuantityHandle(-1));
-      getCarts(); // ❗ You missed this earlier
+      toast.success(res.data?.message);
+      getCarts();
     }
   }
 
+  // handle decrease quantity
   async function handleIncrement(e, id) {
-    const res = await axiosPost(`cartIncreaseQty/${id}`, {
-      userId: stateUser._id,
-    }).catch((error) => {
-      console.log(error);
+    const res = await apiRequest({
+      method: "post",
+      url: `${userEndPoints.cartIncreaseQty}/${id}`,
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
     });
-    if (res?.status) {
+    if (res.success) {
       setLoader(false);
       dispatch(cartQuantityHandle(1));
+      toast.success(res.data?.message);
       getCarts(); // ✅ This was already correct
     }
   }
@@ -493,17 +504,23 @@ const Cart = () => {
     // } else {
     // }
   }
-  //  -----------------------get current user details ----------------------
 
+  // Get current user details
   useEffect(() => {
     getCarts();
   }, [getCarts]);
+
+  // using effect here to fetch current user
   useEffect(() => {
     const fetchUserDetails = async () => {
       try {
-        const res = await axiosGet(`getProfile/${currentUserId.id}`);
-        if (res && res.data) {
-          setUserDetails(res.data);
+        // const res = await axiosGet(`getProfile/${currentUserId.id}`);
+        const res = await apiRequest({
+          method: "get",
+          url: `${userEndPoints.getProfile}/${currentUserId.id}`,
+        });
+        if (res.success) {
+          setUserDetails(res.data?.data);
         }
       } catch (error) {
         console.error("Failed to fetch user details:", error);
@@ -512,7 +529,9 @@ const Cart = () => {
 
     fetchUserDetails();
   }, [currentUserId.id]);
-  // ----------------Payment Integration ----------------------
+
+  // Payemnt intergration
+
   const loadRazorpayScript = () => {
     return new Promise((resolve) => {
       if (window.Razorpay) {
@@ -536,12 +555,12 @@ const Cart = () => {
       toast.error("Razorpay SDK failed to load. Are you online?");
       return;
     }
-
-    // create order
-    const { success, order } = await axiosPost("api/create-payment-order", {
-      finalAmount: finalAmount,
-      // in future we can optimize it using showing ul all address and by selecting i give that idf
+    const res = await apiRequest({
+      method: "post",
+      url: userEndPoints.createPaymetOrder,
+      data: { finalAmount: finalAmount },
     });
+    const { success, order } = res.data?.data;
 
     if (!success || !order?.id) {
       toast.error("Failed to create payment order");
@@ -565,27 +584,36 @@ const Cart = () => {
       },
       handler: async (response) => {
         // 2. Verify Payment
-        const { success, paymentDetails, paymentMethod } = await axiosPost(
-          "api/verify-payment",
-          response
-        );
+
+        const res = await apiRequest({
+          method: "post",
+          url: userEndPoints.verifyPayment,
+          data: response,
+        });
+        const { success, paymentDetails, paymentMethod } = res.data;
 
         if (!success) {
           toast.error("Payment verification failed");
           return;
         }
 
-        // 3. Save Order
-        const saveOrderRes = await axiosPost("/save-order", {
-          finalAmount,
-          gst: GST,
-          deliveryTip,
-          platfromFees,
-          deliveryAddress: "684481b6a1c6b8d80554fd78",
-          razorpay_order_id: paymentDetails.order_id,
-          razorpay_payment_id: paymentDetails.id,
-          paymentMethod,
+        // saving order in db
+        const saveOrder = await apiRequest({
+          method: "post",
+          url: userEndPoints.saveOrder,
+          data: {
+            finalAmount,
+            gst: GST,
+            deliveryTip,
+            platfromFees,
+            deliveryAddress: "684481b6a1c6b8d80554fd78",
+            razorpay_order_id: paymentDetails.order_id,
+            razorpay_payment_id: paymentDetails.id,
+            paymentMethod,
+          },
         });
+
+        const saveOrderRes = saveOrder.data?.data;
 
         if (saveOrderRes.success) {
           toast.success("Order placed successfully!");
@@ -816,10 +844,7 @@ const Cart = () => {
                     >
                       {0}
                     </span>
-                    <CartImage
-                      src={`${imageUrl}/${cart.prodId.src}`}
-                      className="cartImage"
-                    />
+                    <CartImage src={cart.prodId.src} className="cartImage" />
                     <CartItemName>{`${cart.prodId.name}`}</CartItemName>
                     <CartItemQuantity>
                       <span
@@ -929,7 +954,7 @@ const Cart = () => {
           )
         )}
       </CartSection>
-      {cart !== null && (
+      {cartValue !== 0 && (
         <button
           onClick={(e) => {
             handlePayment(e);

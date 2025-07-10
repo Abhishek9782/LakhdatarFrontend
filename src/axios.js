@@ -15,9 +15,10 @@ const axiosInstance = axios.create({
 
 // Interceptor to add Authorization header dynamically
 axiosInstance.interceptors.request.use((config) => {
-  const token = window.localStorage.getItem("user");
+  const token = JSON.parse(localStorage.getItem("user"));
+
   if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
+    config.headers.Authorization = `Bearer ${token.data}`;
   }
   return config;
 });
@@ -88,3 +89,32 @@ export const axiosForImage = async (url, data) => {
 export const imageUrl =
   "https://lakahdatarbackend.onrender.com/uploads/productImages/";
 export const imageUrlLocal = "http://localhost:5000/uploads/productImages/";
+
+// Generic request handler
+export const apiRequest = async ({
+  method,
+  url,
+  data = {},
+  params = {},
+  headers = {},
+}) => {
+  try {
+    const response = await axiosInstance({
+      method,
+      url,
+      data: ["post", "put", "patch"].includes(method.toLowerCase())
+        ? data
+        : undefined,
+      params, // ✅ Always include params
+      headers,
+    });
+
+    return { success: true, data: response.data };
+  } catch (error) {
+    return {
+      success: false,
+      error: error.response?.data || error.message,
+      status: error.response?.status,
+    };
+  }
+};

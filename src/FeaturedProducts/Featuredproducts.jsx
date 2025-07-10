@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { axiosGet, axiosPost, imageUrl } from "../axios";
 // import { toast } from "react-toastify";
 import { toast } from "react-hot-toast";
+import { axiosRequest, userEndPoints } from "../utils/baseUrl";
 
 const Featuredproducts = () => {
   const [FeatureProducts, setFeatureProducts] = useState([]);
@@ -16,11 +17,14 @@ const Featuredproducts = () => {
   const getFeatureData = useCallback(async () => {
     setloader(true);
 
-    const res = await axiosGet("food/featureProducts").catch((error) => {});
-
-    if (res.status == 1) {
+    const res = await axiosRequest(
+      "user",
+      "get",
+      userEndPoints.FeatureProducts
+    );
+    if (res.success) {
       setloader(false);
-      setFeatureProducts(res.data);
+      setFeatureProducts(res.data?.data);
     }
   }, []);
   //  Use effects to get data
@@ -28,45 +32,6 @@ const Featuredproducts = () => {
   useEffect(() => {
     getFeatureData();
   }, [getFeatureData]);
-
-  // const handleCart = useCallback(
-  //   (e, data) => {
-  //     e.preventDefault();
-  //     if (user === null) {
-  //       if (carts === null) {
-  //         dispatch(cartAdd([data]));
-  //         dispatch(cartQuantityHandle(1));
-  //       } else {
-  //         dispatch(cartAdd([...carts, data]));
-  //         dispatch(cartQuantityHandle(1));
-  //       }
-  //     } else {
-  //       const addToCart = async () => {
-  //         const res = useCallback(() => {
-  //           axiosPost(`user-cart-add/${user._id}`, data);
-  //         }, []);
-  //         if (res?.data) {
-  //           dispatch(cartClear(null));
-  //           dispatch(cartQuantityHandle(1));
-  //         }
-  //       };
-  //       addToCart();
-  //     }
-  //   },
-  //   [user, carts, dispatch]
-  // );
-
-  // async function handleCart(e, id) {
-  //   e.preventDefault();
-  //   const res = await axiosPost(`addToCart/${id}`).catch((err) => {
-  //     if (err) {
-  //       toast.error(err.message);
-  //     }
-  //   });
-  //   if (res.status) {
-  //     toast.success(res.message);
-  //   }
-  // }
 
   async function handleCart(e, id) {
     e.preventDefault();

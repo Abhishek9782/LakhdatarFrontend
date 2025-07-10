@@ -13,9 +13,9 @@ const API = axios.create({
 // ✅ Request Interceptor (Attach Token)
 API.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem("user"); // Get token from storage
+    const token = JSON.parse(localStorage.getItem("user")); // Get token from storage
     if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+      config.headers.Authorization = `Bearer ${token.data}`;
     }
     return config;
   },

@@ -2,10 +2,12 @@ import React, { useState } from "react";
 import "./Register.css";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
-import { axiosPost } from "../axios";
+import { apiRequest, axiosPost } from "../axios";
 import OtpVerification from "../OtpVerification/OtpVerification";
 import { useEffect } from "react";
 import { useRef } from "react";
+import { userEndPoints } from "../utils/baseUrl";
+import { toast } from "react-hot-toast";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -20,7 +22,8 @@ const Register = () => {
   const [ConfirmPassword, setConfirmPassword] = useState("");
   const [show, setShow] = useState(false);
   const [passMatch, setPassMatch] = useState(false);
-  const errorRef = useRef(null);
+  const errorRef = useRef(null); // For form validation errors
+  const matchRef = useRef(null); // For confirm password match
 
   const registerInputs = [
     {
@@ -68,6 +71,7 @@ const Register = () => {
       errorRef.current.style.color = "red";
       return true;
     }
+
     if (!gmailRegex.test(credential.email)) {
       errorRef.current.innerText = "Please Enter a Valid Email Address";
       errorRef.current.style.color = "red";
@@ -95,6 +99,7 @@ const Register = () => {
       errorRef.current.style.color = "red";
       return true;
     }
+    errorRef.current.innerText = "";
     return false;
   };
 
@@ -107,20 +112,20 @@ const Register = () => {
   function confirmPassword(e) {
     const confirmValue = e.target.value;
     setConfirmPassword(confirmValue);
-    const messageElement = document.getElementById("isMatch");
 
     const isMatch = credential.password === confirmValue;
-
     setPassMatch(isMatch);
 
-    if (isMatch) {
-      messageElement.innerText = "Password Matched...";
-      messageElement.style.color = "green";
-      messageElement.style.display = "block";
-    } else {
-      messageElement.innerText = "Password Not Match";
-      messageElement.style.color = "red";
-      messageElement.style.display = "block";
+    if (matchRef.current) {
+      if (isMatch) {
+        matchRef.current.innerText = "Password Matched...";
+        matchRef.current.style.color = "green";
+        matchRef.current.style.display = "block";
+      } else {
+        matchRef.current.innerText = "Password Not Match";
+        matchRef.current.style.color = "red";
+        matchRef.current.style.display = "block";
+      }
     }
   }
 
@@ -141,15 +146,17 @@ const Register = () => {
     e.preventDefault();
     let err = validate();
     if (!err) {
-      const res = await axiosPost("user-register", credential).catch(
-        (error) => {
-          document.getElementById("isMatch").innerText =
-            error.response.data.message;
-          document.getElementById("isMatch").style.color = "red";
-          document.getElementById("isMatch").style.display = "block";
-        }
-      );
-      if (res.data) {
+      const res = await apiRequest({
+        method: "post",
+        url: userEndPoints.register,
+        data: credential,
+      });
+
+      if (res.success == 0) {
+        toast.error(res?.error?.message);
+      }
+
+      if (res.success) {
         setShow(true);
         Swal.fire({
           title: "Account Create Sucessfully ",
@@ -179,7 +186,9 @@ const Register = () => {
                 createUser(e);
               }}
             >
-              <p id="isMatch" className="ismatch" ref={errorRef}></p>
+              <p ref={errorRef} className="validation-error"></p>
+              <p ref={matchRef} className="ismatch" id="isMatch"></p>
+
               <h3>Register Here </h3>
               {registerInputs.map((form) => (
                 <>

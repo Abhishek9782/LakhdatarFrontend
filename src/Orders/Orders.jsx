@@ -21,6 +21,10 @@ import { axiosPost } from "../axios";
 import { toast } from "react-hot-toast";
 import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
 import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
+import { axiosRequest, userEndPoints } from "../utils/baseUrl";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { logout } from "../store/userSlice";
 
 dayjs.extend(isSameOrBefore);
 dayjs.extend(isSameOrAfter);
@@ -48,6 +52,8 @@ const mockOrders = [
 
 const statuses = ["All", "Pending", "Processing", "Completed", "Failed"];
 const Orders = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [status, setStatus] = useState("All");
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
@@ -55,16 +61,22 @@ const Orders = () => {
   const [totalOrder, setTotalOrder] = useState(0);
 
   const getAllOrders = useCallback(async () => {
-    const res = await axiosPost("/orders", {
-      status,
-      startDate,
-      endDate,
+    const res = await axiosRequest("user", "post", userEndPoints.getAllorder, {
+      status: status,
+      startDate: startDate,
+      endDate: endDate,
     });
 
-    if (res.status) {
-      setOrders(res.data.orders);
-      setTotalOrder(res.data.totalOrder);
-      toast.success(res.message);
+    if (res.success) {
+      setOrders(res.data?.data?.orders);
+      setTotalOrder(res.data?.data?.totalOrder);
+      toast.success(res.data?.message);
+    }
+
+    if (!res.success && res.status === 401) {
+      toast.error("Session Expire...");
+      dispatch(logout());
+      navigate("/user-login");
     }
   }, [status, startDate, endDate]);
 

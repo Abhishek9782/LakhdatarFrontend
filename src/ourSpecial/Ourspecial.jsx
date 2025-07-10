@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
-import axios from "axios";
+// import axios from "axios";
+import { apiRequest } from "../axios.js";
 
 const Ourspecial = () => {
   const OurSpecialParent = styled.div`
@@ -231,20 +232,18 @@ const Ourspecial = () => {
   // State
   const [allFood, setAllFood] = useState([]);
 
-  const FetchAllProduct = async () => {
-    const res = await axios
-      .get("https://lakahdatarbackend.onrender.com/food/our-special")
-      .catch((error) => {
-        console.log(error);
-      });
-    if (res.data) {
-      setAllFood(res.data);
+  const FetchAllProduct = useCallback(async () => {
+    const res = await apiRequest({
+      method: "get",
+      url: "/food/our-special",
+    });
+    if (res.success) {
+      setAllFood(res.data.data);
     }
-  };
-
+  }, []);
   useEffect(() => {
     FetchAllProduct();
-  }, []);
+  }, [FetchAllProduct]);
 
   return (
     <>

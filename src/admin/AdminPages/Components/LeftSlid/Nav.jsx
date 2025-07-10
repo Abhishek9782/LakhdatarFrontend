@@ -27,49 +27,26 @@ export const Nav = ({ activeIndex }) => {
           ></i>
         </h3>
         <ul>
-          <li
-            className={activeIndex === 0 ? "active" : ""}
-            onClick={(e) => {
-              changeBack(e, 0);
-            }}
-          >
-            <Link to="/lakhdatar/admin/home">Home</Link>
+          <li className={activeIndex === 0 ? "active" : ""}>
+            <Link to="/lakhdatar/admin/">Home</Link>
           </li>
 
-          <li
-            className={activeIndex === 1 ? "active" : ""}
-            onClick={(e) => {
-              changeBack(e, 1);
-            }}
-          >
+          <li className={activeIndex === 1 ? "active" : ""}>
             <Link to="/lakhdatar/admin/products">Products Edit</Link>
           </li>
 
-          <li
-            className={activeIndex === 2 ? "active" : ""}
-            onClick={(e) => {
-              changeBack(e, 2);
-            }}
-          >
+          <li className={activeIndex === 2 ? "active" : ""}>
             <Link to="/lakhdatar/admin/allusers">All User</Link>
           </li>
           {/* all users see and block  */}
 
-          <li
-            className={activeIndex === 3 ? "active" : ""}
-            onClick={(e) => {
-              changeBack(e, 3);
-            }}
-          >
-            <Link to="/total-order">Email Templates </Link>
+          <li className={activeIndex === 3 ? "active" : ""}>
+            <Link to="/lakhdatar/admin/allemailTemplates">
+              Email Templates{" "}
+            </Link>
           </li>
 
-          <li
-            className={activeIndex === 4 ? "active" : ""}
-            onClick={(e) => {
-              changeBack(e, 4);
-            }}
-          >
+          <li className={activeIndex === 4 ? "active" : ""}>
             <Link>Faq Management </Link>
           </li>
         </ul>

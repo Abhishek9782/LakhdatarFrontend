@@ -18,17 +18,30 @@ const Navbar = () => {
   const profileRef = useRef(null);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const user = useSelector((state) => state.user.user);
+  const user = useSelector((state) => state.user.user.data);
   const favProduct = useSelector((state) => state.favprod.favProduct);
   const cartQuantity = useSelector((state) => state.carts.qty);
 
   // Extract userId directly
-  const { decodedToken } = useJwt(user);
+  let { decodedToken } = useJwt(user);
   const userId = decodedToken?.id || null;
 
   const [profileHandle, setProfileHandle] = useState(false);
   const [allFavProduct, setAllFavProducts] = useState(null);
   const [currentUser, setCurrentUser] = useState({});
+
+  //  check token is valid or expire
+  useEffect(() => {
+    if (!decodedToken) return;
+
+    const currentTime = Date.now();
+    const tokenExpiryTime = decodedToken.exp * 1000;
+
+    if (tokenExpiryTime < currentTime) {
+      dispatch(logout());
+      navigate("/user-login");
+    }
+  }, [decodedToken]);
 
   // Fetch favorite products
   const getFavData = useCallback(async () => {
@@ -42,7 +55,7 @@ const Navbar = () => {
     }
   }, [userId]);
 
-  // Fetch user profile
+  // Fetch user profileW
   const getProfile = useCallback(async () => {
     if (!userId) return;
     try {

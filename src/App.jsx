@@ -13,6 +13,7 @@ import "./App.css";
 import { Toaster } from "react-hot-toast";
 import Orders from "./Orders/Orders";
 import UserList from "./admin/AdminPages/AllUser/UserList";
+import { AdminEmailTemplates } from "./admin/AdminPages/AdminEmailTemplates/AdminEmailTemplates";
 
 // Lazy Loading Components for Faster Performance
 const Menu = lazy(() => import("./MenuSction/MenuPartiels/Menu"));
@@ -34,6 +35,7 @@ const AdminProducts = lazy(() =>
 );
 const AdminHome = lazy(() => import("./admin/AdminPages/AdminHome/AdminHome"));
 const Footer = lazy(() => import("./Footer/Footer"));
+const ProtectedRoute = lazy(() => import("./ProtectedRoutes/ProtectedRoute"));
 
 function AppContent() {
   // Optimize AOS initialization using useEffect to prevent multiple executions
@@ -51,6 +53,9 @@ function AppContent() {
         "/lakhdatar/admin/",
         "/lakhdatar/admin/products",
         "/lakhdatar/admin/allusers",
+        "/lakhdatar/admin/allemailTemplates",
+        "/user-login",
+        "/user-register",
       ].includes(location.pathname),
     [location.pathname]
   );
@@ -68,14 +73,46 @@ function AppContent() {
         <Route path="/user-register" element={<Register />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/our-special" element={<Ourspecial />} />
-        <Route path="/orders" element={<Orders />} />
+        <Route
+          path="/orders"
+          element={
+            <ProtectedRoute>
+              <Orders />
+            </ProtectedRoute>
+          }
+        />
         <Route path="*" element={<PageNotFound />} />
 
         {/* Admin Routes */}
         <Route path="/lakhdatar/admin/login" element={<AdminLogin />} />
-        <Route path="/lakhdatar/admin/" element={<AdminHome />} />
-        <Route path="/lakhdatar/admin/products" element={<AdminProducts />} />
-        <Route path="/lakhdatar/admin/allusers" element={<UserList />} />
+        <Route
+          path="/lakhdatar/admin/"
+          element={
+            // <ProtectedRoute>
+            <AdminHome />
+            // </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/lakhdatar/admin/products"
+          element={
+            // <ProtectedRoute>
+            <AdminProducts />
+            // </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/lakhdatar/admin/allusers"
+          element={
+            // <ProtectedRoute>
+            <UserList />
+            // </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/lakhdatar/admin/allemailTemplates"
+          element={<AdminEmailTemplates />}
+        />
       </Routes>
       {!isAdminRoutes && <Footer />}
 
