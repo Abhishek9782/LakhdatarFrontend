@@ -8,8 +8,9 @@ import React, {
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../store/userSlice";
+import { cartClear } from "../store/cartSlice";
 import { axiosGet, axiosPost, imageUrl } from "../axios";
-import { userEndPoints } from "../utils/baseUrl";
+import { axiosRequest, userEndPoints } from "../utils/baseUrl";
 import { useJwt } from "react-jwt";
 import "./Navbar.css";
 import Swal from "sweetalert2";
@@ -20,7 +21,7 @@ const Navbar = () => {
   const navigate = useNavigate();
   const user = useSelector((state) => state.user?.user?.data);
   const favProduct = useSelector((state) => state.favprod.favProduct);
-  const cartQuantity = useSelector((state) => state.carts.qty);
+  const stateCartQuantity = useSelector((state) => state.carts.qty);
 
   // Extract userId directly
   let { decodedToken } = useJwt(user);
@@ -67,10 +68,12 @@ const Navbar = () => {
   }, [userId]);
 
   // Handle logout
-  const handleLogout = useCallback(
-    (e) => {
-      e.preventDefault();
+  const handleLogout = async (e) => {
+    e.preventDefault();
+    const res = await axiosRequest("user", "post", userEndPoints.logout);
+    if (res.success) {
       dispatch(logout());
+      dispatch(cartClear());
       setProfileHandle(false);
       Swal.fire({
         title: "Logout SuccessFully.",
@@ -79,9 +82,8 @@ const Navbar = () => {
       }).then(() => {
         navigate(userEndPoints.login);
       });
-    },
-    [dispatch, navigate]
-  );
+    }
+  };
 
   // Handle favorite section toggle
   const handleFavProduct = useCallback(
@@ -94,7 +96,7 @@ const Navbar = () => {
   );
 
   // Memoized faviorate product value
-  const cartCount = useMemo(() => favProduct.length, [favProduct]);
+  const cartQuantity = useMemo(() => stateCartQuantity, [stateCartQuantity]);
 
   // Fetch user profile and favorite data on mount or userId change
   useEffect(() => {

@@ -1,11 +1,16 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
 import { Await, Link, Navigate, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import "./cart.css";
 import axios from "axios";
 
-import { cartQuantityHandle } from "../store/cartSlice";
+import {
+  cartQuantityHandle,
+  decreaseQuantity,
+  increaseQuantity,
+  setCartQuantity,
+} from "../store/cartSlice";
 import { apiRequest, axiosGet, axiosPost, imageUrl } from "../axios";
 import { toast } from "react-hot-toast";
 import { jwtDecode } from "jwt-decode";
@@ -43,7 +48,7 @@ const LeftPart = styled.div`
 `;
 const RightPart = styled.div`
   color: black;
-  width: 30%;
+  width: 40%;
 `;
 const IsAccount = styled.div`
   color: black;
@@ -214,8 +219,8 @@ const CartItem = styled.div`
   margin: 1px 0px 1px 0px;
 `;
 const CartImage = styled.img`
-  width: 100px;
-  height: 100px;
+  width: 80px;
+  height: 80px;
   object-fit: cover;
   border-radius: 2%;
   margin: 0px 30px 0px 0px;
@@ -365,19 +370,24 @@ const Cart = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const stateUser = useSelector((state) => state.user.user.data);
-  const [cartValue, setCartValue] = useState(0);
-  const [loader, setLoader] = useState(true);
-  const [addclicked, SetaddClicked] = useState(false);
-  const [paymentclicked, SetPaymentClicked] = useState(false);
+  const stateUser = useSelector((state) => state.user?.user);
+  const statecarts = useSelector((state) => state.carts?.carts);
+  const statecharges = useSelector((state) => state.carts?.charges);
+
+  // const [addclicked, SetaddClicked] = useState(false);
+  // const [paymentclicked, SetPaymentClicked] = useState(false);
   const [cart, setcart] = useState([]);
   const [deliveryTip, setDeliveryTip] = useState(20);
   const [platfromFees, setplatfromFees] = useState(50);
-  const [currentUserId, setCurrentUserId] = useState(jwtDecode(stateUser));
   const [userDetails, setUserDetails] = useState(null);
+  const [userCharges, setUserCharges] = useState(null);
   const [errors, setErrors] = useState({});
   const token = window.localStorage.getItem("user");
-  console.log(stateUser);
+
+  let currentUserId;
+  if (stateUser) {
+    currentUserId = jwtDecode(stateUser.data);
+  }
 
   const [deliveryAddress, setDeliveryAddress] = useState({
     fullName: "",
@@ -400,63 +410,94 @@ const Cart = () => {
     });
 
     if (res.success) {
-      setcart(res.data.data);
-      if (res.data.data.length == 0) {
-        setCartValue(0);
-      }
-      setCartValue(res.data?.data?.carts.length);
+      setcart(res.data?.data?.carts || []);
+
+      const ch = {
+        deliveryFees: res.data?.data?.deliveryFees || 0,
+        discountAmount: res.data?.data?.discountAmount || 0,
+        gst: res.data?.data?.gst || 0,
+        platformFees: res.data?.data?.platformFees || 0,
+        subTotal: res.data?.data?.subTotal || 0,
+        totalAmount: res.data?.data?.totalAmount || 0,
+      };
+      setUserCharges(ch);
     }
-    setLoader(false);
   }, []);
+
+  // Get current user details
+  useEffect(() => {
+    if (stateUser) {
+      getCarts();
+    }
+  }, [stateUser]); // ✅ Clean and safe
+
+  // Fetch cuurent user details
+
+  useEffect(() => {
+    const fetchUserDetails = async () => {
+      try {
+        // const res = await axiosGet(`getProfile/${currentUserId.id}`);
+        const res = await apiRequest({
+          method: "get",
+          url: `${userEndPoints.getProfile}/${currentUserId?.id}`,
+        });
+        if (res.success) {
+          setUserDetails(res.data?.data);
+        }
+      } catch (error) {
+        console.error("Failed to fetch user details:", error);
+      }
+    };
+
+    stateUser && fetchUserDetails();
+  }, [currentUserId?.id]);
+
+  // set cartItems
+  const cartItem = useMemo(
+    () => (stateUser ? cart : statecarts),
+    [stateUser, cart, statecarts]
+  );
 
   //  handle increase cart quantity
   async function handleDecreaseqty(e, id) {
-    const res = await apiRequest({
-      method: "post",
-      url: `${userEndPoints.cartDecreaseQty}/${id}`,
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    if (res.success) {
-      setLoader(false);
-      dispatch(cartQuantityHandle(-1));
-      toast.success(res.data?.message);
-      getCarts();
+    if (stateUser) {
+      const res = await apiRequest({
+        method: "post",
+        url: `${userEndPoints.cartDecreaseQty}/${id}`,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (res.success) {
+        dispatch(cartQuantityHandle(-1));
+        toast.success(res.data?.message);
+        await getCarts();
+      }
+    } else {
+      dispatch(decreaseQuantity(id));
     }
   }
 
   // handle decrease quantity
   async function handleIncrement(e, id) {
-    const res = await apiRequest({
-      method: "post",
-      url: `${userEndPoints.cartIncreaseQty}/${id}`,
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    if (res.success) {
-      setLoader(false);
-      dispatch(cartQuantityHandle(1));
-      toast.success(res.data?.message);
-      getCarts(); // ✅ This was already correct
+    if (stateUser) {
+      const res = await apiRequest({
+        method: "post",
+        url: `${userEndPoints.cartIncreaseQty}/${id}`,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      console.log(res);
+      if (res.success) {
+        dispatch(cartQuantityHandle(1));
+        toast.success(res.data?.message);
+        await getCarts();
+      }
+    } else {
+      dispatch(increaseQuantity(id));
     }
   }
-
-  let totalAmount = 0;
-  if (cartValue > 1) {
-    for (let i = 0; i < cart?.carts.length; i++) {
-      totalAmount += cart?.carts[i]?.price * cart?.carts[i]?.qty;
-    }
-  } else {
-    for (let i = 0; i < cart?.carts?.length; i++) {
-      totalAmount += cart?.carts[i]?.price * cart?.carts[i]?.qty;
-    }
-  }
-
-  const GST = (totalAmount * 5) / 100;
-
-  const finalAmount = totalAmount + GST + deliveryTip + platfromFees;
 
   //  Delivery address data handle from here--------------------------
   function handleaddressField(e) {
@@ -482,7 +523,6 @@ const Cart = () => {
     const isValid = validate();
 
     if (isValid) {
-      console.log("Submitting form...");
       try {
         const res = await axiosPost("/addaddress", deliveryAddress);
         if (res.status) {
@@ -505,30 +545,7 @@ const Cart = () => {
     // }
   }
 
-  // Get current user details
-  useEffect(() => {
-    getCarts();
-  }, [getCarts]);
-
   // using effect here to fetch current user
-  useEffect(() => {
-    const fetchUserDetails = async () => {
-      try {
-        // const res = await axiosGet(`getProfile/${currentUserId.id}`);
-        const res = await apiRequest({
-          method: "get",
-          url: `${userEndPoints.getProfile}/${currentUserId.id}`,
-        });
-        if (res.success) {
-          setUserDetails(res.data?.data);
-        }
-      } catch (error) {
-        console.error("Failed to fetch user details:", error);
-      }
-    };
-
-    fetchUserDetails();
-  }, [currentUserId.id]);
 
   // Payemnt intergration
 
@@ -545,10 +562,12 @@ const Cart = () => {
       document.body.appendChild(script);
     });
   };
+  console.log(userCharges);
 
   const handlePayment = async () => {
     // first we are load script
     const isLoaded = await loadRazorpayScript();
+    const totalAmount = userCharges?.totalAmount;
 
     // not loaded then give us error
     if (!isLoaded) {
@@ -558,7 +577,7 @@ const Cart = () => {
     const res = await apiRequest({
       method: "post",
       url: userEndPoints.createPaymetOrder,
-      data: { finalAmount: finalAmount },
+      data: { finalAmount: totalAmount },
     });
     const { success, order } = res.data?.data;
 
@@ -569,7 +588,7 @@ const Cart = () => {
 
     const options = {
       key: "rzp_test_sDX2c2fCWsiXsN", // ✅ Use ENV in production
-      amount: finalAmount,
+      amount: totalAmount,
       currency: "INR",
       name: userDetails.fullname,
       description: "Order Payment",
@@ -602,10 +621,10 @@ const Cart = () => {
           method: "post",
           url: userEndPoints.saveOrder,
           data: {
-            finalAmount,
-            gst: GST,
-            deliveryTip,
-            platfromFees,
+            finalAmount: totalAmount,
+            gst: userCharges.gst,
+            deliveryTip: userCharges.deliveryTip || 20,
+            platfromFees: userCharges.platformFees,
             deliveryAddress: "684481b6a1c6b8d80554fd78",
             razorpay_order_id: paymentDetails.order_id,
             razorpay_payment_id: paymentDetails.id,
@@ -617,7 +636,7 @@ const Cart = () => {
 
         if (saveOrderRes.success) {
           toast.success("Order placed successfully!");
-          dispatch(cartQuantityHandle(0));
+          dispatch(setCartQuantity(0));
           navigate(0);
         } else {
           toast.error("Failed to save order");
@@ -698,7 +717,7 @@ const Cart = () => {
 
   return (
     <CartBody>
-      {cartValue == 0 && stateUser !== null && (
+      {stateUser && cartItem?.length === 0 && (
         <EmptyCart>
           <EmptyCartImg src="./emptyCart.png" alt="Image not found " />
           <EmptyCarthead>Your Cart is Empty</EmptyCarthead>
@@ -740,7 +759,7 @@ const Cart = () => {
                   <MainAccIcon>
                     <i
                       style={{ color: "white", fontSize: "30px" }}
-                      class="fa-regular fa-user"
+                      className="fa-regular fa-user"
                     ></i>
                   </MainAccIcon>
                 </MainAccImageP>
@@ -749,7 +768,7 @@ const Cart = () => {
           ) : (
             <></>
           )}
-          {cartValue > 0 && (
+          {cartItem?.length > 0 && (
             <>
               <DeliveryAddress
                 onClick={(e) => {
@@ -808,14 +827,14 @@ const Cart = () => {
                 <PaymentIcon onClick={handlePaymentClick}>
                   <i
                     style={{ color: "white", fontSize: "20px" }}
-                    class="fa-solid fa-wallet"
+                    className="fa-solid fa-wallet"
                   ></i>
                 </PaymentIcon>
               </Payment>
             </>
           )}
         </LeftPart>
-        {cartValue > 0 ? (
+        {cartItem?.length > 0 ? (
           <RightPart className={stateUser ? "rightPart" : ""}>
             <RImagHead>
               <RImgParent>
@@ -832,7 +851,7 @@ const Cart = () => {
             <OverflowScroll>
               {/* Cart item is here  */}
 
-              {cart?.carts.map((cart) => (
+              {cartItem.map((cart) => (
                 <>
                   <CartItem key={cart._id}>
                     <span
@@ -844,8 +863,13 @@ const Cart = () => {
                     >
                       {0}
                     </span>
-                    <CartImage src={cart.prodId.src} className="cartImage" />
-                    <CartItemName>{`${cart.prodId.name}`}</CartItemName>
+                    <CartImage
+                      src={!stateUser ? cart.src : cart.prodId?.src}
+                      className="cartImage"
+                    />
+                    <CartItemName>{`${
+                      !stateUser ? cart.name : cart?.prodId?.name
+                    }`}</CartItemName>
                     <CartItemQuantity>
                       <span
                         style={{
@@ -854,7 +878,10 @@ const Cart = () => {
                           cursor: "pointer",
                         }}
                         onClick={(e) => {
-                          handleDecreaseqty(e, cart.prodId?._id);
+                          handleDecreaseqty(
+                            e,
+                            !stateUser ? cart._id : cart.prodId._id
+                          );
                         }}
                       >
                         -
@@ -867,7 +894,7 @@ const Cart = () => {
                           color: "black",
                         }}
                       >
-                        {cart.qty}
+                        {!stateUser ? cart.qty : cart.qty}
                       </span>
                       <span
                         style={{
@@ -876,7 +903,10 @@ const Cart = () => {
                           cursor: "pointer",
                         }}
                         onClick={(e) => {
-                          handleIncrement(e, cart.prodId._id);
+                          handleIncrement(
+                            e,
+                            !stateUser ? cart._id : cart.prodId._id
+                          );
                         }}
                       >
                         +
@@ -891,7 +921,10 @@ const Cart = () => {
                           right: "2px",
                         }}
                       >
-                        ₹{cart.price + 100}
+                        ₹
+                        {!stateUser
+                          ? (cart.fullprice + 100) * cart.qty
+                          : (cart.price + 100) * cart.qty}
                       </del>
                       <span
                         style={{
@@ -900,7 +933,10 @@ const Cart = () => {
                           fontFamily: "Kanit",
                         }}
                       >
-                        ₹{cart.price}
+                        ₹
+                        {!stateUser
+                          ? cart.fullprice * cart.qty
+                          : cart.price * cart.qty}
                       </span>
                     </CartItemPrice>
                   </CartItem>
@@ -919,9 +955,24 @@ const Cart = () => {
                     <BillDeatilSpan> Extra Discount For You </BillDeatilSpan>
                   </BillDeatilSpans>
                   <BillDeatilSpans style={{ padding: " 0px 10px" }}>
-                    <BillDeatilSpan>₹{totalAmount}</BillDeatilSpan>
-                    <BillDeatilSpan>₹ 40</BillDeatilSpan>
-                    <BillDeatilSpan>-₹ 40</BillDeatilSpan>
+                    <BillDeatilSpan>
+                      ₹
+                      {!stateUser
+                        ? statecharges.subtotal
+                        : userCharges.subTotal}
+                    </BillDeatilSpan>
+                    <BillDeatilSpan>
+                      ₹{" "}
+                      {!stateUser
+                        ? statecharges.deliveryFees
+                        : userCharges.deliveryFees}
+                    </BillDeatilSpan>
+                    <BillDeatilSpan>
+                      -₹{" "}
+                      {!stateUser
+                        ? statecharges.discount
+                        : userCharges.discountAmount}
+                    </BillDeatilSpan>
                   </BillDeatilSpans>
                 </BillDetilsHead>
               </BillDeatils>
@@ -934,15 +985,28 @@ const Cart = () => {
                 </BillDeatilSpans>
                 <BillDeatilSpans>
                   <BillDeatilSpan>₹ {deliveryTip}</BillDeatilSpan>
-                  <BillDeatilSpan>₹ {platfromFees}</BillDeatilSpan>
-                  <BillDeatilSpan>₹ {GST}</BillDeatilSpan>
+                  <BillDeatilSpan>
+                    ₹{" "}
+                    {!stateUser
+                      ? statecharges.platformFees
+                      : userCharges.platformFees}
+                  </BillDeatilSpan>
+                  <BillDeatilSpan>
+                    ₹ {!stateUser ? statecharges.gst : userCharges.gst}
+                  </BillDeatilSpan>
                 </BillDeatilSpans>
               </DeliveryDetails>
             </OverflowScroll>
             {/*  Final Payment */}
             <PaymentSection className={stateUser ? "toPaysection" : ""}>
               <PaymentSpan>To Pay</PaymentSpan>
-              <PaymentSpan> ₹{finalAmount}</PaymentSpan>
+              <PaymentSpan>
+                {" "}
+                ₹
+                {!stateUser
+                  ? statecharges.finalAmount
+                  : userCharges.totalAmount}
+              </PaymentSpan>
             </PaymentSection>
           </RightPart>
         ) : (
@@ -954,7 +1018,7 @@ const Cart = () => {
           )
         )}
       </CartSection>
-      {cartValue !== 0 && (
+      {cartItem?.length !== 0 && stateUser && (
         <button
           onClick={(e) => {
             handlePayment(e);

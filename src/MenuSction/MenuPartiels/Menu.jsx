@@ -50,6 +50,8 @@ const GlassCard = styled(motion.div)(({ theme }) => ({
 
 const Menu = () => {
   const user = useSelector((state) => state.user.user);
+  const carts = useSelector((state) => state.carts?.carts);
+
   const favoriteProducts = useSelector((state) => state.favprod.favProduct);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -157,10 +159,12 @@ const Menu = () => {
 
   async function handleCart(e, id) {
     e.preventDefault();
-    if (user == null) {
+    if (!user) {
       dispatch(cartAdd(id));
-      dispatch(cartQuantityHandle(1));
-    } else {
+      return;
+    }
+
+    try {
       const res = await apiRequest({
         method: "post",
         url: `${userEndPoints.addtoCart}/${id}`,
@@ -176,6 +180,8 @@ const Menu = () => {
         dispatch(logout());
         navigate("/user-login");
       }
+    } catch (error) {
+      console.log(error);
     }
   }
 
@@ -477,7 +483,7 @@ const Menu = () => {
                           px: 3,
                         }}
                         onClick={(e) => {
-                          handleCart(e, item._id);
+                          handleCart(e, user == null ? item : item._id);
                         }}
                       >
                         Add to Cart

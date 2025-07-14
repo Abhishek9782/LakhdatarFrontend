@@ -7,10 +7,15 @@ import { cartClear, cartQuantityHandle } from "../store/cartSlice";
 import { apiRequest, axiosPost } from "../axios";
 import { toast } from "react-hot-toast";
 import { axiosRequest, userEndPoints } from "../utils/baseUrl";
+
 const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const errorRef = useRef(null);
+
+  //  state Carts check
+  const stateCarts = useSelector((state) => state.carts?.carts);
+  const statecharges = useSelector((state) => state.carts?.charges);
 
   // Here is all state=------------------------------
   const [eyeShow, seteyeShow] = useState("hide");
@@ -50,7 +55,17 @@ const Login = () => {
     if (!err) {
       dispatch(loginStart());
 
-      const res = await axiosRequest("user", "post", userEndPoints.login, user);
+      let userData =
+        stateCarts.length !== 0
+          ? { ...user, carts: stateCarts, charges: statecharges }
+          : user;
+
+      const res = await axiosRequest(
+        "user",
+        "post",
+        userEndPoints.login,
+        userData
+      );
 
       if (res.error && res.error.status == 0) {
         toast.error(res.error.message);
@@ -61,6 +76,7 @@ const Login = () => {
         toast.success(res.data.message);
         dispatch(loginSucess({ data: res.data.data }));
         navigate("/");
+        dispatch(cartClear());
       }
     }
   };

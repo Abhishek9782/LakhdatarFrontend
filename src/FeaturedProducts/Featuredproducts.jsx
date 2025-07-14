@@ -16,7 +16,6 @@ const Featuredproducts = () => {
 
   const getFeatureData = useCallback(async () => {
     setloader(true);
-
     const res = await axiosRequest(
       "user",
       "get",
@@ -27,12 +26,13 @@ const Featuredproducts = () => {
       setFeatureProducts(res.data?.data);
     }
   }, []);
-  //  Use effects to get data
 
+  //  Use effects to get data
   useEffect(() => {
     getFeatureData();
   }, [getFeatureData]);
 
+  // handle cart section
   async function handleCart(e, id) {
     e.preventDefault();
     if (user == null) {

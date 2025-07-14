@@ -10,6 +10,7 @@ export const ADMIN_BASE_URL =
 export const userEndPoints = {
   login: "user-login",
   register: "user-register",
+  logout: "/logout",
   verifyOtp: "verifyOtp",
   resendOtp: "resendOtp/",
   changePassword: "chnagePassword",
