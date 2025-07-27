@@ -5,27 +5,33 @@
   --kanitFont: "Kanit", sans-serif;
   --blackColor: #000;
 }
+h2,
+h3 {
+  color: black !important;
+}
 .offersSection {
-  margin-top: 80px;
+  /* margin-top: 80px; */
   color: red;
   height: 80vh;
   display: flex;
   justify-content: center;
   align-items: center;
 }
-.container,
+
 .cursol_head {
   height: 100%;
-  display: flex;
 }
-.container {
+.parent-content {
   max-width: 1124px;
   width: 100%;
-  flex-direction: row;
+  height: max-content !important;
+  display: flex;
+  flex-direction: row !important;
 }
 .leftCotent {
   width: 50%;
   background-color: #fff;
+  padding: 20px;
 }
 .leftCotent .headLeftContent {
   display: flex;
@@ -36,6 +42,18 @@
   height: 20vh;
 }
 .leftCotent .headLeftContent span {
+  color: var(--blackColor);
+}
+.listLeftContent .listdesc h4 {
+  color: black;
+  font-family: var(--kanitFont);
+}
+.listLeftContent .listdesc p {
+  font-family: var(--kanitFont);
+  font-size: 12px;
+  line-height: 15px;
+  letter-spacing: 1px;
+  word-spacing: 1px;
   color: var(--blackColor);
 }
 .leftCotent .headLeftContent:first-child {
@@ -108,14 +126,15 @@
   .offersSection {
     margin: 0;
     width: 100%;
-    height: auto;
+    height: max-content !important;
   }
-  .container {
+  .parent-content {
     display: flex;
-    flex-direction: column;
+    flex-direction: column !important;
     margin: 0;
     width: 100%;
     align-items: center;
+    height: max-content !important;
   }
   .leftCotent {
     width: 80%;

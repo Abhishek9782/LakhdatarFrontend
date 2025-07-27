@@ -19,6 +19,7 @@ import {
 import { Nav } from "../Components/LeftSlid/Nav";
 import { AdminEndpoints, axiosRequest } from "../../../utils/baseUrl";
 import { fetchAllEmailTemplates } from "../../../services/authService";
+import AdminTemplateUpdate from "../AdminEmailUpdate/AdminTemplateUpdate";
 
 export const AdminEmailTemplates = () => {
   const theme = useTheme();
@@ -27,6 +28,8 @@ export const AdminEmailTemplates = () => {
   const [templates, setTemplates] = useState([]);
   const [pageNumber, setPageNumber] = useState(1);
   const [pageSize, setPageSize] = useState(10);
+  const [isupdateTemplate, setIsupdateTemplate] = useState(false);
+  const [currentEmailTempValue, setcurrentEmailTempValue] = useState(null);
 
   const [filteredTemplates, setFilteredTemplates] = useState([]);
 
@@ -55,6 +58,12 @@ export const AdminEmailTemplates = () => {
       tpl.title.toLowerCase().includes(keyword)
     );
     setFilteredTemplates(filtered);
+  };
+
+  const EmailtemplateValue = (e, value) => {
+    e.preventDefault();
+    setIsupdateTemplate(true);
+    setcurrentEmailTempValue(value);
   };
 
   return (
@@ -148,12 +157,18 @@ export const AdminEmailTemplates = () => {
 
                 <Button
                   variant="outlined"
-                  onClick={() => console.log("Open Edit for", tpl.name)}
+                  onClick={(e) => EmailtemplateValue(e, tpl)}
                 >
                   Edit
                 </Button>
               </Paper>
             ))
+          )}
+          {isupdateTemplate && (
+            <AdminTemplateUpdate
+              value={currentEmailTempValue}
+              close={setIsupdateTemplate}
+            />
           )}
         </Container>
       </Box>

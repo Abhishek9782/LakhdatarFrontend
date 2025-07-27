@@ -64,7 +64,11 @@ const Featuredproducts = () => {
                 loading="Lazy"
               >
                 {/* for locally we use this */}
-                <img src={data.src} alt="" loading="lazy" />
+                <img
+                  src={data.src}
+                  alt={`${data?.name} - Lakhdatar Restaurant Jaipur `}
+                  loading="lazy"
+                />
 
                 <div className="fpdetails">
                   <div className="fptop">

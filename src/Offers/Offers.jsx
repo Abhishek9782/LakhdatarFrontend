@@ -3,76 +3,87 @@ import "./Offers.css";
 
 const Offers = () => {
   return (
-    <div className="offersSection">
-      <div className="container">
+    <section className="offersSection" id="special-offers">
+      <div className="parent-content">
+        {/* Left Side - Offer List */}
         <div className="leftCotent">
-          <div className="headLeftContent">
-            <span> From The Menu</span>
-            <span>Special Offers</span>
-          </div>
-          <div className="listLeftContent" data-aos="fade-up-right">
-            <div className="listimg">
+          <header className="headLeftContent">
+            <h2>From The Menu</h2>
+            <h3>Special Vegetarian Offers</h3>
+          </header>
+
+          {/* Dish 1 */}
+          <article className="listLeftContent" data-aos="fade-up-right">
+            <figure className="listimg">
               <img
                 src="https://images.pexels.com/photos/9609842/pexels-photo-9609842.jpeg?auto=compress&cs=tinysrgb&w=600"
-                alt=""
+                alt="Matar Paneer at Lakhdatar Restaurant Jaipur"
               />
-            </div>
+            </figure>
             <div className="listdesc">
-              <h3>Matar Paneer </h3>
-              <span>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                Mollitia porro debitis reprehenderit nihil facilis doloribus
-                perferendis? Nostrum quas quo praesentium?
-              </span>
+              <h4>Matar Paneer</h4>
+              <p>
+                Enjoy the rich and creamy Matar Paneer made with fresh peas,
+                paneer, and aromatic spices — a favorite vegetarian dish in
+                Jaipur.
+              </p>
             </div>
             <div className="listprice">
-              <button>₹250</button>
+              <button aria-label="Order Matar Paneer - ₹250">₹250</button>
             </div>
-          </div>
-          <div className="listLeftContent" data-aos="fade-up-right">
-            <div className="listimg">
+          </article>
+
+          {/* Dish 2 */}
+          <article className="listLeftContent" data-aos="fade-up-right">
+            <figure className="listimg">
               <img
                 src="https://images.pexels.com/photos/10345736/pexels-photo-10345736.jpeg?auto=compress&cs=tinysrgb&w=600"
-                alt=""
+                alt="Paneer Lababdar with Malai at Lakhdatar Restaurant"
               />
-            </div>
+            </figure>
             <div className="listdesc">
-              <h3>Paneer Lababdar With Malai</h3>
-              <span>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                Mollitia porro debitis reprehenderit nihil facilis doloribus
-                perferendis? Nostrum quas quo praesentium?
-              </span>
+              <h4>Paneer Lababdar With Malai</h4>
+              <p>
+                A royal vegetarian delight – our Paneer Lababdar with Malai is
+                perfect for those who love creamy, spiced gravies with soft
+                paneer cubes.
+              </p>
             </div>
             <div className="listprice">
-              <button>₹250</button>
+              <button aria-label="Order Paneer Lababdar - ₹250">₹250</button>
             </div>
-          </div>
-          <div className="listLeftContent" data-aos="flip-left">
-            <div className="listimg">
+          </article>
+
+          {/* Dish 3 */}
+          <article className="listLeftContent" data-aos="flip-left">
+            <figure className="listimg">
               <img
                 src="https://images.pexels.com/photos/10580197/pexels-photo-10580197.jpeg?auto=compress&cs=tinysrgb&w=600"
-                alt=""
+                alt="Lakhdatar Special Vegetarian Thali in Jaipur"
               />
-            </div>
+            </figure>
             <div className="listdesc">
-              <h3>Lakhdatar Special Dish</h3>
-              <span>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                Mollitia porro debitis reprehenderit nihil facilis doloribus
-                perferendis? Nostrum quas quo praesentium?
-              </span>
+              <h4>Lakhdatar Special Dish</h4>
+              <p>
+                Our signature pure veg dish featuring a premium Rajasthani
+                thali, packed with traditional flavors and served with love in
+                Jaipur.
+              </p>
             </div>
             <div className="listprice">
-              <button>₹1250</button>
+              <button aria-label="Order Lakhdatar Special Dish - ₹1250">
+                ₹1250
+              </button>
             </div>
-          </div>
+          </article>
         </div>
-        <div className="rightContent" data-aos="flip-right">
+
+        {/* Right Side - Carousel */}
+        <aside className="rightContent" data-aos="flip-right">
           <div
             id="carouselExampleIndicators"
             className="carousel slide cursol_head"
-            data-bs-ride="true"
+            data-bs-ride="carousel"
           >
             <div className="carousel-indicators">
               <button
@@ -101,28 +112,28 @@ const Offers = () => {
                 <img
                   src="https://images.pexels.com/photos/784633/pexels-photo-784633.jpeg?auto=compress&cs=tinysrgb&w=600"
                   className="d-block cursol_image"
-                  alt="..."
+                  alt="Vegetarian Rajasthani Cuisine - Lakhdatar Restaurant"
                 />
               </div>
               <div className="carousel-item">
                 <img
                   src="https://images.pexels.com/photos/1109197/pexels-photo-1109197.jpeg?auto=compress&cs=tinysrgb&w=600"
                   className="d-block cursol_image"
-                  alt="..."
+                  alt="Family Dining at Pure Veg Restaurant in Jaipur"
                 />
               </div>
               <div className="carousel-item">
                 <img
                   src="https://images.pexels.com/photos/2097090/pexels-photo-2097090.jpeg?auto=compress&cs=tinysrgb&w=600"
                   className="d-block cursol_image"
-                  alt="..."
+                  alt="Special Offer on Veg Meals in Jaipur"
                 />
               </div>
             </div>
           </div>
-        </div>
+        </aside>
       </div>
-    </div>
+    </section>
   );
 };
 

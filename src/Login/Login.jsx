@@ -23,6 +23,9 @@ const Login = () => {
     email: "",
     password: "",
   });
+  const [attempt, setAttempt] = useState(3);
+  const [attempterror, setAttempterror] = useState(false);
+
   // Here is our functions ------------------------
 
   //  For catch value input and create a user state
@@ -68,6 +71,11 @@ const Login = () => {
       );
 
       if (res.error && res.error.status == 0) {
+        toast.error(res.error.message);
+        setAttempterror(true);
+        setAttempt(parseInt(attempt) - 1);
+        return;
+      } else if (res.error && res.status === 429) {
         toast.error(res.error.message);
       }
       // If alll is good email and id both are good then run it
@@ -129,8 +137,17 @@ const Login = () => {
             <span className="RegisterLink">
               <Link to="/user-register">Register Here</Link>
             </span>
+
             <button type="sumbit">Login</button>
           </form>
+          <br />
+          {attempterror && (
+            <p className="attemoterrror">
+              {attempt !== 0
+                ? `You have only ${attempt} attempt more`
+                : `You've used all attempts.Please try Again Tomorrow `}
+            </p>
+          )}
         </div>
       </div>
     </>

@@ -1,11 +1,12 @@
 import axios from "axios";
 // export const USER_BASE_URL = "http://localhost:5000";
+// export const USER_BASE_URL = "http://192.168.31.241:5000";
 // export const ADMIN_BASE_URL = "http://localhost:5000/lakhdatar/admin";
 
 // for live url
 export const USER_BASE_URL = "https://lakahdatarbackend.onrender.com";
-export const ADMIN_BASE_URL =
-  "https://lakahdatarbackend.onrender.com/lakhdatar/admin";
+// export const ADMIN_BASE_URL =
+("https://lakahdatarbackend.onrender.com/lakhdatar/admin");
 
 export const userEndPoints = {
   login: "user-login",

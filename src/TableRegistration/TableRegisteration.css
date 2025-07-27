@@ -94,7 +94,7 @@ input[type="number"] {
 }
 @media screen and (min-width: 300px) and (max-width: 500px) {
   .Trhead {
-    height: 75vh !important;
+    height: 85vh !important;
   }
   .TrForm input {
     padding: 8px 20px;

@@ -14,12 +14,24 @@ const CustomerFeedback = lazy(() =>
 );
 const BestChef = lazy(() => import("./BestChelf/BestChef"));
 const Location = lazy(() => import("./Location/Location"));
+const HomeIntroSection = lazy(() =>
+  import("./HomeCompanents/HomeIntroSection/HomeIntroSection")
+);
+const WhyChooseUse = lazy(() =>
+  import("./HomeCompanents/WhyChooseUS/WhyChooseUs")
+);
+const LocationHours = lazy(() =>
+  import("./HomeCompanents/LocationHours/LocationHours")
+);
 
 const Home = () => {
   return (
     <div>
       <Suspense fallback={<div>Loading Navbar...</div>}>
         <Navbarbg />
+      </Suspense>
+      <Suspense fallback={<div>Loading Navbar...</div>}>
+        <HomeIntroSection />
       </Suspense>
 
       <Suspense fallback={<div>Loading Offers...</div>}>
@@ -46,8 +58,14 @@ const Home = () => {
         <BestChef />
       </Suspense>
 
+      <Suspense fallback={<div>Loading Feedback...</div>}>
+        <WhyChooseUse />
+      </Suspense>
       <Suspense fallback={<div>Loading Location...</div>}>
         <Location />
+      </Suspense>
+      <Suspense fallback={<div>Loading Feedback...</div>}>
+        <LocationHours />
       </Suspense>
     </div>
   );

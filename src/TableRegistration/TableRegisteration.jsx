@@ -5,7 +5,7 @@ const TableRegisteration = () => {
   return (
     <div className="TR_main">
       <div className="Trbg">
-        <img src="restaurantTable.jpg" alt="" loading="lazy" />
+        <img src="restaurantTable.webp" alt="" loading="lazy" />
       </div>
       <div className="Trhead" data-aos="zoom-in">
         <h3>

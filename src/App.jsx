@@ -14,6 +14,7 @@ import { Toaster } from "react-hot-toast";
 import Orders from "./Orders/Orders";
 import UserList from "./admin/AdminPages/AllUser/UserList";
 import { AdminEmailTemplates } from "./admin/AdminPages/AdminEmailTemplates/AdminEmailTemplates";
+import AdminTemplateUpdate from "./admin/AdminPages/AdminEmailUpdate/AdminTemplateUpdate";
 
 // Lazy Loading Components for Faster Performance
 const Menu = lazy(() => import("./MenuSction/MenuPartiels/Menu"));

@@ -17,8 +17,9 @@ import {
   InputLabel,
   Select,
   MenuItem,
+  useMediaQuery,
 } from "@mui/material";
-import { styled } from "@mui/material/styles";
+import { styled, useTheme } from "@mui/material/styles";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import { motion } from "framer-motion";
@@ -51,6 +52,9 @@ const GlassCard = styled(motion.div)(({ theme }) => ({
 const Menu = () => {
   const user = useSelector((state) => state.user.user);
   const carts = useSelector((state) => state.carts?.carts);
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const isTablet = useMediaQuery(theme.breakpoints.between("sm", "md"));
 
   const favoriteProducts = useSelector((state) => state.favprod.favProduct);
   const dispatch = useDispatch();
@@ -207,11 +211,19 @@ const Menu = () => {
       </Typography>
 
       <Stack
-        direction="row"
-        spacing={2}
+        direction={{ xs: "column", sm: "row" }} // Column on mobile, row on tablet+
+        spacing={{ xs: 1, sm: 2 }} // Smaller gap on mobile
         justifyContent="center"
+        alignItems="center" // Center items on mobile
         flexWrap="wrap"
-        mb={5}
+        mb={{ xs: 8, sm: 15 }} // Smaller bottom margin on mobile
+        sx={{
+          width: "100%",
+          maxWidth: "100vw",
+          overflowX: "auto", // Allow horizontal scrolling if needed
+          py: 1, // Add some vertical padding
+          marginBottom: "80px !important ",
+        }}
       >
         {foodTypes.map((type) => (
           <Chip
@@ -223,11 +235,14 @@ const Menu = () => {
             onClick={(e) => handleMenu(e, type)}
             sx={{
               fontWeight: 600,
-              fontSize: "1rem",
-              px: 2,
-              py: 1,
+              fontSize: { xs: "0.875rem", sm: "1rem" }, // Smaller text on mobile
+              px: { xs: 1.5, sm: 2 }, // Less horizontal padding on mobile
+              py: { xs: 0.5, sm: 1 }, // Less vertical padding on mobile
+              m: { xs: 0.5, sm: 0 }, // Small margin on mobile
+              minWidth: { xs: "120px", sm: "auto" }, // Minimum width on mobile
               "& .MuiChip-label": {
                 color: activeType === type ? "white" : "#0288d1",
+                px: { xs: 0.5, sm: 1 }, // Adjust label padding
               },
             }}
           />
@@ -252,7 +267,7 @@ const Menu = () => {
             <FormControl
               variant="outlined"
               sx={{
-                minWidth: 200,
+                minWidth: isMobile ? 300 : 200,
                 // bgcolor: "#0288d1",
                 borderRadius: 2,
                 "& .MuiOutlinedInput-notchedOutline": {
@@ -342,7 +357,7 @@ const Menu = () => {
                           component="img"
                           height="200"
                           image={item.src} // get direct clodinary image
-                          alt={item.name}
+                          alt={`${item.name} - Lakhdatar Restaurant Jaipur`}
                           sx={{
                             objectFit: "cover",
                             borderTopLeftRadius: 16,

@@ -12,6 +12,7 @@ import {
   TextField,
   MenuItem,
   Grid,
+  Button,
 } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -122,7 +123,6 @@ const Orders = () => {
                   ))}
                 </TextField>
               </Grid>
-
               <Grid item xs={6} md={4}>
                 <DatePicker
                   label="Start Date"
@@ -141,7 +141,6 @@ const Orders = () => {
                   }}
                 />
               </Grid>
-
               <Grid item xs={6} md={4}>
                 <DatePicker
                   label="End Date"
@@ -177,6 +176,7 @@ const Orders = () => {
                   <TableCell>Status</TableCell>
                   <TableCell>Date</TableCell>
                   <TableCell>Amount</TableCell>
+                  <TableCell>Details</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -193,7 +193,7 @@ const Orders = () => {
                         <TableCell sx={{ color: "orange" }}>
                           {order.status}
                         </TableCell>
-                      ) : order.status === "failed" ? (
+                      ) : order.status === "cancelled" ? (
                         <TableCell sx={{ color: "red" }}>
                           {order.status}
                         </TableCell>
@@ -206,6 +206,18 @@ const Orders = () => {
                         dayjs(order.orderDate).$M
                       }-${dayjs(order.orderDate).$y}`}</TableCell>
                       <TableCell>{order.totalAmount}</TableCell>
+                      <TableCell>
+                        <Button
+                          variant="contained"
+                          onClick={() => {
+                            alert(
+                              `you clicked on this button order id :${order.orderId} `
+                            );
+                          }}
+                        >
+                          View
+                        </Button>
+                      </TableCell>
                     </TableRow>
                   ))
                 ) : (

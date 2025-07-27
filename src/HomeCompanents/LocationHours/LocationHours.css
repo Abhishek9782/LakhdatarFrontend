@@ -1,0 +1,210 @@
+/* LocationHours.css */
+
+strong {
+  color: black;
+}
+address {
+  color: black;
+}
+.container {
+  height: max-content !important;
+  display: flex;
+  flex-direction: column !important;
+  width: 100% !important;
+}
+.location-hours-section {
+  padding: 5rem 0;
+  background-color: #f8f9fa;
+  height: max-content !important;
+}
+
+.section-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #2c3e50;
+  margin-bottom: 1rem;
+}
+
+.section-subtitle {
+  font-size: 1.1rem;
+  color: #555;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.highlight {
+  color: #d4af37;
+}
+
+.info-card {
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  height: 100%;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+}
+
+.info-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+.card-header {
+  background: linear-gradient(135deg, #d4af37 0%, #c9a227 100%);
+  color: white;
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.card-header i {
+  font-size: 1.5rem;
+}
+
+.card-title {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.card-body {
+  padding: 2rem;
+}
+
+address {
+  font-style: normal;
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+}
+
+.contact-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0.75rem 0;
+}
+
+.contact-item i {
+  color: #d4af37;
+}
+
+.contact-item a {
+  color: #2c3e50;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.contact-item a:hover {
+  color: #d4af37;
+}
+
+.hours-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.hours-list li {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #eee;
+}
+
+.hours-list li:last-child {
+  border-bottom: none;
+}
+
+.day {
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+.hours {
+  color: #555;
+}
+
+.special-note {
+  display: flex;
+  gap: 0.75rem;
+  background: #f8f4e5;
+  padding: 1rem;
+  border-radius: 8px;
+}
+
+.special-note i {
+  color: #d4af37;
+  font-size: 1.25rem;
+}
+
+.special-note p {
+  margin: 0;
+  color: #5a4a3a;
+}
+
+.holiday-hours {
+  background: #f5f5f5;
+  padding: 1rem;
+  border-radius: 8px;
+}
+
+.holiday-hours h4 {
+  color: #2c3e50;
+  font-size: 1.1rem;
+  margin-bottom: 0.75rem;
+}
+
+.holiday-hours ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  color: #555;
+}
+
+.holiday-hours li {
+  padding: 0.25rem 0;
+  color: black;
+}
+
+.map-container {
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive adjustments */
+@media (max-width: 992px) {
+  .section-title {
+    font-size: 2rem;
+  }
+
+  .card-header {
+    padding: 1.25rem;
+  }
+
+  .card-body {
+    padding: 1.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .location-hours-section {
+    padding: 3rem 0;
+  }
+
+  .section-title {
+    font-size: 1.8rem;
+  }
+
+  .card-title {
+    font-size: 1.3rem;
+  }
+
+  .hours-list li {
+    color: black;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+}
