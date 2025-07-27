@@ -5,8 +5,8 @@ import axios from "axios";
 
 // for live url
 export const USER_BASE_URL = "https://lakahdatarbackend.onrender.com";
-// export const ADMIN_BASE_URL =
-("https://lakahdatarbackend.onrender.com/lakhdatar/admin");
+export const ADMIN_BASE_URL =
+  "https://lakahdatarbackend.onrender.com/lakhdatar/admin";
 
 export const userEndPoints = {
   login: "user-login",
