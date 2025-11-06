@@ -55,7 +55,7 @@ const UserCard = ({ user, setOpenUserDetails }) => {
   return (
     <Box
       sx={{
-        position: "fixed",
+        position: "absolute",
         top: 0,
         left: 0,
         width: "100vw",
@@ -71,11 +71,12 @@ const UserCard = ({ user, setOpenUserDetails }) => {
       <Card
         variant="outlined"
         sx={{
-          width: "80%",
+          width: "70%",
           height: "90%",
           overflowY: "auto",
           p: 3,
           position: "relative",
+          left: "9%",
           boxShadow: 6,
           borderRadius: 4,
           backgroundColor: "#fff",

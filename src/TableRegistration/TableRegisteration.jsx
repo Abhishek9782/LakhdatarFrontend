@@ -7,7 +7,12 @@ const TableRegisteration = () => {
       <div className="Trbg">
         <img src="restaurantTable.webp" alt="" loading="lazy" />
       </div>
-      <div className="Trhead" data-aos="zoom-in">
+      <div
+        className="Trhead"
+        data-aos="fade-up"
+        data-aos-offset="50"
+        data-aos-duration="1"
+      >
         <h3>
           Your Table <span>Reservation Now </span>{" "}
         </h3>

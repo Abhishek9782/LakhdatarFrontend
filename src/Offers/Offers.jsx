@@ -13,7 +13,12 @@ const Offers = () => {
           </header>
 
           {/* Dish 1 */}
-          <article className="listLeftContent" data-aos="fade-up-right">
+          <article
+            className="listLeftContent"
+            data-aos="fade-up"
+            data-aos-offset="50"
+            data-aos-duration="1"
+          >
             <figure className="listimg">
               <img
                 src="https://images.pexels.com/photos/9609842/pexels-photo-9609842.jpeg?auto=compress&cs=tinysrgb&w=600"
@@ -34,7 +39,12 @@ const Offers = () => {
           </article>
 
           {/* Dish 2 */}
-          <article className="listLeftContent" data-aos="fade-up-right">
+          <article
+            className="listLeftContent"
+            data-aos="fade-up"
+            data-aos-offset="50"
+            data-aos-duration="1"
+          >
             <figure className="listimg">
               <img
                 src="https://images.pexels.com/photos/10345736/pexels-photo-10345736.jpeg?auto=compress&cs=tinysrgb&w=600"
@@ -55,7 +65,12 @@ const Offers = () => {
           </article>
 
           {/* Dish 3 */}
-          <article className="listLeftContent" data-aos="flip-left">
+          <article
+            className="listLeftContent"
+            data-aos="fade-up"
+            data-aos-offset="50"
+            data-aos-duration="1"
+          >
             <figure className="listimg">
               <img
                 src="https://images.pexels.com/photos/10580197/pexels-photo-10580197.jpeg?auto=compress&cs=tinysrgb&w=600"
@@ -79,7 +94,11 @@ const Offers = () => {
         </div>
 
         {/* Right Side - Carousel */}
-        <aside className="rightContent" data-aos="flip-right">
+        <aside
+          className="rightContent"
+          data-aos="flip-right"
+          data-aos-offset="50"
+        >
           <div
             id="carouselExampleIndicators"
             className="carousel slide cursol_head"

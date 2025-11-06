@@ -28,7 +28,7 @@ export const Nav = ({ activeIndex }) => {
         </h3>
         <ul>
           <li className={activeIndex === 0 ? "active" : ""}>
-            <Link to="/lakhdatar/admin/">Home</Link>
+            <Link to="/lakhdatar/admin/dashboard">Home</Link>
           </li>
 
           <li className={activeIndex === 1 ? "active" : ""}>
@@ -41,9 +41,7 @@ export const Nav = ({ activeIndex }) => {
           {/* all users see and block  */}
 
           <li className={activeIndex === 3 ? "active" : ""}>
-            <Link to="/lakhdatar/admin/allemailTemplates">
-              Email Templates{" "}
-            </Link>
+            <Link to="/lakhdatar/admin/email-templates">Email Templates </Link>
           </li>
 
           <li className={activeIndex === 4 ? "active" : ""}>

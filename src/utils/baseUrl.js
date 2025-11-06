@@ -1,12 +1,16 @@
 import axios from "axios";
-// export const USER_BASE_URL = "http://localhost:5000";
+// export const USER_BASE_URL = "http://localhost:5000/v1/api";
 // export const USER_BASE_URL = "http://192.168.31.241:5000";
-// export const ADMIN_BASE_URL = "http://localhost:5000/lakhdatar/admin";
+// export const ADMIN_BASE_URL = "http://localhost:5000/v1/api/admin";
+export const ImageSelectable = "image/png, image/jpeg, image/webp";
+// export const VendorBaseUrl = "http://localhost:5000/v1/api/vendor";
 
 // for live url
-export const USER_BASE_URL = "https://lakahdatarbackend.onrender.com";
+export const USER_BASE_URL = "https://lakahdatarbackend.onrender.com/v1/api";
 export const ADMIN_BASE_URL =
-  "https://lakahdatarbackend.onrender.com/lakhdatar/admin";
+  "https://lakahdatarbackend.onrender.com/v1/api/admin";
+export const VendorBaseUrl =
+  "https://lakahdatarbackend.onrender.com/v1/api/vendor";
 
 export const userEndPoints = {
   login: "user-login",
@@ -38,11 +42,14 @@ export const AdminEndpoints = {
   verifyOtp: "verifyOtp",
   // products api
   getAllproduct: "getAllproduct",
-  statusChange: "changeuserStatus",
-  getAllEmailTemplate: "email-templates/getAllEmailTemplate",
-  getAllUsers: "/allusers",
+  statusChange: "/user/changeuserStatus",
+  getAllEmailTemplate: "email-template/getAllEmailTemplate",
+  getAllUsers: "/user/allusers",
   addProduct: "/product/productadd",
   productDelete: "/product/deleteproduct",
+};
+export const VendorEndPoints = {
+  login: "/login",
 };
 
 export const axiosRequest = async (
@@ -55,7 +62,12 @@ export const axiosRequest = async (
 ) => {
   // Create axios instance
   const axiosInstance = axios.create({
-    baseURL: type === "user" ? USER_BASE_URL : ADMIN_BASE_URL,
+    baseURL:
+      type === "user"
+        ? USER_BASE_URL
+        : type === "vendor"
+        ? VendorBaseUrl
+        : ADMIN_BASE_URL,
     headers: customHeaders
       ? customHeaders
       : {

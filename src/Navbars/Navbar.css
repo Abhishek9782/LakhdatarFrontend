@@ -4,6 +4,29 @@
   display: flex;
   display: flex;
 }
+.menuparent {
+  display: flex;
+  gap: 25px;
+  align-items: center;
+}
+.menuparent span i {
+  color: black;
+}
+.cartquantity {
+  background-color: white;
+  color: black;
+  font-size: 9px;
+  border-radius: 50%;
+  width: 15px;
+  height: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  z-index: 1;
+  top: 7px;
+  right: 18%;
+}
 .menu ul,
 .menu ul li {
   background-color: transparent;
@@ -48,7 +71,7 @@
 }
 .logoname span {
   font-size: 20px;
-  animation: 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) both focus-in-contract-bck;
+  /* animation: 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) both focus-in-contract-bck; */
 }
 @keyframes focus-in-contract-bck {
   0% {

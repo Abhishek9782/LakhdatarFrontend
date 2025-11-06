@@ -93,7 +93,11 @@ const Product = () => {
           <Typography variant="subtitle1" gutterBottom color="text.secondary">
             {product.food} | {product.foodType}
           </Typography>
-          <Chip label="In Stock" color="success" sx={{ mr: 2 }} />
+          <Chip
+            label="In Stock"
+            color="success"
+            sx={{ mr: 2, color: "white" }}
+          />
           <Chip label="10% Off Today" color="warning" />
           <Typography variant="body1" mt={2} color="text.primary">
             {product.desc}

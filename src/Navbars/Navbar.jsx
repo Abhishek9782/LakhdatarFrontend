@@ -13,7 +13,9 @@ import { axiosGet, axiosPost, imageUrl } from "../axios";
 import { axiosRequest, userEndPoints } from "../utils/baseUrl";
 import { useJwt } from "react-jwt";
 import "./Navbar.css";
+import { useMediaQuery } from "@mui/material";
 import Swal from "sweetalert2";
+import { ProfileSection } from "../admin/AdminPages/Components/LeftSlid/ProfileSection/ProfileSection";
 
 const Navbar = () => {
   const profileRef = useRef(null);
@@ -26,6 +28,7 @@ const Navbar = () => {
   // Extract userId directly
   let { decodedToken } = useJwt(user);
   const userId = decodedToken?.id || null;
+  const isSmallScreen = useMediaQuery("(max-width:500px)");
 
   const [profileHandle, setProfileHandle] = useState(false);
   const [allFavProduct, setAllFavProducts] = useState(null);
@@ -163,7 +166,7 @@ const Navbar = () => {
             )}
             <li>
               <Link to="/cart">
-                Cart{" "}
+                Cart
                 <i
                   className="fa-solid fa-cart-shopping"
                   style={{ color: "black" }}
@@ -173,14 +176,24 @@ const Navbar = () => {
             </li>
           </ul>
         </div>
-        <span
-          className="menuIcon"
-          onClick={() => {
-            document.body.classList.add("menu-open");
-          }}
-        >
-          <i className="fa-solid fa-bars"></i>
-        </span>
+        {isSmallScreen && (
+          <div className="menuparent">
+            <Link to="/cart">
+              <span className="cartquantity">{cartQuantity}</span>
+              <span>
+                <i class="fa-solid fa-cart-shopping"></i>
+              </span>
+            </Link>
+            <span
+              className="menuIcon"
+              onClick={() => {
+                document.body.classList.add("menu-open");
+              }}
+            >
+              <i className="fa-solid fa-bars"></i>
+            </span>
+          </div>
+        )}
       </div>
 
       {/* Mobile Menu */}
@@ -244,7 +257,12 @@ const Navbar = () => {
               </li>
             )}
             <li>
-              <Link to="/cart">Cart ({cartQuantity})</Link>
+              <Link
+                to="/cart"
+                onClick={document.body.classList.remove("menu-open")}
+              >
+                Cart ({cartQuantity})
+              </Link>
             </li>
           </ul>
         </div>
@@ -252,97 +270,108 @@ const Navbar = () => {
 
       {/* Profile Popup */}
       {profileHandle && (
-        <div className="profilebody" ref={profileRef}>
-          <div className="xmark" onClick={() => setProfileHandle(false)}>
-            <i className="fa-solid fa-xmark"></i>
-          </div>
-          {profileHandle === "favorite" ? (
-            <div className="favioratedetails">
-              <span className="favoritelogo">Lakhdatar Restaurant</span>
-              <h3>Your Favorite Products</h3>
+        // (
+        //   <div className="profilebody" ref={profileRef}>
+        //     <div className="xmark" onClick={() => setProfileHandle(false)}>
+        //       <i className="fa-solid fa-xmark"></i>
+        //     </div>
+        //     {profileHandle === "favorite" ? (
+        //       <div className="favioratedetails">
+        //         <span className="favoritelogo">Lakhdatar Restaurant</span>
+        //         <h3>Your Favorite Products</h3>
 
-              {allFavProduct.length > 0 ? (
-                allFavProduct.map((data) => (
-                  <div className="favproductList" key={data._id}>
-                    <ul>
-                      <li className="img">
-                        <img src={`${imageUrl}/${data.src}`} alt={data.name} />
-                      </li>
-                      <li style={{ flex: "2" }}>{data.name}</li>
-                      <li className="deleteicon">
-                        <i
-                          className="fa-solid fa-trash"
-                          title="Remove from favorite"
-                        ></i>
-                      </li>
-                    </ul>
-                  </div>
-                ))
-              ) : (
-                <h2 className="EmptyFav">No Favorite products available</h2>
-              )}
-            </div>
-          ) : (
-            <div className="prilfilelist">
-              <div className="logo">
-                <img
-                  src={currentUser?.img || "https://via.placeholder.com/150"}
-                  alt="Profile"
-                  loading="lazy"
-                />
-              </div>
-              <ul>
-                <li className="username" style={{ listStyle: "none" }}>
-                  <b>Hey! {currentUser.fullname}</b>
-                </li>
-                <a href="/orders">
-                  <li>
-                    <i className="fa-solid fa-bag-shopping"></i> Your Orders
-                  </li>
-                </a>
-                <a href="">
-                  <li onClick={handleFavProduct}>
-                    <i className="fa-regular fa-heart"></i> Favorite
-                  </li>
-                </a>
-                <a href="">
-                  <li>
-                    <i className="fa fa-ticket"></i> Your Ticket
-                  </li>
-                </a>
-                <a href="">
-                  <li>
-                    <i className="fa-regular fa-handshake"></i> Help
-                  </li>
-                </a>
+        //         {allFavProduct.length > 0 ? (
+        //           allFavProduct.map((data) => (
+        //             <div className="favproductList" key={data._id}>
+        //               <ul>
+        //                 <li className="img">
+        //                   <img src={`${imageUrl}/${data.src}`} alt={data.name} />
+        //                 </li>
+        //                 <li style={{ flex: "2" }}>{data.name}</li>
+        //                 <li className="deleteicon">
+        //                   <i
+        //                     className="fa-solid fa-trash"
+        //                     title="Remove from favorite"
+        //                   ></i>
+        //                 </li>
+        //               </ul>
+        //             </div>
+        //           ))
+        //         ) : (
+        //           <h2 className="EmptyFav">No Favorite products available</h2>
+        //         )}
+        //       </div>
+        //     ) : (
+        //       <div className="prilfilelist">
+        //         <div className="logo">
+        //           <img
+        //             src={currentUser?.img || "https://via.placeholder.com/150"}
+        //             alt="Profile"
+        //             loading="lazy"
+        //           />
+        //         </div>
+        //         <ul>
+        //           <li className="username" style={{ listStyle: "none" }}>
+        //             <b>Hey! {currentUser.fullname}</b>
+        //           </li>
+        //           <a href="/orders">
+        //             <li>
+        //               <i className="fa-solid fa-bag-shopping"></i> Your Orders
+        //             </li>
+        //           </a>
+        //           <a href="">
+        //             <li onClick={handleFavProduct}>
+        //               <i className="fa-regular fa-heart"></i> Favorite
+        //             </li>
+        //           </a>
+        //           <a href="">
+        //             <li>
+        //               <i className="fa fa-ticket"></i> Your Ticket
+        //             </li>
+        //           </a>
+        //           <a href="">
+        //             <li>
+        //               <i className="fa-regular fa-handshake"></i> Help
+        //             </li>
+        //           </a>
 
-                <a href="">
-                  <li>
-                    <i className="fa-solid fa-cart-shopping"></i> Cart
-                  </li>
-                </a>
-                <li
-                  onClick={handleLogout}
-                  style={{
-                    color: "black",
-                    listStyle: "none",
-                    lineHeight: "70px",
-                    fontFamily: "Kanit",
-                    fontSize: "17px",
-                    width: "100%",
-                    cursor: "pointer",
-                  }}
-                >
-                  <i
-                    className="fa-solid fa-address-card"
-                    style={{ color: "black" }}
-                  ></i>{" "}
-                  Logout
-                </li>
-              </ul>
-            </div>
-          )}
-        </div>
+        //           <a href="">
+        //             <li>
+        //               <i className="fa-solid fa-cart-shopping"></i> Cart
+        //             </li>
+        //           </a>
+        //           <li
+        //             onClick={handleLogout}
+        //             style={{
+        //               color: "black",
+        //               listStyle: "none",
+        //               lineHeight: "70px",
+        //               fontFamily: "Kanit",
+        //               fontSize: "17px",
+        //               width: "100%",
+        //               cursor: "pointer",
+        //             }}
+        //           >
+        //             <i
+        //               className="fa-solid fa-address-card"
+        //               style={{ color: "black" }}
+        //             ></i>{" "}
+        //             Logout
+        //           </li>
+        //         </ul>
+        //       </div>
+        //     )}
+        //   </div>
+        // )
+        <ProfileSection
+          profileRef={profileRef}
+          profileHandle={profileHandle}
+          currentUser={currentUser}
+          setProfileHandle={setProfileHandle}
+          handleFavProduct={handleFavProduct}
+          handleLogout={handleLogout}
+          allFavProduct={allFavProduct}
+        />
       )}
     </>
   );

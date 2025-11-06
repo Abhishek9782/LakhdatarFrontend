@@ -17,7 +17,10 @@ export const getProducts = async (userData) => {
   try {
     const response = await API.post(
       `/product/${AdminEndpoints.getAllproduct}`,
-      userData
+      userData,
+      {
+        withCredentials: true,
+      }
     );
     return response.data;
   } catch (error) {

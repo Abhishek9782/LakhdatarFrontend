@@ -17,11 +17,11 @@ import {
   Clear as ClearIcon,
 } from "@mui/icons-material";
 import { Nav } from "../Components/LeftSlid/Nav";
-import { AdminEndpoints, axiosRequest } from "../../../utils/baseUrl";
 import { fetchAllEmailTemplates } from "../../../services/authService";
 import AdminTemplateUpdate from "../AdminEmailUpdate/AdminTemplateUpdate";
+import { jwtDecode } from "jwt-decode";
 
-export const AdminEmailTemplates = () => {
+const AdminEmailTemplates = () => {
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
   const [searchItem, setSearchItem] = useState("");
@@ -30,7 +30,6 @@ export const AdminEmailTemplates = () => {
   const [pageSize, setPageSize] = useState(10);
   const [isupdateTemplate, setIsupdateTemplate] = useState(false);
   const [currentEmailTempValue, setcurrentEmailTempValue] = useState(null);
-
   const [filteredTemplates, setFilteredTemplates] = useState([]);
 
   const fetchTemplates = async () => {
@@ -175,3 +174,5 @@ export const AdminEmailTemplates = () => {
     </Box>
   );
 };
+
+export default AdminEmailTemplates;

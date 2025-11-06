@@ -1,147 +1,98 @@
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  useLocation,
-} from "react-router-dom";
-import React, { lazy, Suspense, useEffect, useMemo } from "react";
+import React, { Suspense } from "react";
+import { ThemeProvider, CssBaseline, Box } from "@mui/material";
+import { BrowserRouter as Router, useLocation } from "react-router-dom";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import { ToastContainer, Bounce } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import "./App.css";
 import { Toaster } from "react-hot-toast";
-import Orders from "./Orders/Orders";
-import UserList from "./admin/AdminPages/AllUser/UserList";
-import { AdminEmailTemplates } from "./admin/AdminPages/AdminEmailTemplates/AdminEmailTemplates";
-import AdminTemplateUpdate from "./admin/AdminPages/AdminEmailUpdate/AdminTemplateUpdate";
+import "./App.css";
 
-// Lazy Loading Components for Faster Performance
-const Menu = lazy(() => import("./MenuSction/MenuPartiels/Menu"));
-const Home = lazy(() => import("./Home"));
-const Help = lazy(() => import("./HelpSection/Help"));
-const HelpLegal = lazy(() => import("./HelpSection/HelpLegal"));
-const Login = lazy(() => import("./Login/Login"));
-const Register = lazy(() => import("./Register/Register"));
-const Navbar = lazy(() => import("./Navbars/Navbar"));
-const Cart = lazy(() => import("./Cart/Cart"));
-const Ourspecial = lazy(() => import("./ourSpecial/Ourspecial"));
-const Product = lazy(() => import("./Product/Product"));
-const PageNotFound = lazy(() => import("./PageNotFound/PageNotFound"));
-const AdminLogin = lazy(() =>
-  import("./admin/AdminPages/AdminLogin/AdminLogin")
-);
-const AdminProducts = lazy(() =>
-  import("./admin/AdminPages/AdminProducts/AdminProducts")
-);
-const AdminHome = lazy(() => import("./admin/AdminPages/AdminHome/AdminHome"));
-const Footer = lazy(() => import("./Footer/Footer"));
-const ProtectedRoute = lazy(() => import("./ProtectedRoutes/ProtectedRoute"));
+// Themes
+import { theme } from "./theme/index";
+import { vendorTheme } from "./theme/vendorTheme";
+import { adminTheme } from "./theme/admintheme";
 
-function AppContent() {
-  // Optimize AOS initialization using useEffect to prevent multiple executions
-  useEffect(() => {
-    AOS.init({ offset: 300, delay: 200 });
-  }, []);
+// Main Router
+import AppRouter from "./routes/AppRouter";
 
+// Loading Component
+import LoadingSpinner from "./components/common/LoadingSpinner";
+
+// Theme Wrapper Component
+const ThemeWrapper = ({ children }) => {
   const location = useLocation();
 
-  // Memoize Admin Routes Check for Performance Optimization
-  const isAdminRoutes = useMemo(
-    () =>
-      [
-        "/lakhdatar/admin/login",
-        "/lakhdatar/admin/",
-        "/lakhdatar/admin/products",
-        "/lakhdatar/admin/allusers",
-        "/lakhdatar/admin/allemailTemplates",
-        "/user-login",
-        "/user-register",
-      ].includes(location.pathname),
-    [location.pathname]
-  );
+  const getTheme = () => {
+    if (location.pathname.startsWith("/vendor")) return vendorTheme;
+    if (
+      location.pathname.startsWith("/admin") ||
+      location.pathname.startsWith("/lakhdatar/admin")
+    )
+      return adminTheme;
+    return theme;
+  };
 
   return (
-    <Suspense fallback={<div>Loading...</div>}>
-      {!isAdminRoutes && <Navbar />}
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/menu" element={<Menu />} />
-        <Route path="/menu/:id" element={<Product />} />
-        <Route path="/help" element={<Help />} />
-        <Route path="/help/legal" element={<HelpLegal />} />
-        <Route path="/user-login" element={<Login />} />
-        <Route path="/user-register" element={<Register />} />
-        <Route path="/cart" element={<Cart />} />
-        <Route path="/our-special" element={<Ourspecial />} />
-        <Route
-          path="/orders"
-          element={
-            <ProtectedRoute>
-              <Orders />
-            </ProtectedRoute>
-          }
-        />
-        <Route path="*" element={<PageNotFound />} />
-
-        {/* Admin Routes */}
-        <Route path="/lakhdatar/admin/login" element={<AdminLogin />} />
-        <Route
-          path="/lakhdatar/admin/"
-          element={
-            // <ProtectedRoute>
-            <AdminHome />
-            // </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/lakhdatar/admin/products"
-          element={
-            // <ProtectedRoute>
-            <AdminProducts />
-            // </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/lakhdatar/admin/allusers"
-          element={
-            // <ProtectedRoute>
-            <UserList />
-            // </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/lakhdatar/admin/allemailTemplates"
-          element={<AdminEmailTemplates />}
-        />
-      </Routes>
-      {!isAdminRoutes && <Footer />}
-
-      <ToastContainer
-        position="top-right"
-        closeButton={true}
-        autoClose={2000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick={false}
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-        transition={Bounce}
-      />
-      <Toaster position="bottom-center" reverseOrder={false} />
-    </Suspense>
+    <ThemeProvider theme={getTheme()}>
+      <CssBaseline />
+      {children}
+    </ThemeProvider>
   );
-}
+};
 
 function App() {
+  React.useEffect(() => {
+    AOS.init({
+      offset: 100,
+      delay: 100,
+      duration: 600,
+      easing: "ease-in-out",
+      once: true,
+      mirror: false,
+    });
+  }, []);
+
   return (
     <Router>
-      <AppContent />
+      <ThemeWrapper>
+        <Suspense fallback={<LoadingSpinner />}>
+          <Box
+            sx={{ minHeight: "100vh", backgroundColor: "background.default" }}
+          >
+            <AppRouter />
+
+            {/* Global Notifications */}
+            <ToastContainer
+              position="top-right"
+              autoClose={5000}
+              hideProgressBar={false}
+              newestOnTop
+              closeOnClick
+              rtl={false}
+              pauseOnFocusLoss
+              draggable
+              pauseOnHover
+              theme="light"
+              transition={Bounce}
+            />
+
+            <Toaster
+              position="bottom-center"
+              reverseOrder={false}
+              toastOptions={{
+                duration: 4000,
+                style: {
+                  background: "#363636",
+                  color: "#fff",
+                },
+              }}
+            />
+          </Box>
+        </Suspense>
+      </ThemeWrapper>
     </Router>
   );
 }
 
-export default React.memo(App); // Prevent unnecessary re-renders
+export default React.memo(App);

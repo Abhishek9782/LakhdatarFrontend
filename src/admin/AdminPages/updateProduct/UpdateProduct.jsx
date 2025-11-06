@@ -5,6 +5,7 @@ import { toast } from "react-hot-toast";
 import { useCookies } from "react-cookie";
 import { Circles } from "react-loader-spinner";
 import Compressor from "compressorjs";
+import { ImageSelectable } from "../../../utils/baseUrl";
 
 export const UpdateProduct = ({ product, getAllProducts, hide }) => {
   const [image, setImage] = useState("");
@@ -47,7 +48,7 @@ export const UpdateProduct = ({ product, getAllProducts, hide }) => {
         });
       }
       const res = await axiosPost(
-        `lakhdatar/admin/product/updateproduct/${product._id}`,
+        `/admin/product/updateproduct/${product._id}`,
         formData,
         true
       );
@@ -99,6 +100,7 @@ export const UpdateProduct = ({ product, getAllProducts, hide }) => {
                 type="file"
                 name="src"
                 onChange={(e) => setImage(e.target.files)}
+                accept={ImageSelectable}
               />
             </label>
             <label>

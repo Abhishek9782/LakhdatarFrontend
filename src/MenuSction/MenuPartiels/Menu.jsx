@@ -362,10 +362,15 @@ const Menu = () => {
                             objectFit: "cover",
                             borderTopLeftRadius: 16,
                             borderTopRightRadius: 16,
+                            transition: "transform 0.3s ease", // Optional: smooth animation
+                            "&:hover": {
+                              transform: "scale(1.05)",
+                            },
                           }}
                           loading="Lazy"
                         />
                       </Link>
+                      {/* this is like button svg */}
                       <IconButton
                         onClick={(e) => handleFavProduct(e, item._id)}
                         sx={{
@@ -373,6 +378,7 @@ const Menu = () => {
                           top: 10,
                           right: 10,
                           transition: "all ease .0.5s",
+                          color: "white",
                           backgroundColor: favoriteProducts.includes(item._id)
                             ? "red"
                             : "transparent",
@@ -382,7 +388,7 @@ const Menu = () => {
                         }}
                       >
                         {favoriteProducts.includes(item._id) ? (
-                          <FavoriteIcon sx={{ color: "#f44336" }} /> // Material UI red
+                          <FavoriteIcon sx={{ color: "white" }} /> // Material UI red
                         ) : (
                           <FavoriteBorderIcon />
                         )}

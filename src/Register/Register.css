@@ -38,6 +38,18 @@
   padding: 6px 0;
   margin: 15px 0;
 }
+
+.selcet-tag {
+  width: 80%;
+  border: none;
+  border-radius: 5px;
+  position: relative;
+  top: 30px;
+  color: #000;
+  padding-inline: 20px !important;
+  padding: 6px 0;
+  margin: 15px 0;
+}
 button[type="sumbit"] {
   width: 80%;
   position: relative;

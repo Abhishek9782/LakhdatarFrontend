@@ -15,6 +15,8 @@ import { apiRequest, axiosGet, axiosPost, imageUrl } from "../axios";
 import { toast } from "react-hot-toast";
 import { jwtDecode } from "jwt-decode";
 import { userEndPoints } from "../utils/baseUrl";
+import { AddDeliveryAddress } from "../Components/AddDeliveryAddress";
+import { SavedDeliveryAddress } from "../Components/SavedDeliveryAddress";
 
 //  This is our all styled Components of any component
 const CartBody = styled.div`
@@ -127,26 +129,26 @@ const MainAccIcon = styled.span`
   cursor: pointer;
 `;
 
-const DeliveryAddress = styled.div`
-  color: black;
-  background-color: white;
-  width: 100%;
-  padding: 30px;
-  font-family: "kanit";
-  font-size: 20px;
-  position: relative;
-  box-shadow: 2px 2px 5px #999;
-  cursor: pointer;
-`;
-const AddresIcon = styled.span`
-  border: 2px solid black;
-  padding: 5px;
-  position: absolute;
-  left: -20px;
-  background-color: black;
-  top: 20px;
-  cursor: pointer;
-`;
+// const DeliveryAddress = styled.div`
+//   color: black;
+//   background-color: white;
+//   width: 100%;
+//   padding: 30px;
+//   font-family: "kanit";
+//   font-size: 20px;
+//   position: relative;
+//   box-shadow: 2px 2px 5px #999;
+//   cursor: pointer;
+// `;
+// const AddresIcon = styled.span`
+//   border: 2px solid black;
+//   padding: 5px;
+//   position: absolute;
+//   left: -20px;
+//   background-color: black;
+//   top: 20px;
+//   cursor: pointer;
+// `;
 const Payment = styled.div`
   color: black;
   background-color: white;
@@ -421,6 +423,8 @@ const Cart = () => {
         totalAmount: res.data?.data?.totalAmount || 0,
       };
       setUserCharges(ch);
+    } else if (res.status === 401 || 400) {
+      navigate("/user-login");
     }
   }, []);
 
@@ -520,7 +524,7 @@ const Cart = () => {
   const handleSubmit = async (e) => {
     e.preventDefault(); // Prevent page reload
 
-    const isValid = validate();
+    const isValid = validate(deliveryAddress);
 
     if (isValid) {
       try {
@@ -562,7 +566,6 @@ const Cart = () => {
       document.body.appendChild(script);
     });
   };
-  console.log(userCharges);
 
   const handlePayment = async () => {
     // first we are load script
@@ -574,6 +577,7 @@ const Cart = () => {
       toast.error("Razorpay SDK failed to load. Are you online?");
       return;
     }
+    //  here we create a payment
     const res = await apiRequest({
       method: "post",
       url: userEndPoints.createPaymetOrder,
@@ -609,7 +613,8 @@ const Cart = () => {
           url: userEndPoints.verifyPayment,
           data: response,
         });
-        const { success, paymentDetails, paymentMethod } = res.data;
+        const { success, paymentDetails, paymentMethod, paymentStatus } =
+          res.data;
 
         if (!success) {
           toast.error("Payment verification failed");
@@ -629,6 +634,7 @@ const Cart = () => {
             razorpay_order_id: paymentDetails.order_id,
             razorpay_payment_id: paymentDetails.id,
             paymentMethod,
+            paymentStatus,
           },
         });
 
@@ -637,7 +643,7 @@ const Cart = () => {
         if (saveOrderRes.success) {
           toast.success("Order placed successfully!");
           dispatch(setCartQuantity(0));
-          navigate(0);
+          navigate("/orders");
         } else {
           toast.error("Failed to save order");
         }
@@ -770,58 +776,15 @@ const Cart = () => {
           )}
           {cartItem?.length > 0 && (
             <>
-              <DeliveryAddress
-                onClick={(e) => {
-                  handleaddressField(e);
-                }}
-              >
-                Delivery Address
-                <AddresIcon>
-                  <i className="fa-solid fa-location-dot"></i>
-                </AddresIcon>
-                <div className="form-container" id="AddressField">
-                  <h2>Address Form</h2>
-                  <form>
-                    {inputFields.map(({ name, label, type, placeholder }) => (
-                      <div className="form-group" key={name}>
-                        <label>
-                          {label}
-                          {/* Show error if exists for this field */}
-                          {errors[name] && (
-                            <span
-                              style={{
-                                color: "red",
-                                marginLeft: "15px",
-                                fontSize: "0.9em",
-                              }}
-                            >
-                              {errors[name]}
-                            </span>
-                          )}
-                        </label>
+              <AddDeliveryAddress
+                handleaddressField={handleaddressField}
+                handleSubmit={handleSubmit}
+                deliveryAddress={deliveryAddress}
+                handleChange={handleChange}
+                errors={errors}
+              />
 
-                        <input
-                          type={type}
-                          name={name}
-                          placeholder={placeholder}
-                          value={deliveryAddress[name]}
-                          onChange={handleChange}
-                          required
-                        />
-                      </div>
-                    ))}
-
-                    <button
-                      type="submit"
-                      onClick={(e) => {
-                        handleSubmit(e);
-                      }}
-                    >
-                      Save
-                    </button>
-                  </form>
-                </div>
-              </DeliveryAddress>
+              {/* <SavedDeliveryAddress /> */}
               <Payment>
                 Payment
                 <PaymentIcon onClick={handlePaymentClick}>
@@ -854,7 +817,7 @@ const Cart = () => {
               {cartItem.map((cart) => (
                 <>
                   <CartItem key={cart._id}>
-                    <span
+                    {/* <span
                       style={{
                         color: "black",
                         margin: "0px 20px 0px 0px ",
@@ -862,7 +825,7 @@ const Cart = () => {
                       className="cartSr"
                     >
                       {0}
-                    </span>
+                    </span> */}
                     <CartImage
                       src={!stateUser ? cart.src : cart.prodId?.src}
                       className="cartImage"
@@ -984,7 +947,9 @@ const Cart = () => {
                   <BillDeatilSpan> Gst And Restaurant Charges </BillDeatilSpan>
                 </BillDeatilSpans>
                 <BillDeatilSpans>
-                  <BillDeatilSpan>₹ {deliveryTip}</BillDeatilSpan>
+                  <BillDeatilSpan>
+                    ₹ {statecharges.subTotal > 500 ? 0 : deliveryTip}
+                  </BillDeatilSpan>
                   <BillDeatilSpan>
                     ₹{" "}
                     {!stateUser

@@ -2,7 +2,7 @@ svg {
   width: 3.25em;
   transform-origin: center;
   animation: none !important;
-  color: red !important;
+  /* color: white !important; */
 }
 
 .Toastify__close-button > svg {

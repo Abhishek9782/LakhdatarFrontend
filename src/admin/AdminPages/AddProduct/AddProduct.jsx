@@ -5,7 +5,11 @@ import { toast, Bounce } from "react-toastify";
 import { useCookies } from "react-cookie";
 import Compressor from "compressorjs";
 import { Circles } from "react-loader-spinner";
-import { AdminEndpoints, axiosRequest } from "../../../utils/baseUrl";
+import {
+  AdminEndpoints,
+  axiosRequest,
+  ImageSelectable,
+} from "../../../utils/baseUrl";
 
 export const AddProduct = ({ setIsAdd, getAllproducts }) => {
   const [product, setProduct] = useState({
@@ -114,7 +118,7 @@ export const AddProduct = ({ setIsAdd, getAllproducts }) => {
               name="src"
               placeholder="Choose a Product Image"
               onChange={handleFileChange}
-              accept="image/*"
+              accept={ImageSelectable}
               required
             />
 

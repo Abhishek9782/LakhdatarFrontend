@@ -1,18 +1,17 @@
 import React, { useEffect, useState } from "react";
 import "./AdminLogin.css";
-import axios from "axios";
 import { toast } from "react-hot-toast";
-import { useCookies } from "react-cookie";
 import { useNavigate, useLocation } from "react-router-dom";
 import { loginAdmin } from "../../../services/authService";
 import { jwtDecode } from "jwt-decode";
 import { useDispatch } from "react-redux";
-import { loginStart, loginSucess } from "../../../store/userSlice";
+import { loginStart, loginSucess } from "../../../store/adminSlice";
 const AdminLogin = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
+  console.log("adminLogin Page ");
   // here we chek if admin login and he is come again on login page then we redirect it on home page check jwt is expire or not
   useEffect(() => {
     const token = JSON.parse(localStorage.getItem("user"));
@@ -20,8 +19,9 @@ const AdminLogin = () => {
       try {
         const decode = jwtDecode(token.data);
         const isExpired = Date.now() >= decode.exp * 1000;
+
         if (!isExpired) {
-          navigate("/lakhdatar/admin/");
+          navigate("/lakhdatar/admin/dashboard");
         }
       } catch (error) {
         console.log(error);
@@ -30,7 +30,6 @@ const AdminLogin = () => {
     }
   }, [location, navigate]);
 
-  const [cookies, setCookie] = useCookies(["user"]);
   let [user, setUser] = useState({
     email: "",
     password: "",
@@ -47,12 +46,14 @@ const AdminLogin = () => {
 
     //  here we login admin
     const res = await loginAdmin(user);
-
     if (res.status == 1) {
       toast.success(res.message, { autoClose: 1000 });
+
       const user = { data: res.data };
+
       dispatch(loginSucess(user));
-      navigate("/lakhdatar/admin/");
+
+      navigate("/lakhdatar/admin/dashboard");
     }
   }
   return (

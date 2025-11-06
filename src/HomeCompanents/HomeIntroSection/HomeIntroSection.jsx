@@ -5,8 +5,11 @@ const IntroSection = () => {
   return (
     <section className="intro-section">
       <div className="container">
-        <div className="row align-items-center gx-5">
-          <div className="col-lg-6 order-lg-1 order-2">
+        <div
+          className="row align-items-center gx-5"
+          style={{ display: "flex", flexDirection: "row-reverse" }}
+        >
+          <div className="col-lg-7 order-lg-1 order-2">
             <div className="text-section p-4 p-lg-5">
               <h1 className="display-4 fw-bold mb-4 main-heading">
                 Pure Veg Restaurant in Jaipur –{" "}
@@ -45,7 +48,7 @@ const IntroSection = () => {
               </div>
             </div>
           </div>
-          <div className="col-lg-6 order-lg-2 order-1 mb-4 mb-lg-0">
+          <div className="col-lg-4 order-lg-2 order-1 mb-4 mb-lg-0">
             <div className="image-container">
               <img
                 src="https://images.pexels.com/photos/10580197/pexels-photo-10580197.jpeg"

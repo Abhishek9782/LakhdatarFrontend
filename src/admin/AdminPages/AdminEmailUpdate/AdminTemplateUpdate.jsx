@@ -52,7 +52,7 @@ export default function AdminTemplateUpdate({ value, close }) {
       }}
       className="container"
     >
-      <Paper elevation={3} sx={{ p: 3 }}>
+      <Paper elevation={3} sx={{ p: 3, position: "relative", left: "120px " }}>
         <Typography variant="h5" gutterBottom>
           Edit Blog Post
         </Typography>

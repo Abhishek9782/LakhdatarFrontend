@@ -4,7 +4,6 @@ import { getProducts, deleteProducts } from "../../../services/authService";
 import { Nav } from "../Components/LeftSlid/Nav";
 import { UpdateProduct } from "../updateProduct/UpdateProduct";
 import { AddProduct } from "../AddProduct/AddProduct";
-import { axiosPut, imageUrl } from "../../../axios";
 
 // Material-UI Components
 import {
@@ -47,6 +46,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { ADMIN_BASE_URL } from "../../../utils/baseUrl";
 import { useCookies } from "react-cookie";
+import { jwtDecode } from "jwt-decode";
 
 const AdminProducts = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -64,19 +64,31 @@ const AdminProducts = () => {
 
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
-  const token = window.localStorage.getItem("user");
   const navigate = useNavigate();
+
+  // check user is valid or login
+  // useEffect(() => {
+  //   const token = window.localStorage.getItem("user");
+  //   if (!token) navigate("/lakhdatar/admin/login");
+  //   const decodeToken = jwtDecode(JSON.parse(token).data);
+
+  //   const isExpired = Date.now() >= decodeToken.exp * 1000;
+  //   if (isExpired) {
+  //     navigate("/lakhdatar/admin/login ");
+  //   }
+  // }, []);
 
   // Debouncing
   useEffect(() => {
     const delayDebounce = setTimeout(() => {
       setDebouncedSearchItem(searchItem);
-    }, 400);
+    }, 600);
 
     return () => clearTimeout(delayDebounce);
   }, [searchItem]);
 
   // Fetch products with pagination & search
+  // useCallback use here for memoized this function it will change when our currentpage,pagesize or debounceSearchItem Will be change
   const getAllProducts = useCallback(async () => {
     setLoading(true);
     try {
@@ -341,19 +353,21 @@ const AdminProducts = () => {
                           >
                             <Box sx={{ display: "flex", gap: 1 }}>
                               <IconButton
-                                color="error"
                                 onClick={() => setSelectedProduct(prod)}
                                 aria-label="edit"
-                                sx={{ backgroundColor: "green" }}
+                                sx={{
+                                  backgroundColor: "green",
+                                  color: "#fff",
+                                }}
                               >
                                 <EditIcon />
                               </IconButton>
                               <IconButton
-                                color="error"
                                 onClick={() => handleDeleteClick(prod)}
                                 aria-label="delete"
                                 sx={{
                                   backgroundColor: "red",
+                                  color: "#fff",
                                 }}
                               >
                                 <DeleteIcon />

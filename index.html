@@ -21,7 +21,7 @@
     <!-- Meta Tags -->
     <meta
       name="description"
-      content="Lakhdatar Restaurant is Jaipur’s best pure veg restaurant, serving delicious Rajasthani vegetarian food, thalis, and family dining in a cozy ambiance."
+      content="Lakhdatar Restaurant is Jaipur’s best pure veg restaurant, serving delicious Rajasthani vegetarian food, thali's, and family dining in a cozy ambiance."
     />
 
     <meta
@@ -43,7 +43,7 @@
     />
     <meta
       property="og:image"
-      content="https://lakhdatarrestaurant.netlify.app/logo.png"
+      content="https://lakhdatarrestaurant.netlify.app/web-app-manifest-512x512.png"
     />
     <meta
       property="og:url"
@@ -136,6 +136,43 @@
       }
     </script>
 
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "Lakhdata Restaurant ",
+        "url": "https://lakhdatarrestaurant.netlify.app/",
+        "logo": "https://lakhdatarrestaurant.netlify.app/logo.png",
+        "sameAs": [
+          "https://lakhdatarrestaurant.netlify.app/",
+          "https://lakhdatarrestaurant.netlify.app/"
+        ]
+      }
+    </script>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Article",
+        "headline": "Jaipur's Best Food Restaurant is Here ",
+        "image": [
+          "https://images.pexels.com/photos/10580197/pexels-photo-10580197.jpeg"
+        ],
+        "author": {
+          "@type": "Person",
+          "name": "Author Name"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": "Lakhdatar Restaurant",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "https://lakhdatarrestaurant.netlify.app/logo.png"
+          }
+        },
+        "datePublished": "2025-08-01"
+      }
+    </script>
+
     <!-- ✅ Preconnects (Use ONLY these) -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -180,6 +217,6 @@
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
     <!-- ✅ Your React Script (Vite or Parcel users) -->
-    <script type="module" src="/src/main.jsx"></script>
+    <script type="module" src="./src/main.jsx"></script>
   </body>
 </html>

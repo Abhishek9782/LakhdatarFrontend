@@ -19,7 +19,7 @@ span {
 
 .text-section {
   position: relative;
-  z-index: 2;
+  z-index: 1;
 }
 
 .main-heading {

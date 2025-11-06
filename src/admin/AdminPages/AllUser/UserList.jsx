@@ -30,6 +30,7 @@ import axios from "axios";
 import { ADMIN_BASE_URL } from "../../../utils/baseUrl";
 
 import { toast } from "react-hot-toast";
+import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
 import UserCard from "../SingleUser/User";
 import { fetchAllUsers } from "../../../services/authService";
@@ -69,6 +70,17 @@ export default function UserList() {
   const [debouncedSearchItem, setDebouncedSearchItem] = useState("");
   const [openuserDetails, setOpenUserDetails] = useState(false);
   const [selectedUser, setselectedUser] = useState(null);
+
+  // check user is valid or login
+  useEffect(() => {
+    const token = window.localStorage.getItem("user");
+    if (!token) navigate("/lakhdatar/admin/login");
+    const decodeToken = jwtDecode(JSON.parse(token).data);
+    const isExpired = Date.now() >= decodeToken.exp * 1000;
+    if (isExpired) {
+      navigate("/lakhdatar/admin/login ");
+    }
+  }, []);
 
   //  debouncer for delay response (Reduces rendering and performance issues)
 

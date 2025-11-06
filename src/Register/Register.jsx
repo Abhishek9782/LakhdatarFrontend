@@ -12,11 +12,14 @@ import { toast } from "react-hot-toast";
 const Register = () => {
   const navigate = useNavigate();
 
+  let [gender, setGender] = useState("male");
+
   const [credential, setCredential] = useState({
     fullname: "",
     email: "",
     mobile: "",
     password: "",
+    gender: gender,
   });
 
   const [ConfirmPassword, setConfirmPassword] = useState("");
@@ -209,6 +212,19 @@ const Register = () => {
                   confirmPassword(e);
                 }}
               />
+
+              <select
+                name=""
+                value={gender}
+                className="selcet-tag"
+                onChange={(e) => setGender(e.target.value)}
+                required
+                placeholder="sbfkjbskj"
+              >
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+              </select>
+
               <button style={{ cursor: "pointer" }} type="sumbit">
                 Register
               </button>

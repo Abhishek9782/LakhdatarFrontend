@@ -9,7 +9,7 @@ const calculateCartSummary = (cartItems) => {
 
   const deliveryFees = subtotal > 500 ? 0 : 50;
   const platformFees = Math.round(subtotal * 0.05); // 5%
-  const gst = Math.round(subtotal * 0.1); // 10%
+  const gst = Math.round(subtotal * 0.1); // 10%s
   const discount = 0; // You can update this logic
 
   const finalAmount = subtotal + deliveryFees + platformFees + gst - discount;

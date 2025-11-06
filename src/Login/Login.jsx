@@ -81,6 +81,7 @@ const Login = () => {
       // If alll is good email and id both are good then run it
 
       if (res.success) {
+        console.log(res.data);
         toast.success(res.data.message);
         dispatch(loginSucess({ data: res.data.data }));
         navigate("/");
@@ -104,7 +105,7 @@ const Login = () => {
             <span className="errortag" ref={errorRef}></span>
 
             <input
-              type="text"
+              type="email"
               placeholder=" Your Email or Mobile Number"
               id="email"
               onChange={handleLogin}

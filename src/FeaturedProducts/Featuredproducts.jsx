@@ -60,6 +60,8 @@ const Featuredproducts = () => {
               <div
                 className="fpcard"
                 data-aos="flip-up"
+                data-aos-offset="50"
+                data-aos-duration="1"
                 key={data._id}
                 loading="Lazy"
               >

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Nav } from "../Components/LeftSlid/Nav";
 import {
   Box,
@@ -23,6 +23,8 @@ import {
   Pie,
   Cell,
 } from "recharts";
+import { useNavigate } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
 
 const revenueData = [
   { month: "Jan", revenue: 10000 },
@@ -55,6 +57,18 @@ const topProducts = [
 const AdminHome = () => {
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
+  const navigate = useNavigate();
+
+  // check user is valid or login
+  useEffect(() => {
+    const token = window.localStorage.getItem("user");
+    if (!token) navigate("/lakhdatar/admin/login");
+    const decodeToken = jwtDecode(JSON.parse(token).data);
+    const isExpired = Date.now() >= decodeToken.exp * 1000;
+    if (isExpired) {
+      navigate("/lakhdatar/admin/login ");
+    }
+  }, []);
 
   return (
     <Box sx={{ display: "flex", height: "100vh" }}>
