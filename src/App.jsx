@@ -14,7 +14,7 @@ import { vendorTheme } from "./theme/vendorTheme";
 import { adminTheme } from "./theme/admintheme";
 
 // Main Router
-import AppRouter from "./routes/AppRouter.jsx";
+import AppRouter from "./routes/AppRouter";
 
 // Loading Component
 import LoadingSpinner from "./components/common/LoadingSpinner";
