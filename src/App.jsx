@@ -14,7 +14,7 @@ import { vendorTheme } from "./theme/vendorTheme";
 import { adminTheme } from "./theme/admintheme";
 
 // Main Router
-import AppRouter from "./routes/AppRouter";
+import AppRoute from "./Routes/AppRouter";
 
 // Loading Component
 import LoadingSpinner from "./components/common/LoadingSpinner";
@@ -60,7 +60,7 @@ function App() {
           <Box
             sx={{ minHeight: "100vh", backgroundColor: "background.default" }}
           >
-            <AppRouter />
+            <AppRoute />
 
             {/* Global Notifications */}
             <ToastContainer
