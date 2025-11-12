@@ -1,16 +1,16 @@
 import axios from "axios";
-// export const USER_BASE_URL = "http://localhost:5000/v1/api";
 // export const USER_BASE_URL = "http://192.168.31.241:5000";
+
+// export const USER_BASE_URL = "http://localhost:5000/v1/api";
 // export const ADMIN_BASE_URL = "http://localhost:5000/v1/api/admin";
-export const ImageSelectable = "image/png, image/jpeg, image/webp";
 // export const VendorBaseUrl = "http://localhost:5000/v1/api/vendor";
+export const ImageSelectable = "image/png, image/jpeg, image/webp";
 
 // for live url
 export const USER_BASE_URL = "https://lakahdatarbackend.onrender.com/v1/api";
 export const ADMIN_BASE_URL =
   "https://lakahdatarbackend.onrender.com/v1/api/admin";
-export const VendorBaseUrl =
-  "https://lakahdatarbackend.onrender.com/v1/api/vendor";
+export const VendorBaseUrl = "https://lakahdatarbackend.onrender.com/v1/api/";
 
 export const userEndPoints = {
   login: "user-login",
@@ -50,6 +50,9 @@ export const AdminEndpoints = {
 };
 export const VendorEndPoints = {
   login: "/login",
+  dashboard: "/dashboard",
+  recentOrders: "/recentOrders",
+  totalorders: "/orders",
 };
 
 export const axiosRequest = async (
@@ -79,7 +82,15 @@ export const axiosRequest = async (
   // Attach Authorization token dynamically
   axiosInstance.interceptors.request.use(
     (config) => {
-      const token = JSON.parse(localStorage.getItem("user"));
+      const token = JSON.parse(
+        localStorage.getItem(
+          type == "user"
+            ? "user"
+            : type == "vendor"
+            ? "vendor_token"
+            : "admin_token"
+        )
+      );
       if (token) {
         config.headers.Authorization = `Bearer ${token.data}`;
       }

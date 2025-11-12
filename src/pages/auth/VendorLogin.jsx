@@ -52,7 +52,12 @@ const VendorLogin = () => {
 
       if (response.success) {
         // Store the token and vendor info
-        localStorage.setItem("vendor_token", response.data.data.token);
+        localStorage.setItem(
+          "vendor_token",
+          JSON.stringify({
+            data: response.data.data.token,
+          })
+        );
         localStorage.setItem(
           "vendor_info",
           JSON.stringify(response.data.data.vendor)

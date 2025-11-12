@@ -11,7 +11,6 @@ const AdminLogin = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  console.log("adminLogin Page ");
   // here we chek if admin login and he is come again on login page then we redirect it on home page check jwt is expire or not
   useEffect(() => {
     const token = JSON.parse(localStorage.getItem("user"));

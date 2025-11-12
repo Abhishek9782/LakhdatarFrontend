@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Card,
   CardContent,
@@ -22,10 +22,15 @@ import {
   Help as HelpIcon,
   Logout as LogoutIcon,
   Edit as EditIcon,
+  CancelOutlined as CancelIcon,
 } from "@mui/icons-material";
 
 const ProfileSettings = () => {
   const vendorDetails = JSON.parse(localStorage.getItem("vendor_info"));
+  const [isOpenEdit, setisOpenEdit] = useState(false);
+  function handleEditBtn() {
+    setisOpenEdit(!isOpenEdit);
+  }
   return (
     <Box sx={{ p: 2 }}>
       {/* Profile Header */}
@@ -33,7 +38,7 @@ const ProfileSettings = () => {
         <CardContent>
           <Box sx={{ display: "flex", alignItems: "center", gap: 2, mb: 3 }}>
             <Avatar
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuBQWFvdFOOIi82VwdSqUyGrBhoyq6aYEJ-roRSWWjiSN6bJSQFHlyDdMFmvVVWZ48CH2OmqofEtZZsFZSVxyiQF-8jAFtjDsb2BdNL-UHUH1I3o9O7PutFSFSpa1XrPk3g2qHKodo2Memogtvcwb73bRMkMfdW0zJaCN44IoxPkHiuM19hD2mIRxSKqP2gtacLVFgYtLau7bpCSp6-Q7BhFMAEAu1xAdpKspxe5ovYXDayistecu8S36Le2kvgvovEhFbnpgICR_kdq"
+              src={vendorDetails.profileImage}
               sx={{ width: 80, height: 80 }}
             />
             <Box sx={{ flex: 1 }}>
@@ -48,49 +53,59 @@ const ProfileSettings = () => {
                 ).getMonth()}-${new Date(vendorDetails.joined).getFullYear()}`}
               </Typography>
             </Box>
-            <Button startIcon={<EditIcon />} variant="outlined">
-              Edit
+            <Button
+              startIcon={isOpenEdit ? <CancelIcon /> : <EditIcon />}
+              onClick={() => {
+                handleEditBtn();
+              }}
+              variant="outlined"
+            >
+              {isOpenEdit ? "Cancel" : "Edit"}
             </Button>
           </Box>
         </CardContent>
       </Card>
 
       {/* Personal Information */}
-      <Card elevation={2} sx={{ mb: 3 }}>
-        <CardContent>
-          <Typography variant="h6" gutterBottom>
-            Personal Information
-          </Typography>
-          <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-            <TextField
-              label="Full Name"
-              defaultValue={vendorDetails.fullname}
-              fullWidth
-            />
-            <TextField
-              label="Email"
-              defaultValue={vendorDetails.email}
-              fullWidth
-            />
-            <TextField
-              label="Phone Number"
-              defaultValue={`+91 ${vendorDetails.mobile}`}
-              fullWidth
-            />
-            <TextField
-              label="Restaurant Address"
-              multiline
-              rows={3}
-              defaultValue={vendorDetails.fullname}
-              fullWidth
-            />
-          </Box>
-          <Box sx={{ mt: 2, display: "flex", gap: 1 }}>
-            <Button variant="outlined">Cancel</Button>
-            <Button variant="contained">Save Changes</Button>
-          </Box>
-        </CardContent>
-      </Card>
+      {isOpenEdit && (
+        <Card elevation={2} sx={{ mb: 3 }}>
+          <CardContent>
+            <Typography variant="h6" gutterBottom>
+              Personal Information
+            </Typography>
+            <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+              <TextField
+                label="Full Name"
+                defaultValue={vendorDetails.fullname}
+                fullWidth
+              />
+              <TextField
+                label="Email"
+                defaultValue={vendorDetails.email}
+                fullWidth
+              />
+              <TextField
+                label="Phone Number"
+                defaultValue={`+91 ${vendorDetails.mobile}`}
+                fullWidth
+              />
+              <TextField
+                label="Restaurant Address"
+                multiline
+                rows={3}
+                defaultValue={vendorDetails.fullname}
+                fullWidth
+              />
+            </Box>
+            <Box sx={{ mt: 2, display: "flex", gap: 1 }}>
+              <Button variant="outlined" onClick={() => handleEditBtn()}>
+                Cancel
+              </Button>
+              <Button variant="contained">Save Changes</Button>
+            </Box>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Notification Settings */}
       <Card elevation={2} sx={{ mb: 3 }}>

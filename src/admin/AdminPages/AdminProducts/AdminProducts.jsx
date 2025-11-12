@@ -39,14 +39,10 @@ import {
   Add as AddIcon,
   Edit as EditIcon,
   Delete as DeleteIcon,
-  ChevronLeft,
-  ChevronRight,
 } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { ADMIN_BASE_URL } from "../../../utils/baseUrl";
 import { useCookies } from "react-cookie";
-import { jwtDecode } from "jwt-decode";
 
 const AdminProducts = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -107,7 +103,7 @@ const AdminProducts = () => {
     } catch (error) {
       toast.error(error?.response?.data?.message || "Something went wrong");
       // Here we are removing localstorage old token
-      localStorage.removeItem("user");
+      localStorage.removeItem("admin_token");
       navigate("/lakhdatar/admin/login");
     } finally {
       setLoading(false);
@@ -281,15 +277,36 @@ const AdminProducts = () => {
               <TableContainer>
                 <Table>
                   <TableHead>
-                    <TableRow
-                      sx={{ backgroundColor: theme.palette.primary.main }}
-                    >
-                      <TableCell sx={{ color: "white" }}>Image</TableCell>
-                      <TableCell sx={{ color: "white" }}>Name</TableCell>
-                      <TableCell sx={{ color: "white" }}>Full Price</TableCell>
-                      <TableCell sx={{ color: "white" }}>Half Price</TableCell>
-                      <TableCell sx={{ color: "white" }}>Type</TableCell>
-                      <TableCell sx={{ color: "white" }} align="center">
+                    <TableRow sx={{ backgroundColor: "#3b82f6" }}>
+                      <TableCell
+                        sx={{ color: "white", backgroundColor: "#3b82f6" }}
+                      >
+                        Image
+                      </TableCell>
+                      <TableCell
+                        sx={{ color: "white", backgroundColor: "#3b82f6" }}
+                      >
+                        Name
+                      </TableCell>
+                      <TableCell
+                        sx={{ color: "white", backgroundColor: "#3b82f6" }}
+                      >
+                        Full Price
+                      </TableCell>
+                      <TableCell
+                        sx={{ color: "white", backgroundColor: "#3b82f6" }}
+                      >
+                        Half Price
+                      </TableCell>
+                      <TableCell
+                        sx={{ color: "white", backgroundColor: "#3b82f6" }}
+                      >
+                        Type
+                      </TableCell>
+                      <TableCell
+                        sx={{ color: "white", backgroundColor: "#3b82f6" }}
+                        align="center"
+                      >
                         Actions
                       </TableCell>
                     </TableRow>

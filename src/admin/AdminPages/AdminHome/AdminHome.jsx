@@ -61,7 +61,7 @@ const AdminHome = () => {
 
   // check user is valid or login
   useEffect(() => {
-    const token = window.localStorage.getItem("user");
+    const token = window.localStorage.getItem("admin_token");
     if (!token) navigate("/lakhdatar/admin/login");
     const decodeToken = jwtDecode(JSON.parse(token).data);
     const isExpired = Date.now() >= decodeToken.exp * 1000;
@@ -107,7 +107,9 @@ const AdminHome = () => {
             >
               <MonetizationOnIcon sx={{ fontSize: 40 }} />
               <Box>
-                <Typography variant="body2">Total Revenue</Typography>
+                <Typography variant="body2" sx={{ color: "white" }}>
+                  Total Revenue
+                </Typography>
                 <Typography variant="h6">₹1,20,000</Typography>
               </Box>
             </Paper>
@@ -127,7 +129,9 @@ const AdminHome = () => {
             >
               <ShoppingCartIcon sx={{ fontSize: 40 }} />
               <Box>
-                <Typography variant="body2">Total Orders</Typography>
+                <Typography variant="body2" sx={{ color: "white" }}>
+                  Total Orders
+                </Typography>
                 <Typography variant="h6">1,245</Typography>
               </Box>
             </Paper>
@@ -147,7 +151,9 @@ const AdminHome = () => {
             >
               <PeopleIcon sx={{ fontSize: 40 }} />
               <Box>
-                <Typography variant="body2">Total Users</Typography>
+                <Typography variant="body2" sx={{ color: "white" }}>
+                  Total Users
+                </Typography>
                 <Typography variant="h6">780</Typography>
               </Box>
             </Paper>

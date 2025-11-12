@@ -73,7 +73,7 @@ export default function UserList() {
 
   // check user is valid or login
   useEffect(() => {
-    const token = window.localStorage.getItem("user");
+    const token = window.localStorage.getItem("admin_token");
     if (!token) navigate("/lakhdatar/admin/login");
     const decodeToken = jwtDecode(JSON.parse(token).data);
     const isExpired = Date.now() >= decodeToken.exp * 1000;

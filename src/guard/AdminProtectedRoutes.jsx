@@ -59,7 +59,6 @@ const AdminProtectedRoute = ({ children }) => {
   if (!authState.isAuthenticated) {
     return <Navigate to="/admin/login" replace />;
   }
-  console.log(children);
 
   // Render children if authenticated
   return children;

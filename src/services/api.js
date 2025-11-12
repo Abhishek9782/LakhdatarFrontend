@@ -13,7 +13,7 @@ const API = axios.create({
 // ✅ Request Interceptor (Attach Token)
 API.interceptors.request.use(
   (config) => {
-    const token = JSON.parse(localStorage.getItem("user")); // Get token from storage
+    const token = JSON.parse(localStorage.getItem("admin_token")); // Get token from storage
     if (token) {
       config.headers.Authorization = `Bearer ${token.data}`;
     }

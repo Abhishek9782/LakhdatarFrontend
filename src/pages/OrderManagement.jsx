@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Grid,
   Card,
@@ -18,9 +18,38 @@ import {
   ReceiptLong as OrderIcon,
   CheckCircle as CompletedIcon,
 } from "@mui/icons-material";
+import { totalOrders } from "../api/vendorApi";
 
 const OrderManagement = () => {
-  const [filter, setFilter] = useState("pending");
+  const [filter, setFilter] = useState("all");
+  const [orders, setOrders] = useState([]);
+  const [pageNumber, setPageNumber] = useState(0);
+  const [pageSize, setPageSize] = useState(10);
+  const [sortOrder, setSortOrder] = useState("asc");
+  const [sortBy, setSortBy] = useState("createdAt");
+  const [status, setStatus] = useState("");
+  const [searchItem, setSearchItem] = useState("");
+  const [filterdOrder, setFilterOrder] = useState([]);
+
+  const fetchData = async () => {
+    const data = {
+      searchItem,
+      pageNumber,
+      pageSize,
+      sortBy,
+      sortOrder,
+      status,
+    };
+    const res = await totalOrders(data);
+    if (res) {
+      setOrders(res.orders);
+      setFilterOrder(res.orders);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   const stats = [
     { label: "Today's Total Sales", value: "₹12,500" },
@@ -28,34 +57,21 @@ const OrderManagement = () => {
     { label: "Pending Orders", value: "4" },
   ];
 
-  const orders = [
-    {
-      id: "#1024",
-      customer: "Rohan Sharma",
-      time: "12:35 PM",
-      amount: "₹450",
-      status: "Preparing",
-    },
-    {
-      id: "#1023",
-      customer: "Priya Singh",
-      time: "12:30 PM",
-      amount: "₹820",
-      status: "Preparing",
-    },
-    {
-      id: "#1022",
-      customer: "Anjali Verma",
-      time: "12:15 PM",
-      amount: "₹1,150",
-      status: "Completed",
-    },
-  ];
-
-  const handleFilterChange = (event, newFilter) => {
+  const handleFilterChange = (event) => {
+    let newFilter = event.target.value;
     if (newFilter !== null) {
       setFilter(newFilter);
     }
+    if (newFilter == "all") {
+      setFilterOrder(orders);
+      setFilter("all");
+      return;
+    }
+    const filterOrder = orders.filter((order) => {
+      return order.status === newFilter;
+    });
+    // set orders filter
+    setFilterOrder(filterOrder);
   };
 
   return (
@@ -87,9 +103,15 @@ const OrderManagement = () => {
             exclusive
             fullWidth
           >
+            <ToggleButton value="all">All</ToggleButton>
             <ToggleButton value="pending">Pending</ToggleButton>
+            <ToggleButton value="pick-up">Pick-Up</ToggleButton>
+            <ToggleButton value="preparing">preparing</ToggleButton>
             <ToggleButton value="completed">Completed</ToggleButton>
             <ToggleButton value="cancelled">Cancelled</ToggleButton>
+            <ToggleButton value="out-for-delivery">
+              Out For Delivery
+            </ToggleButton>
           </ToggleButtonGroup>
         </CardContent>
       </Card>
@@ -101,7 +123,7 @@ const OrderManagement = () => {
             Current Orders
           </Typography>
           <List>
-            {orders.map((order, index) => (
+            {filterdOrder.map((order, index) => (
               <ListItem
                 key={index}
                 divider={index < orders.length - 1}
@@ -111,7 +133,7 @@ const OrderManagement = () => {
               >
                 <ListItemAvatar>
                   <Avatar sx={{ bgcolor: "grey.100" }}>
-                    {order.status === "Completed" ? (
+                    {order.status === "completed" ? (
                       <CompletedIcon />
                     ) : (
                       <OrderIcon />
@@ -119,16 +141,16 @@ const OrderManagement = () => {
                   </Avatar>
                 </ListItemAvatar>
                 <ListItemText
-                  primary={order.id}
-                  secondary={`${order.customer}, ${order.time}`}
+                  primary={order.orderId}
+                  secondary={`${order?.user?.fullname}, ${order.createdAt}`}
                 />
                 <Box sx={{ textAlign: "right" }}>
                   <Typography variant="body1" fontWeight="bold">
-                    {order.amount}
+                    ₹{order.totalAmount}
                   </Typography>
                   <Chip
                     label={order.status}
-                    color={order.status === "Completed" ? "success" : "primary"}
+                    color={order.status === "completed" ? "success" : "primary"}
                     size="small"
                   />
                 </Box>

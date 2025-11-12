@@ -22,55 +22,64 @@ import {
   Add as AddIcon,
   ListAlt as ListIcon,
 } from "@mui/icons-material";
+import { getDashBoard, getrecentOrders } from "../api/vendorApi";
+import { useEffect } from "react";
+import { useState } from "react";
 
 const Dashboard = () => {
+  const [dashboardInfo, setDashboardInfo] = useState({});
+  const [getOrder, setRecentOrders] = useState([]);
+  const [viewAllbtn, setViewAllBtn] = useState(false);
+
+  const fetchData = async () => {
+    // const data = await getDashBoard();
+    // const fetc = await getrecentOrders();
+    const [data, orders] = await Promise.all([
+      getDashBoard(),
+      getrecentOrders(),
+    ]);
+
+    // set dahboard info in state
+    setDashboardInfo(data[0]);
+    setRecentOrders(orders);
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
   const stats = [
     {
       label: "Total Orders",
-      value: "120",
+      value: dashboardInfo.totalOrders || 0,
       icon: <OrdersIcon />,
       color: "primary",
     },
     {
       label: "Earnings",
-      value: "₹8,500",
+      value: Number.parseInt(dashboardInfo?.totalSales) || 0,
       icon: <EarningsIcon />,
       color: "secondary",
     },
     {
       label: "Active Dishes",
-      value: "45",
+      value: dashboardInfo?.productData?.totalActiveProducts || 0,
       icon: <DishesIcon />,
       color: "success",
     },
     {
       label: "Avg. Rating",
-      value: "4.8",
+      value: dashboardInfo?.averageRating || 4.5,
       icon: <StarIcon />,
       color: "warning",
     },
   ];
 
-  const recentOrders = [
-    {
-      id: "#1254",
-      customer: "Ravi Sharma",
-      amount: "₹250.00",
-      status: "Completed",
-    },
-    {
-      id: "#1253",
-      customer: "Priya Patel",
-      amount: "₹480.50",
-      status: "Completed",
-    },
-    {
-      id: "#1252",
-      customer: "Anjali Mehta",
-      amount: "₹120.00",
-      status: "Completed",
-    },
-  ];
+  let Initial_count = 3;
+  const recentOrders = getOrder.slice(
+    0,
+    viewAllbtn ? getOrder.length : Initial_count
+  );
 
   return (
     <Box sx={{ p: 2 }}>
@@ -182,22 +191,35 @@ const Dashboard = () => {
             }}
           >
             <Typography variant="h6">Recent Orders</Typography>
-            <Button size="small" color="primary">
-              View All
+            <Button
+              size="small"
+              color="primary"
+              onClick={() => {
+                setViewAllBtn(!viewAllbtn);
+              }}
+            >
+              {viewAllbtn ? "View Less" : "view All"}
             </Button>
           </Box>
           <List>
             {recentOrders.map((order, index) => (
-              <ListItem key={index} divider={index < recentOrders.length - 1}>
+              <ListItem key={index} divider={index < recentOrders.length}>
                 <ListItemAvatar>
                   <Avatar sx={{ bgcolor: "primary.light" }}>
                     <OrdersIcon />
                   </Avatar>
                 </ListItemAvatar>
-                <ListItemText primary={order.id} secondary={order.customer} />
+                <ListItemText
+                  primary={order.orderId}
+                  secondary={order?.user?.fullname}
+                />
                 <Box sx={{ textAlign: "right" }}>
-                  <Typography variant="body1" fontWeight="bold">
-                    {order.amount}
+                  <Typography
+                    variant="body1"
+                    fontWeight="bold"
+                    sx={{ textAlign: "center" }}
+                  >
+                    {order.totalAmount}
                   </Typography>
                   <Chip label={order.status} color="success" size="small" />
                 </Box>
