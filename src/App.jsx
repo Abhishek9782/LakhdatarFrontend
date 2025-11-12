@@ -17,7 +17,7 @@ import { adminTheme } from "./theme/admintheme";
 import AppRoute from "./Routes/AppRouter";
 
 // Loading Component
-import LoadingSpinner from "./components/common/LoadingSpinner";
+import LoadingSpinner from "./Components/common/LoadingSpinner";
 
 // Theme Wrapper Component
 const ThemeWrapper = ({ children }) => {
